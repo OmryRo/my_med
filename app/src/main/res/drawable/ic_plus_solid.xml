@@ -1,0 +1,15 @@
+<!--
+Font Awesome
+https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt
+
+# Icons: CC BY 4.0 License (https://creativecommons.org/licenses/by/4.0/)
+In the Font Awesome Free download, the CC BY 4.0 license applies to all icons
+packaged as SVG and JS file types.
+
+https://fontawesome.com/icons/syringe?style=solid
+https://fontawesome.com/license
+-->
+<vector android:height="24dp" android:viewportHeight="512"
+    android:viewportWidth="448" android:width="21dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FF000000" android:pathData="M416,208H272V64c0,-17.67 -14.33,-32 -32,-32h-32c-17.67,0 -32,14.33 -32,32v144H32c-17.67,0 -32,14.33 -32,32v32c0,17.67 14.33,32 32,32h144v144c0,17.67 14.33,32 32,32h32c17.67,0 32,-14.33 32,-32V304h144c17.67,0 32,-14.33 32,-32v-32c0,-17.67 -14.33,-32 -32,-32z"/>
+</vector>

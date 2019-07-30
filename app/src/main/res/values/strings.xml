@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MyMeds</string>
+    <string name="title_activity_home">MyMeds</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="open_menu">Open menu</string>
+    <string name="drip_counter">Drip Counter</string>
+    <string name="find_medicine">Find Medicine</string>
+    <string name="options">Options</string>
+    <string name="about">About</string>
+    <string name="calender">Calender</string>
+    <string name="medicines">Medicines</string>
+    <string name="appointments">Appointments</string>
+    <string name="loading">Loading...</string>
 </resources>
