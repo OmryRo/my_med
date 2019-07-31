@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 
 public class LoadingActivity extends AppCompatActivity {
 
+    boolean aborted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +19,9 @@ public class LoadingActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                if (!aborted) {
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                }
                 finish();
             }
         }, 2000);
@@ -27,6 +31,7 @@ public class LoadingActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        aborted = true;
         finish();
     }
 }
