@@ -19,4 +19,26 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="Theme.Card.Title" parent="AppTheme">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorTextTitleDark</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <style name="Theme.Card.Text" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextTextDark</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="Theme.Card.FlatButton" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">0dp</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 </resources>

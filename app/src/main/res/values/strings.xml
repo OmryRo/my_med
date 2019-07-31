@@ -16,4 +16,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="remind_me_later">Remind me later</string>
+    <string name="message_out_of_medicine">You will run out of %s in %d days.\nDon\'t forget to go to the pharmacy.</string>
+    <string name="reminder">Reminder</string>
 </resources>

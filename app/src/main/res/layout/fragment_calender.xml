@@ -9,30 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <CalendarView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:textSize="50sp"
-                android:text="@string/calender" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:textSize="50sp"
-                android:text="@string/calender" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:textSize="50sp"
-                android:text="@string/calender" />
-
-        </LinearLayout>
+            android:layout_height="match_parent"></CalendarView>
 
     </androidx.core.widget.NestedScrollView>
 

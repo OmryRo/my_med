@@ -62,9 +62,6 @@ public class HomeActivity extends AppCompatActivity implements
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                if (pager.hasFocus()) {
-                    return false;
-                }
 
                 int currentItem = medicinesIndex;
                 switch (menuItem.getItemId()) {
@@ -107,5 +104,15 @@ public class HomeActivity extends AppCompatActivity implements
         });
 
         navView.setSelectedItemId(R.id.navigation_medicines);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (navView.getSelectedItemId() == R.id.navigation_medicines) {
+            super.onBackPressed();
+        } else {
+            navView.setSelectedItemId(R.id.navigation_medicines);
+        }
+
     }
 }
