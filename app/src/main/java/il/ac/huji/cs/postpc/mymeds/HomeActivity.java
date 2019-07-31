@@ -7,47 +7,33 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.text.TextUtilsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.widget.ScrollView;
 
-import il.ac.huji.cs.postpc.mymeds.utils.OnSwipeVisitor;
+import java.util.Locale;
 
 public class HomeActivity extends AppCompatActivity implements
         CalenderFragment.CalenderFragmentListener,
         AppointmentsFragment.AppointmentsFragmentListener,
-        MedicinesFragment.MedicinesFragmentListener,
-        BottomNavigationView.OnNavigationItemSelectedListener,
-        OnSwipeVisitor.OnSwipeListener {
+        MedicinesFragment.MedicinesFragmentListener {
 
-    private static final int SLIDE_RIGHT = -1;
-    private static final int SLIDE_LEFT = 1;
-    private static final int SLIDE_NONE = 0;
-
-    private ScrollView scrollView;
+    private ViewPager pager;
     private CalenderFragment calenderFragment;
     private AppointmentsFragment appointmentsFragment;
     private MedicinesFragment medicinesFragment;
-    private Fragment currentFragment;
     private BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        navView = findViewById(R.id.nav_view);
-        scrollView = findViewById(R.id.home_main);
-        scrollView.setOnTouchListener(new OnSwipeVisitor(this, this));
-        appointmentsFragment = new AppointmentsFragment();
-        medicinesFragment = new MedicinesFragment();
-        calenderFragment = new CalenderFragment();
-
-        navView.setOnNavigationItemSelectedListener(this);
-        navView.setSelectedItemId(R.id.navigation_medicines);
+        setFragments();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,112 +45,67 @@ public class HomeActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.navigation_calender:
-                showCalenderFragment();
+    private void setFragments() {
+
+        boolean isRTL = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_RTL;
+        final int calenderIndex = isRTL ? 2 : 0;
+        final int medicinesIndex = 1;
+        final int appointmentIndex = isRTL ? 0 : 2;
+
+        calenderFragment = new CalenderFragment();
+        medicinesFragment = new MedicinesFragment();
+        appointmentsFragment = new AppointmentsFragment();
+
+        navView = findViewById(R.id.nav_view);
+        pager = findViewById(R.id.pager);
+
+        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if (pager.hasFocus()) {
+                    return false;
+                }
+
+                int currentItem = medicinesIndex;
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_calender: currentItem = calenderIndex ; break;
+                    case R.id.navigation_medicines: currentItem = medicinesIndex; break;
+                    case R.id.navigation_appointments: currentItem = appointmentIndex; break;
+                }
+                pager.setCurrentItem(currentItem);
                 return true;
-            case R.id.navigation_medicines:
-                showMedicinesFragment();
-                return true;
-            case R.id.navigation_appointments:
-                showAppointmentFragment();
-                return true;
-        }
-        return false;
-    }
+            }
+        });
 
+        pager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                if (position == calenderIndex) return calenderFragment;
+                if (position == medicinesIndex) return medicinesFragment;
+                if (position == appointmentIndex) return appointmentsFragment;
+                return null;
+            }
 
-    private void showCalenderFragment() {
-        int slideDirection = SLIDE_NONE;
-        if (currentFragment == calenderFragment) {
-            return;
-        } else if (currentFragment == appointmentsFragment) {
-            slideDirection = SLIDE_LEFT;
-        } else if (currentFragment == medicinesFragment) {
-            slideDirection = SLIDE_RIGHT;
-        }
+            @Override
+            public int getCount() {
+                return 3;
+            }
+        });
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
-        setFragment(calenderFragment, slideDirection);
-    }
+            @Override
+            public void onPageSelected(int position) {
+                if (position == calenderIndex) navView.setSelectedItemId(R.id.navigation_calender);
+                else if (position == medicinesIndex) navView.setSelectedItemId(R.id.navigation_medicines);
+                else if (position == appointmentIndex) navView.setSelectedItemId(R.id.navigation_appointments);
+            }
 
-    private void showAppointmentFragment() {
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
 
-
-        int slideDirection = SLIDE_NONE;
-        if (currentFragment == appointmentsFragment) {
-            return;
-        } else if (currentFragment == medicinesFragment) {
-            slideDirection = SLIDE_LEFT;
-        } else if (currentFragment == calenderFragment) {
-            slideDirection = SLIDE_RIGHT;
-        }
-
-        setFragment(appointmentsFragment, slideDirection);
-    }
-
-    private void showMedicinesFragment() {
-
-        int slideDirection = SLIDE_NONE;
-        if (currentFragment == medicinesFragment) {
-            return;
-        } else if (currentFragment == calenderFragment) {
-            slideDirection = SLIDE_LEFT;
-        } else if (currentFragment == appointmentsFragment) {
-            slideDirection = SLIDE_RIGHT;
-        }
-
-        setFragment(medicinesFragment, slideDirection);
-    }
-
-    private void setFragment(Fragment fragment, int slide) {
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        switch (slide) {
-            case SLIDE_LEFT:
-                transaction.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_out);
-                break;
-            case SLIDE_RIGHT:
-                transaction.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out);
-                break;
-        }
-
-        currentFragment = fragment;
-        transaction.replace(R.id.home_main, fragment).commit();
-    }
-
-    @Override
-    public void onSwipeRight() {
-        int selected = navView.getSelectedItemId();
-        switch (selected) {
-            case (R.id.navigation_appointments):
-                navView.setSelectedItemId(R.id.navigation_calender);
-                break;
-            case (R.id.navigation_calender):
-                navView.setSelectedItemId(R.id.navigation_medicines);
-                break;
-            case (R.id.navigation_medicines):
-                navView.setSelectedItemId(R.id.navigation_appointments);
-                break;
-        }
-    }
-
-    @Override
-    public void onSwipeLeft() {
-
-        int selected = navView.getSelectedItemId();
-        switch (selected) {
-            case (R.id.navigation_appointments):
-                navView.setSelectedItemId(R.id.navigation_medicines);
-                break;
-            case (R.id.navigation_calender):
-                navView.setSelectedItemId(R.id.navigation_appointments);
-                break;
-            case (R.id.navigation_medicines):
-                navView.setSelectedItemId(R.id.navigation_calender);
-                break;
-        }
+        navView.setSelectedItemId(R.id.navigation_medicines);
     }
 }

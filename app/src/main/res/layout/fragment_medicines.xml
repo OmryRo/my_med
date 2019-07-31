@@ -5,29 +5,35 @@
     android:layout_height="match_parent"
     tools:context=".MedicinesFragment">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:textSize="50sp"
-            android:text="@string/medicines" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:textSize="50sp"
-            android:text="@string/medicines" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:textSize="50sp"
+                android:text="@string/medicines" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:textSize="50sp"
-            android:text="@string/medicines" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:textSize="50sp"
+                android:text="@string/medicines" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:textSize="50sp"
+                android:text="@string/medicines" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>
