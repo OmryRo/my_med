@@ -65,9 +65,18 @@ public class HomeActivity extends AppCompatActivity implements
 
                 int currentItem = medicinesIndex;
                 switch (menuItem.getItemId()) {
-                    case R.id.navigation_calender: currentItem = calenderIndex ; break;
-                    case R.id.navigation_medicines: currentItem = medicinesIndex; break;
-                    case R.id.navigation_appointments: currentItem = appointmentIndex; break;
+                    case R.id.navigation_calender:
+                        currentItem = calenderIndex;
+                        setTitle(R.string.calender);
+                        break;
+                    case R.id.navigation_medicines:
+                        currentItem = medicinesIndex;
+                        setTitle(R.string.medicines);
+                        break;
+                    case R.id.navigation_appointments:
+                        currentItem = appointmentIndex;
+                        setTitle(R.string.appointments);
+                        break;
                 }
                 pager.setCurrentItem(currentItem);
                 return true;
