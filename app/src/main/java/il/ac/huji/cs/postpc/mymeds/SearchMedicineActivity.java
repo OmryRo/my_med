@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+/*
+ * api to use: https://open.fda.gov/apis/
+ */
 public class SearchMedicineActivity extends AppCompatActivity {
 
     public static final int SEACH_MEDICINE_REQUEST = 0x2010;
