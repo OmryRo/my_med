@@ -1,5 +1,7 @@
 package il.ac.huji.cs.postpc.mymeds;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,12 +40,25 @@ public class MedicinesFragment extends Fragment {
                 new ReminderFragment.ReminderFragmentListener() {
                     @Override
                     public void onRemindMeLaterClicked() {
-
+                        hide();
                     }
 
                     @Override
                     public void onDismissClicked() {
+                        hide();
+                    }
 
+                    private void hide() {
+                        reminderFragment.animateHide(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                getFragmentManager()
+                                        .beginTransaction()
+                                        .setCustomAnimations(R.anim.hide, R.anim.hide)
+                                        .remove(reminderFragment)
+                                        .commit();
+                            }
+                        });
                     }
                 }
         );
