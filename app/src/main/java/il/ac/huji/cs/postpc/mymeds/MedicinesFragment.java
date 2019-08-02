@@ -54,7 +54,6 @@ public class MedicinesFragment extends Fragment {
                             public void onAnimationEnd(Animator animation) {
                                 getFragmentManager()
                                         .beginTransaction()
-                                        .setCustomAnimations(R.anim.hide, R.anim.hide)
                                         .remove(reminderFragment)
                                         .commit();
                             }
