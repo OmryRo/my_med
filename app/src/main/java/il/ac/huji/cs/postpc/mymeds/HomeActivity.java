@@ -1,5 +1,6 @@
 package il.ac.huji.cs.postpc.mymeds;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,6 +38,26 @@ public class HomeActivity extends AppCompatActivity implements
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_drip_counter:
+                        break;
+                    case R.id.navigation_find_medicine:
+                        startActivityForResult(
+                                new Intent(getApplicationContext(), SearchMedicineActivity.class),
+                                SearchMedicineActivity.SEACH_MEDICINE_REQUEST
+                        );
+                        break;
+                    case R.id.navigation_options:
+                        break;
+                    case R.id.navigation_about:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override

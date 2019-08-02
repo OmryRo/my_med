@@ -8,7 +8,7 @@
         android:id="@+id/navigation_open_menu"
         android:icon="@drawable/ic_menu_white_24dp"
         android:title="@string/open_menu"
-        android:orderInCategory="300"
+        android:orderInCategory="100"
         app:showAsAction="always"
         >
 

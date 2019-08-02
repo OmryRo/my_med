@@ -12,12 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SearchMedicineActivity"></activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/title_activity_home"
             android:configChanges="orientation|keyboardHidden"
-            />
-        <activity android:name=".LoadingActivity" android:theme="@style/Theme.Transparent">
+            android:label="@string/title_activity_home" />
+        <activity
+            android:name=".LoadingActivity"
+            android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
