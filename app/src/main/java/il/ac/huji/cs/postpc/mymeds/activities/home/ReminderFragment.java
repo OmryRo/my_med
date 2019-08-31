@@ -1,4 +1,4 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.activities.home;
 
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import il.ac.huji.cs.postpc.mymeds.R;
 
 
 public class ReminderFragment extends Fragment implements View.OnClickListener {

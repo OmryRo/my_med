@@ -1,11 +1,13 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.activities.loading;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.RelativeLayout;
+
+import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.home.HomeActivity;
 
 public class LoadingActivity extends AppCompatActivity {
 

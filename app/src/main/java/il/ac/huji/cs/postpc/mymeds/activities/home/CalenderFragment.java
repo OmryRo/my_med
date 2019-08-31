@@ -1,7 +1,6 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.activities.home;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
 
 public class CalenderFragment extends Fragment {

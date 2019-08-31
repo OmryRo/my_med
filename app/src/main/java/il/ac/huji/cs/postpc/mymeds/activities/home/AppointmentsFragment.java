@@ -1,7 +1,5 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.activities.home;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,64 +8,57 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
+import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
+import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
+import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
-public class MedicinesFragment extends Fragment {
+public class AppointmentsFragment extends Fragment {
 
-    private MedicinesFragmentListener listener;
-    private FloatingActionButton newMedicineFab;
+    private AppointmentsFragmentListener listener;
+    private FloatingActionButton newDoctorFab;
     private RecyclerView recyclerView;
     private ReminderFragment reminderFragment;
+    private DoctorManager doctorManager;
 
-    public MedicinesFragment() {}
+    public AppointmentsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_medicines, container, false);
-        newMedicineFab = view.findViewById(R.id.medicines_add_fab);
-        recyclerView = view.findViewById(R.id.medicines_container);
+        View view = inflater.inflate(R.layout.fragment_appointments, container, false);
+        newDoctorFab = view.findViewById(R.id.doctors_add_fab);
+        recyclerView = view.findViewById(R.id.doctors_container);
 
         reminderFragment = new ReminderFragment();
         reminderFragment.init(
-                "You run out of something in few days.\nDon't forget to go to the phamacy.",
+                "You didn't visit Dr. Palony in the last 3 months.",
                 new ReminderFragment.ReminderFragmentListener() {
                     @Override
                     public void onRemindMeLaterClicked() {
-                        hide();
+
                     }
 
                     @Override
                     public void onDismissClicked() {
-                        hide();
-                    }
 
-                    private void hide() {
-                        reminderFragment.animateHide(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                getFragmentManager()
-                                        .beginTransaction()
-                                        .remove(reminderFragment)
-                                        .commit();
-                            }
-                        });
                     }
                 }
         );
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.medicines_reminder_container, reminderFragment)
+                .replace(R.id.appointments_reminder_container, reminderFragment)
                 .commit();
 
-        newMedicineFab.setOnClickListener(new View.OnClickListener() {
+        newDoctorFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -83,16 +74,21 @@ public class MedicinesFragment extends Fragment {
 
             @Override
             public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
+                if (doctorManager == null) {
+                    return;
+                }
+
+                Doctor doctor = doctorManager.get(position);
                 holder.setData(
-                        R.drawable.ic_tablets_solid,
-                        "Some Medicine",
-                        "3 times a day.\nNext time: 8 hours."
+                        R.drawable.ic_user_md_solid,
+                        doctor.name + " " + doctor.id,
+                        doctor.note
                 );
             }
 
             @Override
             public int getItemCount() {
-                return 10;
+                return doctorManager == null ? 0 : doctorManager.size();
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -104,19 +100,21 @@ public class MedicinesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof MedicinesFragmentListener) {
-            listener = (MedicinesFragmentListener) context;
+        if (context instanceof AppointmentsFragmentListener) {
+            listener = (AppointmentsFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
 
+        doctorManager = ((MyMedApplication) context.getApplicationContext()).getDoctorManager();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        doctorManager = null;
     }
 
-    public interface MedicinesFragmentListener {}
+    public interface AppointmentsFragmentListener {}
 }

@@ -14,14 +14,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:name=".MyMedApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchMedicineActivity"></activity>
+        <activity android:name=".activities.search.SearchMedicineActivity"></activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.home.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_home" />
         <activity
-            android:name=".LoadingActivity"
+            android:name=".activities.loading.LoadingActivity"
             android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,5 +1,7 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.activities.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,45 +16,60 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
-public class AppointmentsFragment extends Fragment {
 
-    private AppointmentsFragmentListener listener;
-    private FloatingActionButton newDoctorFab;
+public class MedicinesFragment extends Fragment {
+
+    private MedicinesFragmentListener listener;
+    private FloatingActionButton newMedicineFab;
     private RecyclerView recyclerView;
     private ReminderFragment reminderFragment;
 
-    public AppointmentsFragment() {}
+    public MedicinesFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_appointments, container, false);
-        newDoctorFab = view.findViewById(R.id.doctors_add_fab);
-        recyclerView = view.findViewById(R.id.doctors_container);
+        View view = inflater.inflate(R.layout.fragment_medicines, container, false);
+        newMedicineFab = view.findViewById(R.id.medicines_add_fab);
+        recyclerView = view.findViewById(R.id.medicines_container);
 
         reminderFragment = new ReminderFragment();
         reminderFragment.init(
-                "You didn't visit Dr. Palony in the last 3 months.",
+                "You run out of something in few days.\nDon't forget to go to the phamacy.",
                 new ReminderFragment.ReminderFragmentListener() {
                     @Override
                     public void onRemindMeLaterClicked() {
-
+                        hide();
                     }
 
                     @Override
                     public void onDismissClicked() {
+                        hide();
+                    }
 
+                    private void hide() {
+                        reminderFragment.animateHide(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                getFragmentManager()
+                                        .beginTransaction()
+                                        .remove(reminderFragment)
+                                        .commit();
+                            }
+                        });
                     }
                 }
         );
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.appointments_reminder_container, reminderFragment)
+                .replace(R.id.medicines_reminder_container, reminderFragment)
                 .commit();
 
-        newDoctorFab.setOnClickListener(new View.OnClickListener() {
+        newMedicineFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -69,9 +86,9 @@ public class AppointmentsFragment extends Fragment {
             @Override
             public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
                 holder.setData(
-                        R.drawable.ic_user_md_solid,
-                        "Dr. Palony Almony",
-                        "Appointment at Friday 10:00."
+                        R.drawable.ic_tablets_solid,
+                        "Some Medicine",
+                        "3 times a day.\nNext time: 8 hours."
                 );
             }
 
@@ -89,8 +106,8 @@ public class AppointmentsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AppointmentsFragmentListener) {
-            listener = (AppointmentsFragmentListener) context;
+        if (context instanceof MedicinesFragmentListener) {
+            listener = (MedicinesFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -103,5 +120,5 @@ public class AppointmentsFragment extends Fragment {
         super.onDetach();
     }
 
-    public interface AppointmentsFragmentListener {}
+    public interface MedicinesFragmentListener {}
 }

@@ -1,4 +1,4 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.utils;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,7 +16,7 @@ public class PermissionChecker {
     private ArrayList<HasPermissionsListener> requests;
     private static final Object LOCK = new Object();
 
-    PermissionChecker(Activity activity) {
+    public PermissionChecker(Activity activity) {
         this.activity = activity;
         this.requests = new ArrayList<>();
     }
@@ -54,6 +54,7 @@ public class PermissionChecker {
 
         HasPermissionsListener listener = null;
         synchronized (LOCK) {
+
             if (resultCode >= requests.size()) {
                 return;
             }

@@ -1,4 +1,4 @@
-package il.ac.huji.cs.postpc.mymeds;
+package il.ac.huji.cs.postpc.mymeds.activities.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Locale;
+
+import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.search.SearchMedicineActivity;
 
 public class HomeActivity extends AppCompatActivity implements
         CalenderFragment.CalenderFragmentListener,
