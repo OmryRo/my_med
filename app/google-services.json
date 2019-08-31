@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "863759590257",
+    "firebase_url": "https://postpc-mymed.firebaseio.com",
+    "project_id": "postpc-mymed",
+    "storage_bucket": "postpc-mymed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863759590257:android:2b99aa005a87edaf",
+        "android_client_info": {
+          "package_name": "il.ac.huji.cs.postpc.mymeds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863759590257-tu77ulhnek91em598ts928esob1bft3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "il.ac.huji.cs.postpc.mymeds",
+            "certificate_hash": "773728c2d3572a2ed544da74ac55a57037ddadeb"
+          }
+        },
+        {
+          "client_id": "863759590257-h74ud14rhc7r83pc10ibphrvgcgsoqga.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpw9z3lNFmRRtf1Tj_BskdtzsvdsOfFI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863759590257-h74ud14rhc7r83pc10ibphrvgcgsoqga.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
