@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:name=".MyMedApplication"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="barcode" />
+
         <activity
             android:name=".activities.home.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
