@@ -100,7 +100,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="Notes, like activity times and expertise.."
-                android:inputType="textMultiLine"
                 android:text="Family doctor. works on sundays and mondays. Don't call on saturdays."
                 android:visibility="gone"
                 />

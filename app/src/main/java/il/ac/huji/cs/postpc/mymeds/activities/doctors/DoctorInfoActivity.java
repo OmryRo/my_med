@@ -188,7 +188,8 @@ public class DoctorInfoActivity extends AppCompatActivity {
             return;
         }
 
-        String doctorNote = doctorNoteEt.getText().toString();
+        String doctorNote = doctorNoteEt.getText().toString().trim();
+        doctorNoteEt.setText(doctorNote);
         String doctorEmail = doctorEmailEt.getText().toString();
         String doctorPhone = doctorPhoneEt.getText().toString();
 
