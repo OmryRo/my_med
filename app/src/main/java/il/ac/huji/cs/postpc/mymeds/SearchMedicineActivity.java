@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.media.Image;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Rational;
 import android.util.Size;
 import android.view.Menu;
@@ -29,6 +33,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageAnalysisConfig;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.widget.NestedScrollView;
@@ -39,17 +44,29 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * api to use: https://open.fda.gov/apis/
  */
-public class SearchMedicineActivity extends AppCompatActivity implements LifecycleOwner , BarcodeAnalyzer.OnFoundBarcode{
+public class SearchMedicineActivity extends AppCompatActivity implements LifecycleOwner {
 
     public static final int SEACH_MEDICINE_REQUEST = 0x2010;
     public static final int SEARCH_MEDICINE_CHANGES = 0x2011;
     public static final int SEARCH_MEDICINE_NO_CHANGES = 0x2012;
     private static final int VOICE_SEARCH_REQ_ID = 0x3000;
+    private static final String TAG = SearchMedicineActivity.class.getSimpleName();
 
     private PermissionChecker permissionChecker;
     private LifecycleRegistry lifecycleRegistry;
@@ -62,6 +79,15 @@ public class SearchMedicineActivity extends AppCompatActivity implements Lifecyc
     private ImageButton clearButton;
     private RecyclerView recyclerView;
     private boolean isInCameraMode;
+
+    private FirebaseVisionBarcodeDetectorOptions options = new FirebaseVisionBarcodeDetectorOptions
+            .Builder()
+            .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_EAN_13)
+            .build();
+
+    private FirebaseVisionBarcodeDetector detector = FirebaseVision
+            .getInstance()
+            .getVisionBarcodeDetector(options);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -337,7 +363,42 @@ public class SearchMedicineActivity extends AppCompatActivity implements Lifecyc
                         .build();
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(config);
-        imageAnalysis.setAnalyzer(new BarcodeAnalyzer());
+
+        imageAnalysis.setAnalyzer(new ImageAnalysis.Analyzer() {
+            @Override
+            public void analyze(ImageProxy imageProxy, int degrees) {
+                if (imageProxy == null || imageProxy.getImage() == null) {
+                    return;
+                }
+                Image mediaImage = imageProxy.getImage();
+                int rotation = degreesToFirebaseRotation(degrees);
+                FirebaseVisionImage img =
+                        FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
+
+                Task<List<FirebaseVisionBarcode>> result =
+                        detector.detectInImage(img)
+                                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+                                    @Override
+                                    public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
+                                        for (FirebaseVisionBarcode barcode : barcodes) {
+                                            Rect bounds = barcode.getBoundingBox();
+                                            Point[] corners = barcode.getCornerPoints();
+                                            String rawValue = barcode.getRawValue();
+                                            searchText.setText(rawValue);
+                                            Log.d(TAG, rawValue);
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                    }
+                                });
+
+            }
+        });
 
         CameraX.bindToLifecycle(this, imageAnalysis, preview);
     }
@@ -372,8 +433,19 @@ public class SearchMedicineActivity extends AppCompatActivity implements Lifecyc
         viewFinder.setTransform(matrix);
     }
 
-    @Override
-    public void onFoundDBarcode(String barcode) {
-        searchText.setText(barcode);
+    private int degreesToFirebaseRotation(int degrees) {
+        switch (degrees) {
+            case 0:
+                return FirebaseVisionImageMetadata.ROTATION_0;
+            case 90:
+                return FirebaseVisionImageMetadata.ROTATION_90;
+            case 180:
+                return FirebaseVisionImageMetadata.ROTATION_180;
+            case 270:
+                return FirebaseVisionImageMetadata.ROTATION_270;
+            default:
+                throw new IllegalArgumentException(
+                        "Rotation must be 0, 90, 180, or 270.");
+        }
     }
 }
