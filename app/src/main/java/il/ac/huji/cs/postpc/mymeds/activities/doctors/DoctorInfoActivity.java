@@ -1,5 +1,6 @@
 package il.ac.huji.cs.postpc.mymeds.activities.doctors;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,6 +46,8 @@ public class DoctorInfoActivity extends AppCompatActivity {
     private EditText doctorEmailEt;
     private View moreInfoView;
     private View afterNotesDividerView;
+    private View doctorPhoneContainer;
+    private View doctorEmailContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class DoctorInfoActivity extends AppCompatActivity {
         doctorEmailEt = findViewById(R.id.doctor_email_et);
         moreInfoView = findViewById(R.id.doctor_more_info);
         afterNotesDividerView = findViewById(R.id.doctor_divider_after_notes);
+        doctorPhoneContainer = findViewById(R.id.doctor_phone_container);
+        doctorEmailContainer = findViewById(R.id.doctor_email_container);
     }
 
     @Override
@@ -107,6 +112,40 @@ public class DoctorInfoActivity extends AppCompatActivity {
         };
         View[] visibleInViewing = new View[]{
                 doctorNameTv, doctorNoteTv, doctorPhoneTv, doctorEmailTv, moreInfoView, afterNotesDividerView};
+
+        if (!isEditing) {
+            doctorPhoneContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri number = Uri.parse(String.format("tel:%s", doctor.phone));
+                    Intent intent = new Intent(Intent.ACTION_DIAL, number);
+
+                    try {
+                        startActivity(intent);
+
+                    } catch (ActivityNotFoundException e) {
+                        // do nothing
+                    }
+                }
+            });
+            doctorEmailContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri number = Uri.parse(String.format("mailto:%s", doctor.email));
+                    Intent intent = new Intent(Intent.ACTION_SEND, number);
+
+                    try {
+                        startActivity(intent);
+
+                    } catch (ActivityNotFoundException e) {
+                        // do nothing
+                    }
+                }
+            });
+        } else {
+            doctorPhoneContainer.setOnClickListener(null);
+            doctorEmailContainer.setOnClickListener(null);
+        }
 
 
         for (View view : visibleInEditing) {
@@ -244,27 +283,6 @@ public class DoctorInfoActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-
-    public void callDoctor(View v) {
-        if (!isEditing){
-            Uri number = Uri.parse("tel:" + doctor.phone);
-            Intent i = new Intent(Intent.ACTION_DIAL, number);
-
-            try
-            {
-                // Launch the Phone app's dialer with a phone
-                // number to dial a call.
-                startActivity(i);
-            }
-            catch (SecurityException s)
-            {
-                // show() method display the toast with
-                // exception message.
-//                Toast.makeText(this, s.Message, Toast.LENGTH_LONG)
-//                        .show();
-            }
-        }
     }
 
     @Override
