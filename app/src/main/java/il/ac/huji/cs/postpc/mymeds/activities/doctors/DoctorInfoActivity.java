@@ -211,6 +211,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             DoctorInfoActivity.this.doctor = doctor;
+                            setResult(DOCTOR_INFO_DOCTORS_CHANGED);
                             setContent(false);
                         }
                     });
