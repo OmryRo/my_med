@@ -136,6 +136,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
+                    android:clickable="true"
+                    android:onClick="callDoctor"
                     android:src="@drawable/ic_phone"
                     android:tint="@color/colorTextTextDark"
                     android:tintMode="src_in" />

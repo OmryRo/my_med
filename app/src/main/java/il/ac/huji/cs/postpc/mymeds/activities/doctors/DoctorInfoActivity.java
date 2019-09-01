@@ -2,6 +2,7 @@ package il.ac.huji.cs.postpc.mymeds.activities.doctors;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -113,7 +114,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
         }
 
         for (View view : visibleInViewing) {
-            view.setVisibility(isEditing ? View.GONE: View.VISIBLE);
+            view.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -243,6 +244,27 @@ public class DoctorInfoActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    public void callDoctor(View v) {
+        if (!isEditing){
+            Uri number = Uri.parse("tel:" + doctor.phone);
+            Intent i = new Intent(Intent.ACTION_DIAL, number);
+
+            try
+            {
+                // Launch the Phone app's dialer with a phone
+                // number to dial a call.
+                startActivity(i);
+            }
+            catch (SecurityException s)
+            {
+                // show() method display the toast with
+                // exception message.
+//                Toast.makeText(this, s.Message, Toast.LENGTH_LONG)
+//                        .show();
+            }
+        }
     }
 
     @Override
