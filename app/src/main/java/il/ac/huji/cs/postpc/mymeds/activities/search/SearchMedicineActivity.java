@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -36,7 +35,7 @@ import il.ac.huji.cs.postpc.mymeds.utils.PermissionChecker;
 /*
  * api to use: https://open.fda.gov/apis/
  */
-public class SearchMedicineActivity extends AppCompatActivity implements SearchBarcodeFragment.OnFragmentInteractionListener {
+public class SearchMedicineActivity extends AppCompatActivity implements ScanBarcodeFragment.Listener {
 
     public static final int SEACH_MEDICINE_REQUEST = 0x2010;
     public static final int SEARCH_MEDICINE_CHANGES = 0x2011;
@@ -51,7 +50,7 @@ public class SearchMedicineActivity extends AppCompatActivity implements SearchB
     private ImageButton micButton;
     private ImageButton clearButton;
     private RecyclerView recyclerView;
-    private SearchBarcodeFragment searchBarcodeFragment;
+    private ScanBarcodeFragment searchBarcodeFragment;
     private boolean isInCameraMode;
 
     @Override
@@ -62,7 +61,7 @@ public class SearchMedicineActivity extends AppCompatActivity implements SearchB
         setContentView(R.layout.activity_search_medicine);
 
         cameraViewPlaceholder = findViewById(R.id.camera_container);
-        searchBarcodeFragment = SearchBarcodeFragment.newInstance();
+        searchBarcodeFragment = new ScanBarcodeFragment();
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -270,7 +269,7 @@ public class SearchMedicineActivity extends AppCompatActivity implements SearchB
     }
 
     @Override
-    public void onFragmentInteraction(String barcode) {
+    public void onBarcodeFound(String barcode) {
         searchText.setText(barcode);
     }
 }

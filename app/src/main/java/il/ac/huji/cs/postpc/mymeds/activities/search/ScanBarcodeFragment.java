@@ -23,9 +23,6 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LifecycleRegistry;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,21 +39,12 @@ import java.util.List;
 import il.ac.huji.cs.postpc.mymeds.R;
 
 
-public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
+public class ScanBarcodeFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private Listener listener;
     private TextureView viewFinder;
-    private LifecycleRegistry lifecycleRegistry;
 
-    public SearchBarcodeFragment() {
-        // Required empty public constructor
-    }
-
-
-    public static SearchBarcodeFragment newInstance() {
-        SearchBarcodeFragment fragment = new SearchBarcodeFragment();
-        return fragment;
-    }
+    public ScanBarcodeFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,8 +54,6 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        lifecycleRegistry = new LifecycleRegistry(this);
-        lifecycleRegistry.markState(Lifecycle.State.CREATED);
         viewFinder =view.findViewById(R.id.view_finder);
         // Every time the provided texture view changes, recompute layout
         viewFinder.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -89,52 +75,28 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
         return inflater.inflate(R.layout.fragment_search_barcode, container, false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        lifecycleRegistry.markState(Lifecycle.State.RESUMED);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        lifecycleRegistry.markState(Lifecycle.State.STARTED);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED);
-    }
-
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return lifecycleRegistry;
-    }
-
-    public void onButtonPressed(String barcode) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(barcode);
+    public void onFoundBarcode(String barcode) {
+        if (listener != null) {
+            listener.onBarcodeFound(barcode);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof Listener) {
+            listener = (Listener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException();
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
+
     private void startCamera() {
         // Create configuration object for the viewfinder use case
         PreviewConfig previewConfig = new PreviewConfig.Builder()
@@ -156,8 +118,7 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
             }
         });
 
-        ImageAnalysisConfig config =
-                new ImageAnalysisConfig.Builder()
+        ImageAnalysisConfig config = new ImageAnalysisConfig.Builder()
                         .setTargetResolution(new Size(640, 640))
                         .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
                         .build();
@@ -165,6 +126,7 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
         ImageAnalysis imageAnalysis = new ImageAnalysis(config);
 
         imageAnalysis.setAnalyzer(new ImageAnalysis.Analyzer() {
+
             @Override
             public void analyze(ImageProxy imageProxy, int degrees) {
                 if (imageProxy == null || imageProxy.getImage() == null) {
@@ -183,17 +145,13 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
                 FirebaseVisionBarcodeDetector detector = FirebaseVision
                         .getInstance()
                         .getVisionBarcodeDetector(options);
-                Task<List<FirebaseVisionBarcode>> result =
-                        detector.detectInImage(img)
+                Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(img)
                                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
                                     @Override
                                     public void onSuccess(List<FirebaseVisionBarcode> barcodes) {
                                         for (FirebaseVisionBarcode barcode : barcodes) {
-                                            Rect bounds = barcode.getBoundingBox();
-                                            Point[] corners = barcode.getCornerPoints();
                                             String rawValue = barcode.getRawValue();
-                                            onButtonPressed(rawValue);
-//                                            Log.d(TAG, rawValue);
+                                            onFoundBarcode(rawValue);
                                         }
                                     }
                                 })
@@ -251,6 +209,7 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
     }
 
     private int degreesToFirebaseRotation(int degrees) {
+
         switch (degrees) {
             case 0:
                 return FirebaseVisionImageMetadata.ROTATION_0;
@@ -266,7 +225,7 @@ public class SearchBarcodeFragment extends Fragment implements LifecycleOwner {
         }
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String barcode);
+    public interface Listener {
+        void onBarcodeFound(String barcode);
     }
 }
