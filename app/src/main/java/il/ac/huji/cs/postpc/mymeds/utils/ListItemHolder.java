@@ -12,15 +12,17 @@ import il.ac.huji.cs.postpc.mymeds.R;
 
 public class ListItemHolder extends RecyclerView.ViewHolder {
 
+    private View view;
     private ImageView imageView;
     private TextView titleView;
     private TextView textView;
 
     public ListItemHolder(View view) {
         super(view);
-        imageView = view.findViewById(R.id.item_image);
-        titleView = view.findViewById(R.id.item_title);
-        textView = view.findViewById(R.id.item_text);
+        this.view = view;
+        this.imageView = view.findViewById(R.id.item_image);
+        this.titleView = view.findViewById(R.id.item_title);
+        this.textView = view.findViewById(R.id.item_text);
     }
 
     public static ListItemHolder createHolder(ViewGroup parent) {
@@ -32,5 +34,9 @@ public class ListItemHolder extends RecyclerView.ViewHolder {
         imageView.setImageResource(imageRes);
         titleView.setText(title);
         textView.setText(text);
+    }
+
+    public void setOnClick(View.OnClickListener listener) {
+        view.setOnClickListener(listener);
     }
 }

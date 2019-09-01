@@ -1,5 +1,6 @@
 package il.ac.huji.cs.postpc.mymeds.database.entities;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -37,4 +38,13 @@ public class Doctor {
         this.email = email;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof Doctor && ((Doctor) obj).id == id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) id;
+    }
 }

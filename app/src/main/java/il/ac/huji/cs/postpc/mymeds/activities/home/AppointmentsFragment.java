@@ -1,10 +1,12 @@
 package il.ac.huji.cs.postpc.mymeds.activities.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,11 +18,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
 public class AppointmentsFragment extends Fragment {
+
+    private static final Object LOCK = new Object();
 
     private AppointmentsFragmentListener listener;
     private FloatingActionButton newDoctorFab;
@@ -28,10 +33,12 @@ public class AppointmentsFragment extends Fragment {
     private ReminderFragment reminderFragment;
     private DoctorManager doctorManager;
 
+    private boolean startedAnotherActivity = false;
+
     public AppointmentsFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appointments, container, false);
         newDoctorFab = view.findViewById(R.id.doctors_add_fab);
@@ -61,7 +68,14 @@ public class AppointmentsFragment extends Fragment {
         newDoctorFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                synchronized (LOCK) {
+                    if (startedAnotherActivity) {
+                        return;
+                    }
 
+                    startedAnotherActivity = true;
+                }
+                startActivityForResult(new Intent(getContext(), DoctorInfoActivity.class), DoctorInfoActivity.DOCTOR_INFO_REQ);
             }
         });
 
@@ -73,17 +87,35 @@ public class AppointmentsFragment extends Fragment {
             }
 
             @Override
-            public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
+            public void onBindViewHolder(@NonNull ListItemHolder holder, final int position) {
                 if (doctorManager == null) {
                     return;
                 }
 
-                Doctor doctor = doctorManager.get(position);
+                final Doctor doctor = doctorManager.getByPos(position);
                 holder.setData(
                         R.drawable.ic_user_md_solid,
-                        doctor.name + " " + doctor.id,
+                        doctor.name,
                         doctor.note
                 );
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), DoctorInfoActivity.class);
+                        intent.putExtra(DoctorInfoActivity.INTENT_INDEX, doctor.id);
+                        startActivityForResult(intent, DoctorInfoActivity.DOCTOR_INFO_REQ);
+
+                    }
+                });
             }
 
             @Override
@@ -95,6 +127,12 @@ public class AppointmentsFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startedAnotherActivity = false;
     }
 
     @Override
@@ -114,6 +152,15 @@ public class AppointmentsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         doctorManager = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == DoctorInfoActivity.DOCTOR_INFO_REQ && resultCode == DoctorInfoActivity.DOCTOR_INFO_DOCTORS_CHANGED) {
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     public interface AppointmentsFragmentListener {}

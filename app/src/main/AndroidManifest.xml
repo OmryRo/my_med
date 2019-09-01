@@ -16,7 +16,6 @@
         android:supportsRtl="true"
         android:name=".MyMedApplication"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.search.SearchMedicineActivity"></activity>
         <activity
             android:name=".activities.home.HomeActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -30,6 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.search.SearchMedicineActivity"></activity>
+        <activity android:name=".activities.doctors.DoctorInfoActivity"></activity>
     </application>
 
 </manifest>

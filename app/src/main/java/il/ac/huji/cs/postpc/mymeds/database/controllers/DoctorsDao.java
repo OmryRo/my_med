@@ -18,7 +18,7 @@ public interface DoctorsDao {
     List<Doctor> getAll();
 
     @Query("SELECT * FROM doctors WHERE d_id = :id LIMIT 1")
-    Doctor getDoctorById(int id);
+    Doctor getDoctorById(long id);
 
     @Insert
     long insert(Doctor doctor);
