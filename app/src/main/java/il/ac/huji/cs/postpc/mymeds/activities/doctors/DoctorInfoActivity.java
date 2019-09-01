@@ -14,6 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
@@ -180,6 +182,12 @@ public class DoctorInfoActivity extends AppCompatActivity {
     private void onDoneClicked() {
 
         String doctorName = doctorNameEt.getText().toString();
+
+        if (doctorName.length() == 0) {
+            doctorNameEt.setError("Name can't be empty.");
+            return;
+        }
+
         String doctorNote = doctorNoteEt.getText().toString();
         String doctorEmail = doctorEmailEt.getText().toString();
         String doctorPhone = doctorPhoneEt.getText().toString();
