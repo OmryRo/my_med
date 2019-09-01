@@ -26,7 +26,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 
 
-public class BarcodeScanningActivity extends AppCompatActivity implements LifecycleOwner {
+public class BarcodeScanningActivity extends AppCompatActivity implements LifecycleOwner  {
     private static final int REQUEST_CODE_PERMISSIONS = 10;
     private LifecycleRegistry lifecycleRegistry;
     // This is an array of all the permission specified in the manifest

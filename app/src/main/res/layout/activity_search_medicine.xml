@@ -90,6 +90,7 @@
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
@@ -111,12 +112,11 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <View
-        android:id="@+id/camera_view"
+    <TextureView
+        android:id="@+id/view_finder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorAccent"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

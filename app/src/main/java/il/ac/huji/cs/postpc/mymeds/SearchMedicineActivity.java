@@ -1,24 +1,19 @@
 package il.ac.huji.cs.postpc.mymeds;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.util.Rational;
+import android.util.Size;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -26,12 +21,30 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.camera.core.CameraX;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageAnalysisConfig;
+import androidx.camera.core.Preview;
+import androidx.camera.core.PreviewConfig;
+import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
 /*
  * api to use: https://open.fda.gov/apis/
  */
-public class SearchMedicineActivity extends AppCompatActivity {
+public class SearchMedicineActivity extends AppCompatActivity implements LifecycleOwner , BarcodeAnalyzer.OnFoundBarcode{
 
     public static final int SEACH_MEDICINE_REQUEST = 0x2010;
     public static final int SEARCH_MEDICINE_CHANGES = 0x2011;
@@ -39,7 +52,9 @@ public class SearchMedicineActivity extends AppCompatActivity {
     private static final int VOICE_SEARCH_REQ_ID = 0x3000;
 
     private PermissionChecker permissionChecker;
-    private View cameraViewPlaceholder;
+    private LifecycleRegistry lifecycleRegistry;
+    private TextureView viewFinder;
+    private NestedScrollView nestedScrollView;
     private Toolbar toolbar;
     private EditText searchText;
     private ImageView searchIcon;
@@ -54,13 +69,24 @@ public class SearchMedicineActivity extends AppCompatActivity {
         permissionChecker = new PermissionChecker(this);
 
         setContentView(R.layout.activity_search_medicine);
-
-        cameraViewPlaceholder = findViewById(R.id.camera_view);
-
+        nestedScrollView = findViewById(R.id.nsv_view);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationContentDescription(R.string.back);
+
+        lifecycleRegistry = new LifecycleRegistry(this);
+        lifecycleRegistry.markState(Lifecycle.State.CREATED);
+        viewFinder = findViewById(R.id.view_finder);
+
+        // Every time the provided texture view changes, recompute layout
+        viewFinder.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                updateTransform();
+            }
+        });
+
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -175,6 +201,40 @@ public class SearchMedicineActivity extends AppCompatActivity {
         imm.showSoftInput(searchText, InputMethodManager.SHOW_IMPLICIT);
     }
 
+
+    private void startScanning() {
+        viewFinder.post(new Runnable() {
+            @Override
+            public void run() {
+                startCamera();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        lifecycleRegistry.markState(Lifecycle.State.RESUMED);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        lifecycleRegistry.markState(Lifecycle.State.STARTED);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED);
+    }
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return lifecycleRegistry;
+    }
+
     private void setCameraMode() {
         setTitle(R.string.search_by_camera);
 
@@ -186,7 +246,9 @@ public class SearchMedicineActivity extends AppCompatActivity {
         });
 
         isInCameraMode = true;
-        cameraViewPlaceholder.setVisibility(View.VISIBLE);
+        nestedScrollView.setVisibility(View.GONE);
+        viewFinder.setVisibility(View.VISIBLE);
+        startScanning();
         searchText.setText("");
         invalidateOptionsMenu();
     }
@@ -202,7 +264,8 @@ public class SearchMedicineActivity extends AppCompatActivity {
             }
         });
 
-        cameraViewPlaceholder.setVisibility(View.GONE);
+        viewFinder.setVisibility(View.GONE);
+        nestedScrollView.setVisibility(View.VISIBLE);
         isInCameraMode = false;
         invalidateOptionsMenu();
     }
@@ -245,5 +308,72 @@ public class SearchMedicineActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+    private void startCamera() {
+        // Create configuration object for the viewfinder use case
+        PreviewConfig previewConfig = new PreviewConfig.Builder()
+                .setTargetAspectRatio(new Rational(1, 1))
+                .setTargetResolution(new Size(640, 640))
+                .build();
+
+        // Build the viewfinder use case
+        Preview preview = new Preview(previewConfig);
+
+        preview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {
+            @Override
+            public void onUpdated(Preview.PreviewOutput output) {
+                ViewGroup parent = (ViewGroup) viewFinder.getParent();
+                parent.removeView(viewFinder);
+                parent.addView(viewFinder, 0);
+                viewFinder.setSurfaceTexture(output.getSurfaceTexture());
+                updateTransform();
+            }
+        });
+
+        ImageAnalysisConfig config =
+                new ImageAnalysisConfig.Builder()
+                        .setTargetResolution(new Size(640, 640))
+                        .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
+                        .build();
+
+        ImageAnalysis imageAnalysis = new ImageAnalysis(config);
+        imageAnalysis.setAnalyzer(new BarcodeAnalyzer());
+
+        CameraX.bindToLifecycle(this, imageAnalysis, preview);
+    }
+
+    private void updateTransform() {
+        Matrix matrix = new Matrix();
+
+        // Compute the center of the view finder
+        float centerX = viewFinder.getWidth() / 2f;
+        float centerY = viewFinder.getHeight() / 2f;
+
+        // Correct preview output to account for display rotation
+        int rotationDegrees = 0;
+        switch (viewFinder.getDisplay().getRotation()) {
+            case Surface.ROTATION_0:
+                rotationDegrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                rotationDegrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                rotationDegrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                rotationDegrees = 270;
+                break;
+        }
+
+        matrix.postRotate(-rotationDegrees, centerX, centerY);
+
+        // Finally, apply transformations to our TextureView
+        viewFinder.setTransform(matrix);
+    }
+
+    @Override
+    public void onFoundDBarcode(String barcode) {
+        searchText.setText(barcode);
     }
 }

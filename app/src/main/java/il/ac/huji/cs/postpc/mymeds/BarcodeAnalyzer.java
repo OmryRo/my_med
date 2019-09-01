@@ -1,5 +1,6 @@
 package il.ac.huji.cs.postpc.mymeds;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.Image;
@@ -28,10 +29,17 @@ public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
             .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_EAN_13)
             .build();
     private static String TAG = BarcodeAnalyzer.class.getSimpleName();
-
+    private OnFoundBarcode listner = null;
     private FirebaseVisionBarcodeDetector detector = FirebaseVision
             .getInstance()
             .getVisionBarcodeDetector(options);
+    private void onFounDBarcode(String barcode) {
+        listner.onFoundDBarcode(barcode);
+    }
+
+    void setOnFounDBarcode (Context context) {
+//        listner = context;
+    }
 
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
@@ -68,8 +76,8 @@ public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
                                     String rawValue = barcode.getRawValue();
+                                    onFounDBarcode(rawValue);
                                     Log.d(TAG, rawValue);
-
                                 }
                             }
                         })
@@ -81,6 +89,10 @@ public class BarcodeAnalyzer implements ImageAnalysis.Analyzer {
                             }
                         });
 
+    }
+
+    interface OnFoundBarcode {
+        void onFoundDBarcode(String barcode);
     }
 }
 
