@@ -35,6 +35,7 @@
         </activity>
         <activity android:name=".activities.search.SearchMedicineActivity"></activity>
         <activity android:name=".activities.doctors.DoctorInfoActivity"></activity>
+        <activity android:name=".activities.medicine.MedicineInfoActivity"></activity>
     </application>
 
 </manifest>

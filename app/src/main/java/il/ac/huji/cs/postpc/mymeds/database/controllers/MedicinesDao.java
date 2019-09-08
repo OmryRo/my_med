@@ -20,7 +20,7 @@ public interface MedicinesDao {
     Medicine getDoctorById(int id);
 
     @Insert
-    void insert(Medicine medicine);
+    long insert(Medicine medicine);
 
     @Update
     void update(Medicine medicine);

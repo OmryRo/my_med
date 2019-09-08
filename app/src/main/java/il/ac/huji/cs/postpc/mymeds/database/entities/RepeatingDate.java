@@ -41,4 +41,38 @@ public class RepeatingDate {
         return String.format("%s:%s", unit, amount);
     }
 
+    public String nextOccurianceHumanReadabily(Date lastTime, Date now) {
+        return addTo(lastTime).toString();
+    }
+
+    public String toHumanReadable() {
+        String timeUnits = "";
+        switch (unit) {
+            case RepeatingDate.UNIT_DAYS:
+                timeUnits = "day";
+                break;
+            case RepeatingDate.UNIT_HOURS:
+                timeUnits = "hour";
+                break;
+            case RepeatingDate.UNIT_MINUTES:
+                timeUnits = "minute";
+                break;
+            case RepeatingDate.UNIT_MONTHS:
+                timeUnits = "month";
+                break;
+            case RepeatingDate.UNIT_WEEKS:
+                timeUnits = "week";
+                break;
+            case RepeatingDate.UNIT_YEARS:
+                timeUnits = "year";
+                break;
+        }
+
+        if (amount > 1) {
+            timeUnits += "s";
+        }
+
+        return String.format("%d %s", amount, timeUnits);
+    }
+
 }
