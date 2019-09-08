@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -34,7 +35,7 @@ import il.ac.huji.cs.postpc.mymeds.utils.PermissionChecker;
 /*
  * api to use: https://open.fda.gov/apis/
  */
-public class SearchMedicineActivity extends AppCompatActivity {
+public class SearchMedicineActivity extends AppCompatActivity implements ScanBarcodeFragment.Listener {
 
     public static final int SEACH_MEDICINE_REQUEST = 0x2010;
     public static final int SEARCH_MEDICINE_CHANGES = 0x2011;
@@ -42,13 +43,14 @@ public class SearchMedicineActivity extends AppCompatActivity {
     private static final int VOICE_SEARCH_REQ_ID = 0x3000;
 
     private PermissionChecker permissionChecker;
-    private View cameraViewPlaceholder;
+    private FrameLayout cameraViewPlaceholder;
     private Toolbar toolbar;
     private EditText searchText;
     private ImageView searchIcon;
     private ImageButton micButton;
     private ImageButton clearButton;
     private RecyclerView recyclerView;
+    private ScanBarcodeFragment searchBarcodeFragment;
     private boolean isInCameraMode;
 
     @Override
@@ -58,8 +60,8 @@ public class SearchMedicineActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_search_medicine);
 
-        cameraViewPlaceholder = findViewById(R.id.camera_view);
-
+        cameraViewPlaceholder = findViewById(R.id.camera_container);
+        searchBarcodeFragment = new ScanBarcodeFragment();
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -187,11 +189,19 @@ public class SearchMedicineActivity extends AppCompatActivity {
                 setTextSearchMode();
             }
         });
-
+        showSearchBarcodeFragment();
         isInCameraMode = true;
         cameraViewPlaceholder.setVisibility(View.VISIBLE);
         searchText.setText("");
         invalidateOptionsMenu();
+    }
+
+    private void showSearchBarcodeFragment() {
+        cameraViewPlaceholder.setVisibility( View.VISIBLE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.camera_container, searchBarcodeFragment)
+                .commit();
     }
 
     private void setTextSearchMode() {
@@ -204,10 +214,18 @@ public class SearchMedicineActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        hideSearchBarcodeFragment();
         cameraViewPlaceholder.setVisibility(View.GONE);
         isInCameraMode = false;
         invalidateOptionsMenu();
+    }
+
+    private void hideSearchBarcodeFragment() {
+        cameraViewPlaceholder.setVisibility(View.GONE);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .remove(searchBarcodeFragment)
+                .commit();
     }
 
     @Override
@@ -248,5 +266,10 @@ public class SearchMedicineActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onBarcodeFound(String barcode) {
+        searchText.setText(barcode);
     }
 }
