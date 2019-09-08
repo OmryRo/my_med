@@ -75,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:text="Dr. Palony Almony"
                     android:hint="Name"
+                    android:inputType="textPersonName"
                     android:visibility="gone"
                     />
 
@@ -113,63 +114,67 @@
                 />
 
             <TextView
+                android:id="@+id/doctor_contact_info_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorTextTextDark"
-                android:text="Contact Info:"
                 android:layout_marginBottom="5dp"
-                />
+                android:text="Contact Info:"
+                android:textColor="@color/colorTextTextDark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="2dp"
-            >
+                android:id="@+id/doctor_phone_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/doctor_phone_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
+                    android:clickable="false"
                     android:src="@drawable/ic_phone"
                     android:tint="@color/colorTextTextDark"
                     android:tintMode="src_in" />
 
                 <TextView
                     android:id="@+id/doctor_phone_number"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorTextTextDark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:text="+9722222222"
-                    />
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/doctor_phone_number_et"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorTextTextDark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="+9722222222"
                     android:hint="Phone number"
-                    android:visibility="gone"
-                    />
+                    android:inputType="phone"
+                    android:text="+9722222222"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/doctor_email_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="2dp"
-                >
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/doctor_email_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="10dp"
@@ -181,24 +186,23 @@
 
                 <TextView
                     android:id="@+id/doctor_email"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorTextTextDark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:text="+9722222222"
-                    />
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp" />
 
                 <EditText
                     android:id="@+id/doctor_email_et"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorTextTextDark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="+9722222222"
                     android:hint="Email address"
-                    android:visibility="gone"
-                    />
+                    android:inputType="textEmailAddress"
+                    android:text="+9722222222"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

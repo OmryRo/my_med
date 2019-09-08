@@ -1,7 +1,9 @@
 package il.ac.huji.cs.postpc.mymeds.activities.doctors;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
@@ -36,12 +40,17 @@ public class DoctorInfoActivity extends AppCompatActivity {
     private TextView doctorNoteTv;
     private TextView doctorPhoneTv;
     private TextView doctorEmailTv;
+    private TextView doctorContactInfoTv;
     private EditText doctorNameEt;
     private EditText doctorNoteEt;
     private EditText doctorPhoneEt;
     private EditText doctorEmailEt;
     private View moreInfoView;
     private View afterNotesDividerView;
+    private View doctorPhoneContainer;
+    private View doctorEmailContainer;
+    private View doctorEmailIv;
+    private View doctorPhoneIv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,11 @@ public class DoctorInfoActivity extends AppCompatActivity {
         doctorEmailEt = findViewById(R.id.doctor_email_et);
         moreInfoView = findViewById(R.id.doctor_more_info);
         afterNotesDividerView = findViewById(R.id.doctor_divider_after_notes);
+        doctorPhoneContainer = findViewById(R.id.doctor_phone_container);
+        doctorEmailContainer = findViewById(R.id.doctor_email_container);
+        doctorContactInfoTv = findViewById(R.id.doctor_contact_info_text);
+        doctorEmailIv = findViewById(R.id.doctor_email_image);
+        doctorPhoneIv = findViewById(R.id.doctor_phone_image);
     }
 
     @Override
@@ -92,18 +106,77 @@ public class DoctorInfoActivity extends AppCompatActivity {
             doctorPhoneTv.setText(doctor.phone);
             doctorEmailTv.setText(doctor.email);
 
+            doctorPhoneContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri number = Uri.parse(String.format("tel:%s", doctor.phone));
+                    Intent intent = new Intent(Intent.ACTION_DIAL, number);
+
+                    try {
+                        startActivity(intent);
+
+                    } catch (ActivityNotFoundException e) {
+                        // do nothing
+                    }
+                }
+            });
+            doctorEmailContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Uri number = Uri.parse(String.format("mailto:%s", doctor.email));
+                    Intent intent = new Intent(Intent.ACTION_SEND, number);
+
+                    try {
+                        startActivity(intent);
+
+                    } catch (ActivityNotFoundException e) {
+                        // do nothing
+                    }
+                }
+            });
+
         } else {
             doctorNameEt.setText(doctor == null ? "" : doctor.name);
             doctorNoteEt.setText(doctor == null ? "" : doctor.note);
             doctorPhoneEt.setText(doctor == null ? "" : doctor.phone);
             doctorEmailEt.setText(doctor == null ? "" : doctor.email);
+
+            doctorPhoneContainer.setOnClickListener(null);
+            doctorEmailContainer.setOnClickListener(null);
         }
 
         View[] visibleInEditing = new View[]{
                 doctorNameEt, doctorNoteEt, doctorPhoneEt, doctorEmailEt
         };
         View[] visibleInViewing = new View[]{
-                doctorNameTv, doctorNoteTv, doctorPhoneTv, doctorEmailTv, moreInfoView, afterNotesDividerView};
+                doctorNameTv, moreInfoView};
+
+        if (!isEditing) {
+            doctorNoteTv.setVisibility(doctor.note.length() > 0 ? View.VISIBLE : View.GONE);
+            if (doctor.email.length() > 0 || doctor.phone.length() > 0) {
+                afterNotesDividerView.setVisibility(View.VISIBLE);
+                doctorContactInfoTv.setVisibility(View.VISIBLE);
+                doctorEmailTv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
+                doctorPhoneTv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
+                doctorEmailIv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
+                doctorPhoneIv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
+            }
+            else {
+                afterNotesDividerView.setVisibility(View.GONE);
+                doctorContactInfoTv.setVisibility(View.GONE);
+                doctorEmailTv.setVisibility(View.GONE);
+                doctorPhoneTv.setVisibility(View.GONE);
+                doctorEmailIv.setVisibility(View.GONE);
+                doctorPhoneIv.setVisibility(View.GONE);
+            }
+        }
+        else {
+            doctorNoteTv.setVisibility(View.GONE);
+            doctorEmailIv.setVisibility(View.VISIBLE);
+            doctorPhoneIv.setVisibility(View.VISIBLE);
+            doctorContactInfoTv.setVisibility(View.VISIBLE);
+        }
+//        , doctorPhoneTv, doctorEmailTv, afterNotesDividerView;
 
 
         for (View view : visibleInEditing) {
@@ -111,7 +184,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
         }
 
         for (View view : visibleInViewing) {
-            view.setVisibility(isEditing ? View.GONE: View.VISIBLE);
+            view.setVisibility(isEditing ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -180,7 +253,14 @@ public class DoctorInfoActivity extends AppCompatActivity {
     private void onDoneClicked() {
 
         String doctorName = doctorNameEt.getText().toString();
-        String doctorNote = doctorNoteEt.getText().toString();
+
+        if (doctorName.length() == 0) {
+            doctorNameEt.setError("Name can't be empty.");
+            return;
+        }
+
+        String doctorNote = doctorNoteEt.getText().toString().trim();
+        doctorNoteEt.setText(doctorNote);
         String doctorEmail = doctorEmailEt.getText().toString();
         String doctorPhone = doctorPhoneEt.getText().toString();
 
