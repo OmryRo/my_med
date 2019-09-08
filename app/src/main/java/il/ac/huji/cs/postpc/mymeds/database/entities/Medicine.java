@@ -5,8 +5,13 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity(tableName = "medicines")
 public class Medicine {
+
+    public static final int TYPE_PILLS = 0;
+    public static final int TYPE_IV = 1;
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "m_id")
@@ -21,17 +26,17 @@ public class Medicine {
     @ColumnInfo(name = "m_amount")
     public int amount;
 
-    @ColumnInfo(name = "m_each_num")
-    public int eachNum;
+    @ColumnInfo(name = "m_each")
+    public RepeatingDate each;
 
-    @ColumnInfo(name = "m_each_type")
-    public int eachType;
+    @ColumnInfo(name = "m_stock")
+    public int stock;
 
-    @ColumnInfo(name = "m_repeat")
-    public int repeat;
+    @ColumnInfo(name = "m_last")
+    public Date lastTaken;
 
-    @ColumnInfo(name = "m_started")
-    public long started;
+    @ColumnInfo(name = "m_type")
+    public int type;
 
     public Medicine() {}
 
