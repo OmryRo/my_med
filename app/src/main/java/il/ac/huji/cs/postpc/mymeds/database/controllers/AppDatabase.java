@@ -19,7 +19,7 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Reminder;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
-@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class, Reminder.class}, version = 1)
+@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class, Reminder.class}, version = 2)
 @TypeConverters({AppDatabase.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -33,6 +33,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if (instance == null) {
             instance = Room.databaseBuilder(
                     context.getApplicationContext(), AppDatabase.class, "local.db")
+                    .fallbackToDestructiveMigration()
                     .build();
         }
 
