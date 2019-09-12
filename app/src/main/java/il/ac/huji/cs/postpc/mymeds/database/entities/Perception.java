@@ -9,6 +9,9 @@ import java.util.Date;
 @Entity(tableName = "perceptions")
 public class Perception {
 
+    public final int STATE_NOT_USED = 0;
+    public final int STATE_USED = 1;
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "p_id")
     public long id;
@@ -24,5 +27,8 @@ public class Perception {
 
     @ColumnInfo(name = "p_date_expire")
     public Date expire;
+
+    @ColumnInfo(name = "p_expire_notify_date")
+    public Date expire_notify_date;
 
 }

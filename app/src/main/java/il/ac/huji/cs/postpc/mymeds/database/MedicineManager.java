@@ -13,16 +13,13 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
 public class MedicineManager {
 
-    private AppDatabase db;
+    private final AppDatabase db;
     private List<Medicine> medicines;
     private Map<Long, Medicine> dbMap;
 
     public MedicineManager(Context context) {
         db = AppDatabase.getInstance(context);
-        invalidate();
-    }
 
-    private void invalidate() {
         new Thread(new Runnable() {
             @Override
             public void run() {

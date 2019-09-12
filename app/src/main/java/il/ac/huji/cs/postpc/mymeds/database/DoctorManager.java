@@ -11,16 +11,13 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 
 public class DoctorManager {
 
-    private AppDatabase db;
+    private final AppDatabase db;
     private List<Doctor> doctors;
     private Map<Long, Doctor> dbMap;
 
     public DoctorManager(Context context) {
         db = AppDatabase.getInstance(context);
-        invalidate();
-    }
 
-    private void invalidate() {
         new Thread(new Runnable() {
             @Override
             public void run() {

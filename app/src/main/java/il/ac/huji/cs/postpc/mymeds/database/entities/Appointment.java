@@ -33,4 +33,7 @@ public class Appointment {
     @ColumnInfo(name = "a_address")
     public String address;
 
+    @ColumnInfo(name = "a_notification_date")
+    public Date notificationDate;
+
 }

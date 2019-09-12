@@ -1,7 +1,6 @@
 package il.ac.huji.cs.postpc.mymeds.database.controllers;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -16,15 +15,16 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Reminder;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
-@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class, Reminder.class}, version = 2)
+@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class}, version = 3)
 @TypeConverters({AppDatabase.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract DoctorsDao doctorsDao();
     public abstract MedicinesDao medicinesDao();
+    public abstract AppointmentsDao appointmentsDao();
+    public abstract PerceptionsDao perceptionsDao();
 
     private static volatile AppDatabase instance;
 

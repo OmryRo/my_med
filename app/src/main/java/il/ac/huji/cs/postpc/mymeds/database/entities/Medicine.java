@@ -41,6 +41,12 @@ public class Medicine {
     @ColumnInfo(name  = "m_has_image")
     public boolean hasImage;
 
+    @ColumnInfo(name = "m_notification_next_date")
+    public Date notificationNextDate;
+
+    @ColumnInfo(name = "m_notified_low_stock")
+    public boolean notifiedLowStock;
+
     @Ignore
     public String getDosageString() {
 
