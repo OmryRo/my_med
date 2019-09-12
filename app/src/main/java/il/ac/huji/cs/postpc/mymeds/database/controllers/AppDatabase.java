@@ -19,7 +19,7 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Reminder;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
-@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class, Reminder.class}, version = 2)
+@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class, Reminder.class}, exportSchema = false, version = 2)
 @TypeConverters({AppDatabase.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
