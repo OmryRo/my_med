@@ -9,8 +9,8 @@ import java.util.Date;
 @Entity(tableName = "perceptions")
 public class Perception {
 
-    public final int STATE_NOT_USED = 0;
-    public final int STATE_USED = 1;
+    public final static int STATE_NOT_USED = 0;
+    public final static int STATE_USED = 1;
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "p_id")
