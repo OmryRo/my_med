@@ -31,4 +31,7 @@ public interface AppointmentsDao {
     @Delete
     void delete(Appointment appointment);
 
+    @Query("DELETE FROM appointments WHERE d_id = :doctorId")
+    void deleteAllByDoctor(long doctorId);
+
 }

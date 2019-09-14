@@ -221,15 +221,34 @@
                     android:layout_marginBottom="20dp"
                     />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextTextDark"
-                    android:text="Appointments:"
-                    android:layout_marginBottom="5dp"
-                    />
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorTextTextDark"
+                        android:text="Appointments:"
+                        android:layout_marginBottom="5dp"
+                        />
+
+                    <ImageView
+                        android:layout_weight="0"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_margin="4dp"
+                        android:layout_gravity="center"
+                        android:tint="@color/colorTextTextDark"
+                        android:src="@drawable/ic_plus_solid"
+                        />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

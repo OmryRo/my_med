@@ -27,6 +27,9 @@ public class Doctor {
     @ColumnInfo(name = "d_email")
     public String email;
 
+    @ColumnInfo(name = "d_address")
+    public String address;
+
     @ColumnInfo(name = "d_last_visit")
     public Date lastVisit;
 

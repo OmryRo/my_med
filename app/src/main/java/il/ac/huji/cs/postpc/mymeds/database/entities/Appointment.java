@@ -2,6 +2,7 @@ package il.ac.huji.cs.postpc.mymeds.database.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -35,5 +36,22 @@ public class Appointment {
 
     @ColumnInfo(name = "a_notification_date")
     public Date notificationDate;
+
+    @Ignore
+    public Appointment(long id, long doctorId, String title, String notes, Date date, int duration, String address, Date notificationDate) {
+        this.id = id;
+        this.doctorId = doctorId;
+        this.title = title;
+        this.notes = notes;
+        this.date = date;
+        this.duration = duration;
+        this.address = address;
+        this.notificationDate = notificationDate;
+    }
+
+    @Ignore
+    public Appointment(long doctorId, String title, String notes, Date date, int duration, String address, Date notificationDate) {
+        this(0, doctorId, title, notes, date, duration, address, notificationDate);
+    }
 
 }
