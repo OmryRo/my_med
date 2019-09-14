@@ -106,6 +106,24 @@ public class DoctorInfoActivity extends AppCompatActivity {
             doctorPhoneTv.setText(doctor.phone);
             doctorEmailTv.setText(doctor.email);
 
+            doctorNoteTv.setVisibility(doctor.note.length() > 0 ? View.VISIBLE : View.GONE);
+            if (doctor.email.length() > 0 || doctor.phone.length() > 0) {
+                afterNotesDividerView.setVisibility(View.VISIBLE);
+                doctorContactInfoTv.setVisibility(View.VISIBLE);
+                doctorEmailTv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
+                doctorPhoneTv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
+                doctorEmailIv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
+                doctorPhoneIv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
+            }
+            else {
+                afterNotesDividerView.setVisibility(View.GONE);
+                doctorContactInfoTv.setVisibility(View.GONE);
+                doctorEmailTv.setVisibility(View.GONE);
+                doctorPhoneTv.setVisibility(View.GONE);
+                doctorEmailIv.setVisibility(View.GONE);
+                doctorPhoneIv.setVisibility(View.GONE);
+            }
+
             doctorPhoneContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -141,8 +159,19 @@ public class DoctorInfoActivity extends AppCompatActivity {
             doctorPhoneEt.setText(doctor == null ? "" : doctor.phone);
             doctorEmailEt.setText(doctor == null ? "" : doctor.email);
 
+            doctorNoteTv.setVisibility(View.GONE);
+            doctorEmailTv.setVisibility(View.GONE);
+            doctorPhoneTv.setVisibility(View.GONE);
+            doctorEmailIv.setVisibility(View.VISIBLE);
+            doctorPhoneIv.setVisibility(View.VISIBLE);
+            afterNotesDividerView.setVisibility(View.VISIBLE);
+            doctorContactInfoTv.setVisibility(View.VISIBLE);
+
             doctorPhoneContainer.setOnClickListener(null);
             doctorEmailContainer.setOnClickListener(null);
+            doctorPhoneContainer.setClickable(false);
+            doctorEmailContainer.setClickable(false);
+
         }
 
         View[] visibleInEditing = new View[]{
@@ -150,34 +179,6 @@ public class DoctorInfoActivity extends AppCompatActivity {
         };
         View[] visibleInViewing = new View[]{
                 doctorNameTv, moreInfoView};
-
-        if (!isEditing) {
-            doctorNoteTv.setVisibility(doctor.note.length() > 0 ? View.VISIBLE : View.GONE);
-            if (doctor.email.length() > 0 || doctor.phone.length() > 0) {
-                afterNotesDividerView.setVisibility(View.VISIBLE);
-                doctorContactInfoTv.setVisibility(View.VISIBLE);
-                doctorEmailTv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
-                doctorPhoneTv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
-                doctorEmailIv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
-                doctorPhoneIv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
-            }
-            else {
-                afterNotesDividerView.setVisibility(View.GONE);
-                doctorContactInfoTv.setVisibility(View.GONE);
-                doctorEmailTv.setVisibility(View.GONE);
-                doctorPhoneTv.setVisibility(View.GONE);
-                doctorEmailIv.setVisibility(View.GONE);
-                doctorPhoneIv.setVisibility(View.GONE);
-            }
-        }
-        else {
-            doctorNoteTv.setVisibility(View.GONE);
-            doctorEmailIv.setVisibility(View.VISIBLE);
-            doctorPhoneIv.setVisibility(View.VISIBLE);
-            doctorContactInfoTv.setVisibility(View.VISIBLE);
-        }
-//        , doctorPhoneTv, doctorEmailTv, afterNotesDividerView;
-
 
         for (View view : visibleInEditing) {
             view.setVisibility(isEditing ? View.VISIBLE : View.GONE);
