@@ -31,4 +31,8 @@ public class MyMedApplication extends Application {
     public MedicineManager getMedicineManager() {
         return medicineManager;
     }
+
+    public AppointmentManager getAppointmentManager() {
+        return appointmentManager;
+    }
 }

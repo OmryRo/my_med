@@ -16,8 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
@@ -27,6 +31,7 @@ public class AppointmentsActivity extends AppCompatActivity {
     private RecyclerView past_recyclerView;
     private AppointmentManager appointmentManager;
     private static final Object LOCK = new Object();
+    private List<Appointment> appointmentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,9 @@ public class AppointmentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_appointments);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        appointmentManager = ((MyMedApplication) AppointmentsActivity.this.getApplicationContext()).getAppointmentManager();
+        appointmentList = appointmentManager.getAppointments(null);
 
         upcoming_recyclerView = findViewById(R.id.upcoming_appointments_container);
         past_recyclerView = findViewById(R.id.past_appointments_container);
@@ -69,26 +77,26 @@ public class AppointmentsActivity extends AppCompatActivity {
                     return;
                 }
 
-                final Doctor doctor = appointmentManager.getByPos(position);
+                final Appointment appointment = appointmentManager.getByPos(position);
                 holder.setData(
                         R.drawable.ic_user_md_solid,
-                        doctor.name,
-                        doctor.note
+                        appointment.title,
+                        appointment.notes
                 );
                 holder.setOnClick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        synchronized (LOCK) {
-                            if (startedAnotherActivity) {
-                                return;
-                            }
+//                        synchronized (LOCK) {
+//                            if (startedAnotherActivity) {
+//                                return;
+//                            }
+//
+//                            startedAnotherActivity = true;
+//                        }
 
-                            startedAnotherActivity = true;
-                        }
-
-                        Intent intent = new Intent(getContext(), DoctorInfoActivity.class);
-                        intent.putExtra(DoctorInfoActivity.INTENT_INDEX, doctor.id);
+                        Intent intent = new Intent(AppointmentsActivity.this, DoctorInfoActivity.class);
+                        intent.putExtra(DoctorInfoActivity.INTENT_INDEX, appointment.id);
                         startActivityForResult(intent, DoctorInfoActivity.DOCTOR_INFO_REQ);
 
                     }
@@ -100,8 +108,8 @@ public class AppointmentsActivity extends AppCompatActivity {
                 return appointmentManager == null ? 0 : appointmentManager.size();
             }
         });
-        upcoming_recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        upcoming_recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        upcoming_recyclerView.setLayoutManager(new LinearLayoutManager(AppointmentsActivity.this));
+        upcoming_recyclerView.addItemDecoration(new DividerItemDecoration(AppointmentsActivity.this, DividerItemDecoration.VERTICAL));
 
     }
 }
