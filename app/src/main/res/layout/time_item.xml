@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cv_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_amount_to_take"
+            android:layout_width="20dp"
+            android:layout_height="19dp"
+            android:inputType="numberDecimal"
+            android:singleLine="true"
+            android:ems="10"
+            app:layout_constraintStart_toEndOf="@+id/tv_prefix_massage_take"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_hour_to_take_dose"
+            android:layout_width="34dp"
+            android:layout_height="19dp"
+            android:inputType="time"
+            android:singleLine="true"
+            android:text="8:00"
+            android:ems="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_prefix_massage_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="at "
+            app:layout_constraintEnd_toStartOf="@+id/et_hour_to_take_dose"
+            app:layout_constraintStart_toEndOf="@+id/et_amount_to_take"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_prefix_massage_take"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take "
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
