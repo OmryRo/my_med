@@ -157,6 +157,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
             doctorNameEt.setText(doctor == null ? "" : doctor.name);
             doctorNoteEt.setText(doctor == null ? "" : doctor.note);
             doctorPhoneEt.setText(doctor == null ? "" : doctor.phone);
+
             doctorEmailEt.setText(doctor == null ? "" : doctor.email);
 
             doctorNoteTv.setVisibility(View.GONE);
