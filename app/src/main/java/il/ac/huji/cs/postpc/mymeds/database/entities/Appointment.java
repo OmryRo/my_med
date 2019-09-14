@@ -37,7 +37,6 @@ public class Appointment {
     @ColumnInfo(name = "a_notification_date")
     public Date notificationDate;
 
-    @Ignore
     public Appointment(long id, long doctorId, String title, String notes, Date date, int duration, String address, Date notificationDate) {
         this.id = id;
         this.doctorId = doctorId;
