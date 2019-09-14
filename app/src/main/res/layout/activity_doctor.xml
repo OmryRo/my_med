@@ -207,6 +207,48 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/doctor_address_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/doctor_address_image"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_map_black"
+                    android:tint="@color/colorTextTextDark"
+                    android:tintMode="src_in" />
+
+                <TextView
+                    android:id="@+id/doctor_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:text="Someplace 11, Somewhere"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/doctor_address_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Address"
+                    android:inputType="textEmailAddress"
+                    android:text="Someplace 11, Somewhere"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/doctor_more_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -227,25 +269,42 @@
                     android:orientation="horizontal"
                     >
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorTextTextDark"
-                        android:text="Appointments:"
-                        android:layout_marginBottom="5dp"
-                        />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorTextTextDark"
+                            android:text="Appointments:"
+                            android:layout_marginBottom="5dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/doctor_appointment_more_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="Last visit was at 14/8/2010."
+                            android:textColor="@color/colorTextTextDark"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
 
                     <ImageView
                         android:layout_weight="0"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="4dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="0dp"
                         android:layout_gravity="center"
+                        android:src="@drawable/ic_arrow_forward_black"
                         android:tint="@color/colorTextTextDark"
-                        android:src="@drawable/ic_plus_solid"
+                        android:tintMode="src_in"
                         />
 
                 </LinearLayout>
@@ -258,15 +317,51 @@
                     android:layout_marginBottom="20dp"
                     />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextTextDark"
-                    android:text="Prescriptions:"
-                    android:layout_marginBottom="5dp"
-                    />
+                    android:orientation="horizontal"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorTextTextDark"
+                            android:text="Perceptions:"
+                            android:layout_marginBottom="5dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/doctor_perceptions_more_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="Ritalin LA 30mg (expire next week)"
+                            android:textColor="@color/colorTextTextDark"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_weight="0"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="0dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_arrow_forward_black"
+                        android:tint="@color/colorTextTextDark"
+                        android:tintMode="src_in"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
