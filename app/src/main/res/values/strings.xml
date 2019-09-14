@@ -25,4 +25,18 @@
     <string name="message_out_of_medicine">You will run out of %s in %d days.\nDon\'t forget to go to the pharmacy.</string>
     <string name="reminder">Reminder</string>
     <string name="voice_search">Voice Search...</string>
+    <string name="monday">M</string>
+    <string name="sunday">S</string>
+    <string name="thursday">T</string>
+    <string name="wednesday">W</string>
+    <string name="tuesday">T</string>
+    <string name="saturday">S</string>
+    <string name="friday">F</string>
+
+    <string-array name="repeats_unit_array">
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+        <item>year</item>
+    </string-array>
 </resources>

@@ -260,7 +260,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
         }
 
         String doctorNote = doctorNoteEt.getText().toString().trim();
-        doctorNoteEt.setText(doctorNote);
+//        doctorNoteEt.setText(doctorNote);
         String doctorEmail = doctorEmailEt.getText().toString();
         String doctorPhone = doctorPhoneEt.getText().toString();
 

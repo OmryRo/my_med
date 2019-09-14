@@ -120,7 +120,7 @@
                 android:layout_marginBottom="5dp"
                 android:text="Contact Info:"
                 android:textColor="@color/colorTextTextDark"
-                android:textSize="18sp"
+                android:textSize="@dimen/title_size"
                 android:textStyle="bold" />
 
             <LinearLayout
