@@ -3,7 +3,6 @@ package il.ac.huji.cs.postpc.mymeds.activities.medicine;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,10 +40,7 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
     private EditText medicineNote;
     private EditText timesOfRepeate;
     private EditText numberOccurrence;
-
-    private RadioButton radioButtonNever;
-    private RadioButton radioButtonCustom;
-    private RadioButton radioButtonOccurrence;
+    private RadioGroup radioGroup;
 
     private TextView dateToEnd;
 
@@ -70,9 +66,7 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
         friday = findViewById(R.id.bt_friday);
         saturday = findViewById(R.id.bt_saturday);
 
-        radioButtonCustom = findViewById(R.id.radio_custom_day);
-        radioButtonNever = findViewById(R.id.radio_never);
-        radioButtonOccurrence = findViewById(R.id.radio_after_number_occurrence);
+        radioGroup = findViewById(R.id.radio_group);
 
         days = new Button[]{sunday, monday, thursday, wednesday, tuesday, friday, saturday};
 
@@ -138,20 +132,17 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
         switch (view.getId()) {
             case R.id.radio_never:
                 end = checked;
-                radioButtonCustom.setChecked(false);
-                radioButtonOccurrence.setChecked(false);
+                radioGroup.check(R.id.radio_never);
                 break;
-            case R.id.radio_custom_day:
+            case R.id.radio_custom:
                 if (checked) {
-                    radioButtonNever.setChecked(false);
-                    radioButtonOccurrence.setChecked(false);
+                    radioGroup.check(R.id.radio_custom);
                     getDatePicker();
                 }
                 break;
-            case R.id.radio_after_number_occurrence:
+            case R.id.radio_occurrence:
                 if (checked) {
-                    radioButtonNever.setChecked(false);
-                    radioButtonCustom.setChecked(false);
+                    radioGroup.check(R.id.radio_occurrence);
 //                    numberOccurrence.setFocusable(true);
 //                    String num = numberOccurrence.getText().toString();
 //                    System.out.println(num);
@@ -173,7 +164,7 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateToEnd.setText(MessageFormat.format("{0}/{1}/{2}", dayOfMonth, monthOfYear, year));
+                                dateToEnd.setText(MessageFormat.format("{0}/{1}/{2}", dayOfMonth, monthOfYear+1, year));
                             }
                         }, year, month, day);
                 pickerDialog.show();
