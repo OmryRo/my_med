@@ -15,6 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="horizontal"
+        android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,6 +24,10 @@
             android:id="@+id/medicine_type_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_low"
+            android:layout_marginStart="@dimen/margin_low"
+            android:layout_marginTop="@dimen/margin_low"
+            android:layout_marginBottom="@dimen/margin_low"
             android:contentDescription="icon content "
             android:src="@drawable/ic_tablets_solid"
             android:tint="@color/colorPrimary" />
@@ -34,18 +39,21 @@
             android:inputType="text"
             android:text="Ritalin Bla 30g"
             android:textColor="@color/colorPrimary"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:visibility="visible"
-             />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:textSize="@dimen/medium_text_size"
+            android:layout_marginTop="@dimen/margin_low"
+            android:textStyle="bold" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -53,26 +61,81 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toTopOf="@+id/divider1"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
 
         <EditText
             android:id="@+id/et_medicine_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_low"
             android:hint="Notes, like should take it with food or not..."
             android:text="Should take after eating, before going to bad."
             android:textColor="@color/colorTextTextDark"
-            android:textSize="18sp" />
-        <View
-            android:id="@+id/divider1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:textSize="@dimen/low_text_size" />
+
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout_start_day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout1" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout_start_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout1"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
+        app:layout_constraintBottom_toTopOf="@+id/divider_start_day"
+        >
+
+        <TextView
+            android:id="@+id/tv_title_start_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="STARTED DAY"
+            android:textColor="@color/colorTextTextDark"
+            android:textStyle="bold"
+            android:textSize="@dimen/low_text_size" />
+
+        <TextView
+            android:id="@+id/tv_start_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="@dimen/low_text_size"
+            android:text="01/09/2019" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_start_day"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_start_day" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -80,22 +143,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout1"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout1">
+        app:layout_constraintBottom_toTopOf="@+id/divider3"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout_start_day"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_start_day">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_title_reminder_times"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reminder Times:"
-                android:textAlignment="textStart"
-                android:textSize="@dimen/title_size" />
+                android:layout_marginBottom="5dp"
+                android:text="REMINDER TIMES"
+                android:textColor="@color/colorTextTextDark"
+                android:textStyle="bold"
+                android:textSize="@dimen/low_text_size" />
 
             <ImageView
                 android:id="@+id/ib_add_time_button"
@@ -106,18 +176,25 @@
                 android:src="@drawable/ic_add_box_black_24dp"
                 android:tint="@color/colorPrimaryDark"
                 android:layout_margin="4dp"/>
+
         </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list_of_times"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <View
-            android:id="@+id/divider3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -134,19 +211,23 @@
             android:id="@+id/tv_title_repeats_every"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorTextTextDark"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"
             android:text="REPEATS EVERY"
-            android:textSize="@dimen/title_size"/>
+            android:textSize="@dimen/low_text_size"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/et_times_of_repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="2"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 app:layout_constraintBottom_toTopOf="@+id/divider3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_repeats_every" />
@@ -159,13 +240,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_title_repeats_every" />
 
         </LinearLayout>
-        <View
-            android:id="@+id/divider4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -173,20 +258,29 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/linearLayout3"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
         <TextView
             android:id="@+id/tv_title_repeats_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="REPEATS ON"
-            android:textSize="@dimen/title_size" />
+            android:textColor="@color/colorTextTextDark"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"
+            android:textSize="@dimen/low_text_size" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal">
 
             <Button
@@ -195,9 +289,11 @@
                 android:layout_height="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/button_custom"
                 android:onClick="onDayButtonClicked"
                 android:text="@string/sunday"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/bt_monday"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -279,14 +375,20 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/bt_friday" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <View
-            android:id="@+id/divider5"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"/>
 
     <LinearLayout
         android:id="@+id/linearLayout5"
@@ -294,6 +396,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/linearLayout4"
@@ -303,15 +408,20 @@
             android:id="@+id/tv_title_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="End"
-            android:textSize="@dimen/title_size" />
+            android:text="END"
+            android:textColor="@color/colorTextTextDark"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"
+            android:textSize="@dimen/low_text_size" />
 
         <RadioGroup
             android:id="@+id/radio_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:checkedButton="@id/radio_never">
 
             <LinearLayout
+                android:id="@+id/linearLayoutNever"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -328,10 +438,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:text="never"
-                    android:textSize="@dimen/title_size" />
+                    android:textSize="@dimen/low_text_size" />
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayoutOccurrence"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -347,6 +459,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
+                    android:textSize="@dimen/low_text_size"
                     android:text="after" />
 
                 <EditText
@@ -356,19 +469,20 @@
                     android:ems="2"
                     android:inputType="number"
                     android:text="2"
-                    android:textSize="12sp" />
-
-
+                    android:textSize="@dimen/low_text_size" />
 
                 <TextView
                     android:id="@+id/tv_title_end_occurrence"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
+                    android:textSize="@dimen/low_text_size"
                     android:text="occurrence" />
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayoutCustom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -384,9 +498,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:textSize="@dimen/low_text_size"
                     android:text="01/09/2019" />
-            </LinearLayout>
 
+            </LinearLayout>
 
         </RadioGroup>
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -20,21 +21,16 @@ import android.widget.TextView;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.PriorityQueue;
 
 import il.ac.huji.cs.postpc.mymeds.R;
 
 public class MedicineEditorActivity extends AppCompatActivity implements OnItemSelectedListener {
 
-    //    private enum Days {Sunday,Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}
+//    private enum Days {Sunday,Monday, Tuesday, Wednesday, Thursday, Friday, Saturday}
+    private static String TAG = MedicineEditorActivity.class.getSimpleName();
     private DatePickerDialog pickerDialog;
-    private Button sunday;
-    private Button monday;
-    private Button thursday;
-    private Button wednesday;
-    private Button tuesday;
-    private Button friday;
-    private Button saturday;
-    private Button[] days = {};
+    private Button[] days;
     private boolean[] daysChoice = {false, false, false, false, false, false, false};
     private EditText medicineName;
     private EditText medicineNote;
@@ -43,8 +39,11 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
     private RadioGroup radioGroup;
 
     private TextView dateToEnd;
+    private TextView dateToStart;
 
-    private ImageButton addTime;
+    private View repeatView;
+
+    private ImageView addTime;
     private ImageView medicineTypeIcone;
 
     private boolean end = false;
@@ -58,17 +57,18 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicine_editor);
 
-        sunday = findViewById(R.id.bt_sunday);
-        monday = findViewById(R.id.bt_monday);
-        thursday = findViewById(R.id.bt_thursday);
-        wednesday = findViewById(R.id.bt_wednesday);
-        tuesday = findViewById(R.id.bt_tuesday);
-        friday = findViewById(R.id.bt_friday);
-        saturday = findViewById(R.id.bt_saturday);
-
         radioGroup = findViewById(R.id.radio_group);
+        repeatView = findViewById(R.id.linearLayout4);
 
-        days = new Button[]{sunday, monday, thursday, wednesday, tuesday, friday, saturday};
+        days = new Button[]{
+                findViewById(R.id.bt_sunday),
+                findViewById(R.id.bt_monday),
+                findViewById(R.id.bt_thursday),
+                findViewById(R.id.bt_wednesday),
+                findViewById(R.id.bt_tuesday),
+                findViewById(R.id.bt_friday),
+                findViewById(R.id.bt_saturday)
+        };
 
         numberOccurrence = findViewById(R.id.et_number_occurrence);
         medicineName = findViewById(R.id.et_medicine_name);
@@ -76,6 +76,10 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
         timesOfRepeate = findViewById(R.id.et_times_of_repeat);
 
         dateToEnd = findViewById(R.id.tv_date_picker);
+        dateToEnd.setOnClickListener(getDate(dateToEnd));
+        dateToStart = findViewById(R.id.tv_start_day);
+        dateToStart.setOnClickListener(getDate(dateToStart));
+
         initSpinner();
 
 
@@ -119,9 +123,11 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
                 choiceDay = 6;
                 break;
         }
+
         if (choiceDay == -1) {
             return;
         }
+
         daysChoice[choiceDay] = !daysChoice[choiceDay];
         days[choiceDay].setBackgroundResource(daysChoice[choiceDay] ? R.drawable.button_pressed : R.drawable.button_default);
 
@@ -137,7 +143,6 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
             case R.id.radio_custom:
                 if (checked) {
                     radioGroup.check(R.id.radio_custom);
-                    getDatePicker();
                 }
                 break;
             case R.id.radio_occurrence:
@@ -151,8 +156,8 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
         }
     }
 
-    private void getDatePicker() {
-        dateToEnd.setOnClickListener(new View.OnClickListener() {
+    private View.OnClickListener getDate(final TextView tv) {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar cldr = Calendar.getInstance();
@@ -164,18 +169,21 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateToEnd.setText(MessageFormat.format("{0}/{1}/{2}", dayOfMonth, monthOfYear+1, year));
+                                tv.setText(MessageFormat.format("{0}/{1}/{2}", dayOfMonth, monthOfYear + 1, year));
                             }
                         }, year, month, day);
                 pickerDialog.show();
             }
-        });
+        };
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         parent.getItemAtPosition(position);
+//        Log.d(TAG, "Selected d"+position);
+
+        repeatView.setVisibility(position == 1 ? View.VISIBLE : View.GONE);
+
     }
 
     @Override

@@ -58,7 +58,7 @@
                 <TextView
                     android:layout_marginTop="10dp"
                     android:id="@+id/doctor_name"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/medium_text_size"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
 
                 <EditText
                     android:id="@+id/doctor_name_et"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/medium_text_size"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
@@ -83,7 +83,7 @@
 
             <TextView
                 android:id="@+id/doctor_notes"
-                android:textSize="18sp"
+                android:textSize="@dimen/low_text_size"
                 android:textColor="@color/colorTextTextDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
 
             <EditText
                 android:id="@+id/doctor_notes_et"
-                android:textSize="18sp"
+                android:textSize="@dimen/low_text_size"
                 android:textColor="@color/colorTextTextDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,7 +120,7 @@
                 android:layout_marginBottom="5dp"
                 android:text="Contact Info:"
                 android:textColor="@color/colorTextTextDark"
-                android:textSize="@dimen/title_size"
+                android:textSize="@dimen/low_text_size"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -150,7 +150,7 @@
                     android:layout_marginTop="7dp"
                     android:text="+9722222222"
                     android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/low_text_size" />
 
                 <EditText
                     android:id="@+id/doctor_phone_number_et"
@@ -160,7 +160,7 @@
                     android:inputType="phone"
                     android:text="+9722222222"
                     android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/low_text_size"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -191,7 +191,7 @@
                     android:layout_marginTop="7dp"
                     android:text="+9722222222"
                     android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/low_text_size" />
 
                 <EditText
                     android:id="@+id/doctor_email_et"
@@ -201,7 +201,7 @@
                     android:inputType="textEmailAddress"
                     android:text="+9722222222"
                     android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/low_text_size"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -224,7 +224,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/low_text_size"
                     android:textStyle="bold"
                     android:textColor="@color/colorTextTextDark"
                     android:text="Appointments:"
@@ -242,7 +242,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/low_text_size"
                     android:textStyle="bold"
                     android:textColor="@color/colorTextTextDark"
                     android:text="Prescriptions:"

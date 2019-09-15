@@ -91,29 +91,6 @@ public class MedicineInfoActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MedicineEditorActivity.class);
             startActivityForResult(intent, MEDICINE_INFO_MEDICINE_REQUEST);
         }
-//        if (!isEditing) {
-//            medicineNameTv.setText(medicine.name);
-//            medicineTypeTv.setText(medicine.type == Medicine.TYPE_PILLS ? "pills" : "IV");
-//            medicineTypeIv.setImageResource(medicine.type == Medicine.TYPE_PILLS ? R.drawable.ic_pills_solid : R.drawable.ic_syringe_solid);
-//            medicineNotesTv.setText(medicine.note);
-//            medicineDoseAmountTv.setText(medicine.getDosageString());
-//            medicineDoseNextTv.setText(medicine.getNextTimeString());
-//
-//        } else {
-//            medicineNameEt.setText(medicine == null ? "" : medicine.name);
-//            medicineNotesEt.setText(medicine == null ? "" : medicine.note);
-//        }
-//
-//        View[] visibleInEditing = new View[]{medicineNotesEt, medicineNameEt};
-//        View[] visibleInViewing = new View[]{medicineNotesTv, medicineNameTv};
-//
-//        for (View view : visibleInEditing) {
-//            view.setVisibility(isEditing ? View.VISIBLE : View.GONE);
-//        }
-//
-//        for (View view : visibleInViewing) {
-//            view.setVisibility(isEditing ? View.GONE : View.VISIBLE);
-//        }
     }
 
     @Override
