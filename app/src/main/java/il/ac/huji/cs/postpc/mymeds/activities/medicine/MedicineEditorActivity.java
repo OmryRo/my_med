@@ -1,10 +1,7 @@
 package il.ac.huji.cs.postpc.mymeds.activities.medicine;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -12,18 +9,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.text.MessageFormat;
 import java.util.Calendar;
-import java.util.PriorityQueue;
 
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.utils.TimeAdapter;
 
 public class MedicineEditorActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -50,7 +50,10 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
 
     private Spinner spinner;
 
-    private View divider;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,13 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
         dateToStart.setOnClickListener(getDate(dateToStart));
 
         initSpinner();
+
+        recyclerView =findViewById(R.id.rv_list_of_times);
+        recyclerView.setHasFixedSize(true);
+        layoutManager= new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new TimeAdapter();
+        recyclerView.setAdapter(adapter);
 
 
     }
