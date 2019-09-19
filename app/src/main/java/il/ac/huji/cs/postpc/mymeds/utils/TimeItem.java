@@ -1,8 +1,11 @@
 package il.ac.huji.cs.postpc.mymeds.utils;
 
+import android.widget.EditText;
+
 public class TimeItem {
     private String amount;
     private String houre;
+
     public TimeItem() {
 
     }

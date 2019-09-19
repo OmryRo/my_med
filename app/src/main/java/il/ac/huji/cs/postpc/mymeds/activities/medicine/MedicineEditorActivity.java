@@ -1,6 +1,7 @@
 package il.ac.huji.cs.postpc.mymeds.activities.medicine;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,10 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.utils.TimeAdapter;
+import il.ac.huji.cs.postpc.mymeds.utils.TimeItem;
 
 public class MedicineEditorActivity extends AppCompatActivity implements OnItemSelectedListener {
 
@@ -51,9 +54,9 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
     private Spinner spinner;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private TimeAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
+    ArrayList<TimeItem> contant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
 
         radioGroup = findViewById(R.id.radio_group);
         repeatView = findViewById(R.id.linearLayout4);
-
+        contant = new ArrayList<>();
         days = new Button[]{
                 findViewById(R.id.bt_sunday),
                 findViewById(R.id.bt_monday),
@@ -85,12 +88,23 @@ public class MedicineEditorActivity extends AppCompatActivity implements OnItemS
 
         initSpinner();
 
-        recyclerView =findViewById(R.id.rv_list_of_times);
+        recyclerView = findViewById(R.id.rv_list_of_times);
         recyclerView.setHasFixedSize(true);
         layoutManager= new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new TimeAdapter();
+        adapter = new TimeAdapter(this);
         recyclerView.setAdapter(adapter);
+        addTime = findViewById(R.id.ib_add_time_button);
+
+        addTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimeItem item = new TimeItem();
+                contant.add(item);
+                adapter.setContext(contant);
+                adapter.notifyDataSetChanged();
+            }
+        });
 
 
     }
