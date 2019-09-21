@@ -30,16 +30,16 @@ public class DoctorManager {
 
                 // remove later for debugging propose...
                 if (doctors.size() == 0) {
-                    add("Palony Almony the first", "Do something", "+9722222222", "first@docdocdoc.com");
-                    add("Palony Almony the second", "Do something", "+9722222222", "second@docdocdoc.com");
-                    add("Palony Almony the third", "Do something", "+9722222222", "third@docdocdoc.com");
+                    add("Palony Almony the first", "Do something", "+9722222222", "first@docdocdoc.com", "");
+                    add("Palony Almony the second", "Do something", "+9722222222", "second@docdocdoc.com", "");
+                    add("Palony Almony the third", "Do something", "+9722222222", "third@docdocdoc.com", "");
                 }
             }
         }).start();
     }
 
-    public Doctor add(String name, String note, String phone, String email) {
-        Doctor doctor = new Doctor(name, note, phone, email);
+    public Doctor add(String name, String note, String phone, String email, String address) {
+        Doctor doctor = new Doctor(name, note, phone, email, address);
         long id = db.doctorsDao().insert(doctor);
         doctor.id = id;
 
@@ -48,11 +48,11 @@ public class DoctorManager {
         return doctor;
     }
 
-    public void add(final String name, final String note, final String phone, final String email, final Listener callback) {
+    public void add(final String name, final String note, final String phone, final String email, final String address, final Listener callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Doctor doctor = add(name, note, phone, email);
+                Doctor doctor = add(name, note, phone, email, address);
 
                 if (callback != null) {
                     callback.callback(doctor);

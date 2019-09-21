@@ -37,11 +37,11 @@ public class Doctor {
     public RepeatingDate repeating;
 
     @Ignore
-    public Doctor(String name, String note, String phone, String email) {
-        this(0, name, note, phone, email);
+    public Doctor(String name, String note, String phone, String email, String address) {
+        this(0, name, note, phone, email, address);
     }
 
-    public Doctor(long id, String name, String note, String phone, String email) {
+    public Doctor(long id, String name, String note, String phone, String email, String address) {
         this.id = id;
         this.name = name;
         this.note = note;

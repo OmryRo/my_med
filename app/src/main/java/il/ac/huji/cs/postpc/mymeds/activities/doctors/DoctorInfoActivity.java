@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentsActivity;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 
@@ -28,29 +29,38 @@ public class DoctorInfoActivity extends AppCompatActivity {
     public static final int DOCTOR_INFO_REQ = 0x5000;
     public static final int DOCTOR_INFO_NOTHING_CHANGED = 0;
     public static final int DOCTOR_INFO_DOCTORS_CHANGED = 1;
-
     public static final String INTENT_INDEX = "INDEX";
+
+    private static final Object LOCK = new Object();
 
     private DoctorManager manager;
     private Doctor doctor;
     private boolean isEditing;
+    private boolean hasStartedAnotherActivity;
 
     private Toolbar toolbar;
     private TextView doctorNameTv;
     private TextView doctorNoteTv;
     private TextView doctorPhoneTv;
     private TextView doctorEmailTv;
+    private TextView doctorAddressTv;
     private TextView doctorContactInfoTv;
     private EditText doctorNameEt;
     private EditText doctorNoteEt;
     private EditText doctorPhoneEt;
     private EditText doctorEmailEt;
+    private EditText doctorAddressEt;
     private View moreInfoView;
     private View afterNotesDividerView;
     private View doctorPhoneContainer;
     private View doctorEmailContainer;
+    private View doctorAddressContainer;
     private View doctorEmailIv;
     private View doctorPhoneIv;
+    private View doctorPerceptionsView;
+    private TextView doctorPerceptionTv;
+    private View doctorAppointmentsView;
+    private TextView doctorAppointmentsTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,22 +75,30 @@ public class DoctorInfoActivity extends AppCompatActivity {
         doctorNoteTv = findViewById(R.id.doctor_notes);
         doctorPhoneTv = findViewById(R.id.doctor_phone_number);
         doctorEmailTv = findViewById(R.id.doctor_email);
+        doctorAddressTv = findViewById(R.id.doctor_address);
         doctorNameEt = findViewById(R.id.doctor_name_et);
         doctorNoteEt = findViewById(R.id.doctor_notes_et);
         doctorPhoneEt = findViewById(R.id.doctor_phone_number_et);
         doctorEmailEt = findViewById(R.id.doctor_email_et);
+        doctorAddressEt = findViewById(R.id.doctor_address_et);
         moreInfoView = findViewById(R.id.doctor_more_info);
         afterNotesDividerView = findViewById(R.id.doctor_divider_after_notes);
         doctorPhoneContainer = findViewById(R.id.doctor_phone_container);
         doctorEmailContainer = findViewById(R.id.doctor_email_container);
+        doctorAddressContainer = findViewById(R.id.doctor_address_container);
         doctorContactInfoTv = findViewById(R.id.doctor_contact_info_text);
         doctorEmailIv = findViewById(R.id.doctor_email_image);
         doctorPhoneIv = findViewById(R.id.doctor_phone_image);
+        doctorPerceptionTv = findViewById(R.id.doctor_perceptions_more_info);
+        doctorAppointmentsTv = findViewById(R.id.doctor_appointment_more_info);
+        doctorAppointmentsView = findViewById(R.id.doctor_appointments);
+        doctorPerceptionsView = findViewById(R.id.doctor_perceptions);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        hasStartedAnotherActivity = false;
         setData();
     }
 
@@ -105,51 +123,138 @@ public class DoctorInfoActivity extends AppCompatActivity {
             doctorNoteTv.setText(doctor.note);
             doctorPhoneTv.setText(doctor.phone);
             doctorEmailTv.setText(doctor.email);
+            doctorAddressTv.setText(doctor.address);
 
             doctorNoteTv.setVisibility(doctor.note.length() > 0 ? View.VISIBLE : View.GONE);
-            if (doctor.email.length() > 0 || doctor.phone.length() > 0) {
-                afterNotesDividerView.setVisibility(View.VISIBLE);
-                doctorContactInfoTv.setVisibility(View.VISIBLE);
-                doctorEmailTv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
-                doctorPhoneTv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
-                doctorEmailIv.setVisibility(doctor.email.length() > 0 ? View.VISIBLE : View.GONE);
-                doctorPhoneIv.setVisibility(doctor.phone.length() > 0 ? View.VISIBLE : View.GONE);
-            }
-            else {
-                afterNotesDividerView.setVisibility(View.GONE);
-                doctorContactInfoTv.setVisibility(View.GONE);
-                doctorEmailTv.setVisibility(View.GONE);
-                doctorPhoneTv.setVisibility(View.GONE);
-                doctorEmailIv.setVisibility(View.GONE);
-                doctorPhoneIv.setVisibility(View.GONE);
-            }
+
+            boolean shouldShowEmail = doctor.email != null && doctor.email.length() != 0;
+            boolean shouldShowPhone = doctor.phone != null && doctor.phone.length() != 0;
+            boolean shouldShowAddress = doctor.address != null && doctor.address.length() != 0;
+            boolean shouldShowContentTitle = shouldShowAddress || shouldShowEmail || shouldShowPhone;
+
+            doctorEmailContainer.setVisibility(shouldShowEmail ? View.VISIBLE : View.GONE);
+            doctorPhoneContainer.setVisibility(shouldShowPhone ? View.VISIBLE : View.GONE);
+            doctorAddressContainer.setVisibility(shouldShowAddress ? View.VISIBLE : View.GONE);
+            afterNotesDividerView.setVisibility(shouldShowContentTitle ? View.VISIBLE : View.GONE);
+            doctorContactInfoTv.setVisibility(shouldShowContentTitle ? View.VISIBLE : View.GONE);
+
+            doctorPhoneContainer.setClickable(true);
+            doctorEmailContainer.setClickable(true);
+            doctorAddressContainer.setClickable(true);
 
             doctorPhoneContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri number = Uri.parse(String.format("tel:%s", doctor.phone));
-                    Intent intent = new Intent(Intent.ACTION_DIAL, number);
+
+                    synchronized (LOCK) {
+                        if (hasStartedAnotherActivity) {
+                            return;
+                        }
+
+                        hasStartedAnotherActivity = true;
+                    }
+
+                    Uri uri = Uri.parse(String.format("tel:%s", doctor.phone));
+                    Intent intent = new Intent(Intent.ACTION_DIAL, uri);
 
                     try {
                         startActivity(intent);
 
                     } catch (ActivityNotFoundException e) {
-                        // do nothing
+                        hasStartedAnotherActivity = false;
                     }
                 }
             });
+
             doctorEmailContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Uri number = Uri.parse(String.format("mailto:%s", doctor.email));
-                    Intent intent = new Intent(Intent.ACTION_SEND, number);
+
+                    synchronized (LOCK) {
+                        if (hasStartedAnotherActivity) {
+                            return;
+                        }
+
+                        hasStartedAnotherActivity = true;
+                    }
+
+                    Uri uri = Uri.parse(String.format("mailto:%s", doctor.email));
+                    Intent intent = new Intent(Intent.ACTION_SEND, uri);
 
                     try {
                         startActivity(intent);
 
                     } catch (ActivityNotFoundException e) {
-                        // do nothing
+                        hasStartedAnotherActivity = false;
                     }
+                }
+            });
+
+            doctorAddressContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    synchronized (LOCK) {
+                        if (hasStartedAnotherActivity) {
+                            return;
+                        }
+
+                        hasStartedAnotherActivity = true;
+                    }
+
+                    Uri uri = Uri.parse(String.format("geo:?q=%s", doctor.address));
+                    Intent intent = new Intent(Intent.ACTION_SEND, uri);
+
+                    try {
+                        startActivity(intent);
+
+                    } catch (ActivityNotFoundException e) {
+                        hasStartedAnotherActivity = false;
+                    }
+                }
+            });
+
+            doctorAppointmentsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (doctor == null) {
+                        return;
+                    }
+
+                    synchronized (LOCK) {
+                        if (hasStartedAnotherActivity) {
+                            return;
+                        }
+
+                        hasStartedAnotherActivity = true;
+                    }
+
+                    Intent intent = new Intent(getApplicationContext(), AppointmentsActivity.class);
+                    intent.putExtra(AppointmentsActivity.INTENT_DOCTOR_ID, doctor.id);
+                    startActivityForResult(intent, AppointmentsActivity.APPOINTMENT_INFO_REQ);
+                }
+            });
+
+            doctorPerceptionsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (doctor == null) {
+                        return;
+                    }
+
+                    synchronized (LOCK) {
+                        if (hasStartedAnotherActivity) {
+                            return;
+                        }
+
+                        hasStartedAnotherActivity = true;
+                    }
+
+                    Intent intent = new Intent(getApplicationContext(), AppointmentsActivity.class);
+                    intent.putExtra(AppointmentsActivity.INTENT_DOCTOR_ID, doctor.id);
+                    startActivityForResult(intent, AppointmentsActivity.APPOINTMENT_INFO_REQ);
                 }
             });
 
@@ -158,27 +263,33 @@ public class DoctorInfoActivity extends AppCompatActivity {
             doctorNoteEt.setText(doctor == null ? "" : doctor.note);
             doctorPhoneEt.setText(doctor == null ? "" : doctor.phone);
             doctorEmailEt.setText(doctor == null ? "" : doctor.email);
+            doctorAddressEt.setText(doctor == null ? "" : doctor.address);
 
             doctorNoteTv.setVisibility(View.GONE);
             doctorEmailTv.setVisibility(View.GONE);
             doctorPhoneTv.setVisibility(View.GONE);
-            doctorEmailIv.setVisibility(View.VISIBLE);
-            doctorPhoneIv.setVisibility(View.VISIBLE);
             afterNotesDividerView.setVisibility(View.VISIBLE);
             doctorContactInfoTv.setVisibility(View.VISIBLE);
 
+            doctorAddressContainer.setVisibility(View.VISIBLE);
+            doctorPhoneContainer.setVisibility(View.VISIBLE);
+            doctorEmailContainer.setVisibility(View.VISIBLE);
+
+            doctorAddressContainer.setOnClickListener(null);
             doctorPhoneContainer.setOnClickListener(null);
             doctorEmailContainer.setOnClickListener(null);
             doctorPhoneContainer.setClickable(false);
             doctorEmailContainer.setClickable(false);
+            doctorAddressContainer.setClickable(false);
 
         }
 
         View[] visibleInEditing = new View[]{
-                doctorNameEt, doctorNoteEt, doctorPhoneEt, doctorEmailEt
+                doctorNameEt, doctorNoteEt, doctorPhoneEt, doctorEmailEt, doctorAddressEt
         };
         View[] visibleInViewing = new View[]{
-                doctorNameTv, moreInfoView};
+                doctorNameTv, doctorPhoneTv, doctorEmailTv, doctorAddressTv, moreInfoView
+        };
 
         for (View view : visibleInEditing) {
             view.setVisibility(isEditing ? View.VISIBLE : View.GONE);
@@ -264,12 +375,14 @@ public class DoctorInfoActivity extends AppCompatActivity {
         doctorNoteEt.setText(doctorNote);
         String doctorEmail = doctorEmailEt.getText().toString();
         String doctorPhone = doctorPhoneEt.getText().toString();
+        String doctorAddress  =doctorAddressEt.getText().toString();
 
         if (doctor != null) {
             doctor.name = doctorName;
             doctor.note = doctorNote;
             doctor.email = doctorEmail;
             doctor.phone = doctorPhone;
+            doctor.address = doctorAddress;
 
             manager.update(doctor, new DoctorManager.Listener() {
                 @Override
@@ -285,7 +398,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
             });
 
         } else {
-            manager.add(doctorName, doctorNote, doctorPhone, doctorEmail, new DoctorManager.Listener() {
+            manager.add(doctorName, doctorNote, doctorPhone, doctorEmail, doctorAddress, new DoctorManager.Listener() {
                 @Override
                 public void callback(final Doctor doctor) {
                     runOnUiThread(new Runnable() {

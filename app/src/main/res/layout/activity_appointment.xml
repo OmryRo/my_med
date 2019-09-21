@@ -51,30 +51,30 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_user_md_solid"
+                    android:src="@drawable/ic_event_black_24dp"
                     android:tint="@color/colorPrimary"
                     />
 
                 <TextView
                     android:layout_marginTop="10dp"
-                    android:id="@+id/doctor_name"
+                    android:id="@+id/appointment_title"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Dr. Palony Almony"
+                    android:text="Appointment for Palony Almony"
                     />
 
                 <EditText
-                    android:id="@+id/doctor_name_et"
+                    android:id="@+id/appointment_title_et"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Dr. Palony Almony"
-                    android:hint="Name"
+                    android:text="Appointment for Palony Almony"
+                    android:hint="Title"
                     android:inputType="textPersonName"
                     android:visibility="gone"
                     />
@@ -82,30 +82,29 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/doctor_notes"
+                android:id="@+id/appointment_notes"
                 android:textSize="18sp"
                 android:textColor="@color/colorTextTextDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
-                android:text="Family doctor. works on sundays and mondays. Don't call on saturdays."
+                android:text="Don't forget ask for prescriptions"
                 />
 
             <EditText
-                android:id="@+id/doctor_notes_et"
+                android:id="@+id/appointment_notes_et"
                 android:textSize="18sp"
                 android:textColor="@color/colorTextTextDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="Notes, like activity times and expertise.."
-                android:text="Family doctor. works on sundays and mondays. Don't call on saturdays."
+                android:hint="Notes, what should I bring with me?"
+                android:text="Don't forget ask for prescriptions."
                 android:visibility="gone"
                 />
 
             <View
-                android:id="@+id/doctor_divider_after_notes"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/cardview_shadow_start_color"
@@ -113,18 +112,8 @@
                 android:layout_marginBottom="20dp"
                 />
 
-            <TextView
-                android:id="@+id/doctor_contact_info_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Contact Info:"
-                android:textColor="@color/colorTextTextDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
             <LinearLayout
-                android:id="@+id/doctor_phone_container"
+                android:id="@+id/appointment_doctor_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -132,41 +121,29 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/doctor_phone_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
                     android:clickable="false"
-                    android:src="@drawable/ic_phone"
+                    android:src="@drawable/ic_user_md_solid"
                     android:tint="@color/colorTextTextDark"
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/doctor_phone_number"
+                    android:id="@+id/appointment_doctor_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
-                    android:text="+9722222222"
+                    android:text="Palony Almony"
                     android:textColor="@color/colorTextTextDark"
                     android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/doctor_phone_number_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Phone number"
-                    android:inputType="phone"
-                    android:text="+9722222222"
-                    android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/doctor_email_container"
+                android:id="@+id/appointment_address_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -174,48 +151,6 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/doctor_email_image"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_email"
-                    android:tint="@color/colorTextTextDark"
-                    android:tintMode="src_in" />
-
-                <TextView
-                    android:id="@+id/doctor_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:text="+9722222222"
-                    android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/doctor_email_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Email address"
-                    android:inputType="textEmailAddress"
-                    android:text="+9722222222"
-                    android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/doctor_address_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/doctor_address_image"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginTop="10dp"
@@ -226,7 +161,7 @@
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/doctor_address"
+                    android:id="@+id/appointment_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -235,7 +170,7 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/doctor_address_et"
+                    android:id="@+id/appointment_address_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Address"
@@ -247,125 +182,73 @@
 
             </LinearLayout>
 
-
             <LinearLayout
-                android:id="@+id/doctor_more_info"
+                android:id="@+id/appointment_date_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/cardview_shadow_start_color"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    />
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/ic_event_black_24dp"
+                    android:tint="@color/colorTextTextDark"
+                    android:tintMode="src_in" />
 
-                <LinearLayout
-                    android:id="@+id/doctor_appointments"
+                <TextView
+                    android:id="@+id/appointment_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="?android:attr/selectableItemBackground"
-                    >
+                    android:layout_marginTop="7dp"
+                    android:text="4th in September 2019 at 20:00"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+            </LinearLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorTextTextDark"
-                            android:text="Appointments:"
-                            android:layout_marginBottom="5dp"
-                            />
+            <LinearLayout
+                android:id="@+id/appointment_notify_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/doctor_appointment_more_info"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="Last visit was at 14/8/2010."
-                            android:textColor="@color/colorTextTextDark"
-                            android:textSize="16sp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_weight="0"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_margin="0dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_arrow_forward_black"
-                        android:tint="@color/colorTextTextDark"
-                        android:tintMode="src_in"
-                        />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:background="@color/cardview_shadow_start_color"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    />
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_notifications_black_24dp"
+                    android:tint="@color/colorTextTextDark"
+                    android:tintMode="src_in" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/appointment_notify_before"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:layout_marginTop="7dp"
+                    android:text="Notify 15 minutes before"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp" />
 
-                    <LinearLayout
-                        android:id="@+id/doctor_perceptions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorTextTextDark"
-                            android:text="Perceptions:"
-                            android:layout_marginBottom="5dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/doctor_perceptions_more_info"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:text="Ritalin LA 30mg (expire next week)"
-                            android:textColor="@color/colorTextTextDark"
-                            android:textSize="16sp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_weight="0"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_margin="0dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_arrow_forward_black"
-                        android:tint="@color/colorTextTextDark"
-                        android:tintMode="src_in"
-                        />
-
-                </LinearLayout>
+                <Spinner
+                    android:id="@+id/appointment_notify_before_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:hint="Don't remind me"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/colorTextTextDark"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

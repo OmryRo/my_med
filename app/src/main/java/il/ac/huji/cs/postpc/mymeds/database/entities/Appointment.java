@@ -34,10 +34,10 @@ public class Appointment {
     @ColumnInfo(name = "a_address")
     public String address;
 
-    @ColumnInfo(name = "a_notification_date")
-    public Date notificationDate;
+    @ColumnInfo(name = "a_notify_minutes_before")
+    public int notifyMinutesBefore;
 
-    public Appointment(long id, long doctorId, String title, String notes, Date date, int duration, String address, Date notificationDate) {
+    public Appointment(long id, long doctorId, String title, String notes, Date date, int duration, String address, int notifyMinutesBefore) {
         this.id = id;
         this.doctorId = doctorId;
         this.title = title;
@@ -45,12 +45,12 @@ public class Appointment {
         this.date = date;
         this.duration = duration;
         this.address = address;
-        this.notificationDate = notificationDate;
+        this.notifyMinutesBefore = notifyMinutesBefore;
     }
 
     @Ignore
-    public Appointment(long doctorId, String title, String notes, Date date, int duration, String address, Date notificationDate) {
-        this(0, doctorId, title, notes, date, duration, address, notificationDate);
+    public Appointment(long doctorId, String title, String notes, Date date, int duration, String address, int notifyMinutesBefore) {
+        this(0, doctorId, title, notes, date, duration, address, notifyMinutesBefore);
     }
 
 }

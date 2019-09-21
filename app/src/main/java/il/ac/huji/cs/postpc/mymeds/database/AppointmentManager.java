@@ -52,9 +52,9 @@ public class AppointmentManager {
             Date date,
             int duration,
             String address,
-            Date notificationDate
+            int notifyMinutesBefore
     ) {
-        Appointment appointment = new Appointment(doctorId, title, notes, date, duration, address, notificationDate);
+        Appointment appointment = new Appointment(doctorId, title, notes, date, duration, address, notifyMinutesBefore);
         long id = db.appointmentsDao().insert(appointment);
         appointment.id = id;
         return appointment;
@@ -67,13 +67,13 @@ public class AppointmentManager {
             final Date date,
             final int duration,
             final String address,
-            final Date notificationDate,
+            final int notifyMinutesBefore,
             final AppointmentListener callback
     ) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Appointment appointment = addAppointment(doctorId, title, notes, date, duration, address, notificationDate);
+                Appointment appointment = addAppointment(doctorId, title, notes, date, duration, address, notifyMinutesBefore);
                 callback.callback(appointment);
             }
         }).start();
