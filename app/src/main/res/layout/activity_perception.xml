@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.appointments.AppointmentActivity">
+    tools:context=".activities.perceptions.PerceptionActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -51,69 +51,25 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_event_black_24dp"
+                    android:src="@drawable/ic_prescription_bottle_solid"
                     android:tint="@color/colorPrimary"
                     />
 
                 <TextView
                     android:layout_marginTop="10dp"
-                    android:id="@+id/appointment_title"
+                    android:id="@+id/perception_title"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Appointment for Palony Almony"
-                    />
-
-                <EditText
-                    android:id="@+id/appointment_title_et"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Appointment for Palony Almony"
-                    android:hint="Title"
-                    android:inputType="textPersonName"
-                    android:visibility="gone"
+                    android:text="Perception"
                     />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/appointment_notes"
-                android:textSize="18sp"
-                android:textColor="@color/colorTextTextDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:text="Don't forget ask for prescriptions"
-                />
-
-            <EditText
-                android:id="@+id/appointment_notes_et"
-                android:textSize="18sp"
-                android:textColor="@color/colorTextTextDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="Notes, what should I bring with me?"
-                android:text="Don't forget ask for prescriptions."
-                android:visibility="gone"
-                />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/cardview_shadow_start_color"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                />
-
             <LinearLayout
-                android:id="@+id/appointment_doctor_container"
+                android:id="@+id/perception_doctor_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -132,7 +88,7 @@
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/appointment_doctor_name"
+                    android:id="@+id/perception_doctor_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -142,48 +98,25 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/appointment_address_container"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/cardview_shadow_start_color"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_map_black"
-                    android:tint="@color/colorTextTextDark"
-                    android:tintMode="src_in" />
-
-                <TextView
-                    android:id="@+id/appointment_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:text="Someplace 11, Somewhere"
-                    android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/appointment_address_et"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Address"
-                    android:inputType="textEmailAddress"
-                    android:text="Someplace 11, Somewhere"
-                    android:textColor="@color/colorTextTextDark"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+                android:layout_marginBottom="5dp"
+                android:text="Validity:"
+                android:textColor="@color/colorTextTextDark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/appointment_date_container"
+                android:id="@+id/perception_start_date_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -202,7 +135,7 @@
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/appointment_date"
+                    android:id="@+id/perception_start_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -213,7 +146,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/appointment_notify_container"
+                android:id="@+id/perception_end_date_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -226,31 +159,66 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
-                    android:src="@drawable/ic_notifications_black_24dp"
+                    android:clickable="false"
+                    android:src="@drawable/ic_event_black_24dp"
                     android:tint="@color/colorTextTextDark"
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/appointment_notify_before"
+                    android:id="@+id/perception_end_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
-                    android:text="Notify 15 minutes before"
+                    android:text="4th in September 2019 at 20:00"
                     android:textColor="@color/colorTextTextDark"
                     android:textSize="18sp" />
 
-                <Spinner
-                    android:id="@+id/appointment_notify_before_spinner"
-                    android:layout_width="match_parent"
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/cardview_shadow_start_color"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:hint="Don't remind me"
-                    android:inputType="textEmailAddress"
+                    android:layout_marginBottom="5dp"
+                    android:text="Medicines:"
                     android:textColor="@color/colorTextTextDark"
                     android:textSize="18sp"
-                    android:visibility="gone" />
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/perception_medicines_add"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_plus_solid"
+                    android:tint="@color/colorTextTextDark"
+                    android:background="?android:attr/selectableItemBackground"
+                    />
 
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/perception_medicines"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 

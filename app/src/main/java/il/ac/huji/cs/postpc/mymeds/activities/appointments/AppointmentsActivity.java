@@ -128,7 +128,7 @@ public class AppointmentsActivity extends AppCompatActivity {
                 futureAppointments = new ArrayList<>();
                 pastAppointments = new ArrayList<>();
 
-                Date now = new Date();
+                Date now = new Date(System.currentTimeMillis());
                 for (Appointment appointment : appointments) {
                     if (appointment.date.after(now)) {
                         futureAppointments.add(appointment);

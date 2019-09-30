@@ -233,8 +233,8 @@ public class AppointmentActivity extends AppCompatActivity {
                                 selectedDate.setHours(hourOfDay);
                                 selectedDate.setMinutes(minute);
                                 selectedDate.setYear(year - 1900);
-                                selectedDate.setMonth(month);
-                                selectedDate.setDate(dayOfMonth);
+                                selectedDate.setMonth(month - 1);
+                                selectedDate.setDate(dayOfMonth - 1);
                                 dateTv.setText(selectedDate.toString());
 
                             }
@@ -242,7 +242,7 @@ public class AppointmentActivity extends AppCompatActivity {
                         timePicker.show();
 
                     }
-                }, selectedDate.getYear() + 1900, selectedDate.getMonth(), selectedDate.getDay());
+                }, selectedDate.getYear() + 1900, selectedDate.getMonth() + 1, selectedDate.getDate() + 1);
                 datePicker.show();
 
             }
@@ -338,7 +338,7 @@ public class AppointmentActivity extends AppCompatActivity {
         String note = notesEt.getText().toString().trim();
         String address = addressEt.getText().toString();
         Date date = selectedDate;
-        int reminder = NOTIFICATION_OPTIONS_IN_MINUTES[notificationSp.getSelectedItemPosition()];
+        int reminder = NOTIFICATION_OPTIONS_IN_MINUTES[(int) notificationSp.getSelectedItemId()];
 
         if (appointment != null) {
             appointment.title = title;
@@ -412,8 +412,8 @@ public class AppointmentActivity extends AppCompatActivity {
     }
 
     private int notificationMinsToOptionIndex(int time) {
-        for (int i = 0; i < NOTIFICATION_OPTIONS_IN_MINUTES.length; i++) {
-            if (i <= NOTIFICATION_OPTIONS_IN_MINUTES[i]) {
+        for (int i = NOTIFICATION_OPTIONS_IN_MINUTES.length - 1; i >= 0; i--) {
+            if (time >= NOTIFICATION_OPTIONS_IN_MINUTES[i]) {
                 return i;
             }
         }

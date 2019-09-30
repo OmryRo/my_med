@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentsActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionsActivity;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 
@@ -252,9 +253,9 @@ public class DoctorInfoActivity extends AppCompatActivity {
                         hasStartedAnotherActivity = true;
                     }
 
-                    Intent intent = new Intent(getApplicationContext(), AppointmentsActivity.class);
-                    intent.putExtra(AppointmentsActivity.INTENT_DOCTOR_ID, doctor.id);
-                    startActivityForResult(intent, AppointmentsActivity.APPOINTMENT_INFO_REQ);
+                    Intent intent = new Intent(getApplicationContext(), PerceptionsActivity.class);
+                    intent.putExtra(PerceptionsActivity.INTENT_DOCTOR_ID, doctor.id);
+                    startActivityForResult(intent, PerceptionsActivity.PERCEPTIONS_REQ);
                 }
             });
 

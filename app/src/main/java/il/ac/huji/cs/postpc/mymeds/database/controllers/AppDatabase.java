@@ -8,6 +8,10 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringJoiner;
 
@@ -17,7 +21,7 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
-@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class}, exportSchema = false, version = 7)
+@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class}, exportSchema = false, version = 9)
 @TypeConverters({AppDatabase.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -42,31 +46,64 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public static class Converters {
+
         @TypeConverter
-        public static String longArrayToString(long[] array) {
-            if (array == null) {
-                return "";
+        public static String stringArrayToString(String[] strings) {
+
+            JSONArray jsonArray = new JSONArray();
+
+            for (String string : strings) {
+                jsonArray.put(string);
             }
 
-            StringJoiner sj = new StringJoiner(",");
-            for (long item : array) {
-                sj.add(String.valueOf(item));
+            return jsonArray.toString();
+        }
+
+        @TypeConverter
+        public static String[] stringToStringArray(String string) {
+
+            try {
+                JSONArray jsonArray = new JSONArray(string);
+                String[] output = new String[jsonArray.length()];
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    output[i] = jsonArray.optString(i, "");
+                }
+
+                return output;
+
+            } catch (JSONException e) {
+                return new String[] {};
             }
-            return sj.toString();
+
+        }
+
+        @TypeConverter
+        public static String longArrayToString(long[] longs) {
+            JSONArray jsonArray = new JSONArray();
+
+            for (long longVal : longs) {
+                jsonArray.put(longVal);
+            }
+
+            return jsonArray.toString();
         }
 
         @TypeConverter
         public static long[] stringToLongArray(String string) {
-            if (string == null) {
+            try {
+                JSONArray jsonArray = new JSONArray(string);
+                long[] output = new long[jsonArray.length()];
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    output[i] = jsonArray.optLong(i, 0);
+                }
+
+                return output;
+
+            } catch (JSONException e) {
                 return new long[] {};
             }
-
-            String[] splitted = string.split(",");
-            long[] longs = new long[splitted.length];
-            for (int i = 0; i < longs.length; i++) {
-                longs[i] = Long.getLong(splitted[i]);
-            }
-            return longs;
         }
 
         @TypeConverter

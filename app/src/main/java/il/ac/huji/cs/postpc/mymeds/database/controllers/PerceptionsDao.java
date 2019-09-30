@@ -31,4 +31,7 @@ public interface PerceptionsDao {
     @Delete
     void delete(Perception perception);
 
+    @Query("DELETE FROM perceptions WHERE d_id = :doctorId")
+    void deleteAllByDoctor(long doctorId);
+
 }

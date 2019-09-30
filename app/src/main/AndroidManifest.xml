@@ -38,6 +38,8 @@
         <activity android:name=".activities.medicine.MedicineInfoActivity"></activity>
         <activity android:name=".activities.appointments.AppointmentsActivity"></activity>
         <activity android:name=".activities.appointments.AppointmentActivity"></activity>
+        <activity android:name=".activities.perceptions.PerceptionsActivity"></activity>
+        <activity android:name=".activities.perceptions.PerceptionActivity"></activity>
     </application>
 
 </manifest>

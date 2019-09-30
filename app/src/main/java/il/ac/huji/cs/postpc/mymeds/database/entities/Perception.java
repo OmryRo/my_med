@@ -2,6 +2,7 @@ package il.ac.huji.cs.postpc.mymeds.database.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
@@ -22,13 +23,27 @@ public class Perception {
     @ColumnInfo(name = "m_ids")
     public long[] medicineIds;
 
+    @ColumnInfo(name = "m_names")
+    public String[] medicineNames;
+
     @ColumnInfo(name = "p_date_start")
     public Date start;
 
     @ColumnInfo(name = "p_date_expire")
     public Date expire;
 
-    @ColumnInfo(name = "p_expire_notify_date")
-    public Date expire_notify_date;
+    public Perception(long id, long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
+        this.id = id;
+        this.doctorId = doctorId;
+        this.medicineIds = medicineIds;
+        this.medicineNames = medicineNames;
+        this.start = start;
+        this.expire = expire;
+    }
+
+    @Ignore
+    public Perception(long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
+        this(0, doctorId, medicineIds, medicineNames, start, expire);
+    }
 
 }
