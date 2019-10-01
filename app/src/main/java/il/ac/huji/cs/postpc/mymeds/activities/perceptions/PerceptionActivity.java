@@ -247,10 +247,12 @@ public class PerceptionActivity extends AppCompatActivity {
 
         final LinearLayout medicineDialogView = new LinearLayout(getApplicationContext());
         medicineDialogView.setOrientation(LinearLayout.VERTICAL);
+        medicineDialogView.setPadding(20, 20, 20, 20);
         final Map<Long,Medicine> globalMedicines = medicineManager.getMedicines();
         for (final Map.Entry<Long,Medicine> entry : globalMedicines.entrySet()) {
             TextView tv = new TextView(this);
             tv.setText(entry.getValue().name);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

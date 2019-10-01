@@ -51,8 +51,8 @@ public class PerceptionsActivity extends AppCompatActivity {
     private TextView pastPerceptionsTv;
     private long doctorId;
     private Doctor doctor;
-    private ArrayList<Perception> pastPerceptions;
-    private ArrayList<Perception> futurePerceptions;
+    private PerceptionAdapter pastAdapter;
+    private PerceptionAdapter futureAdapter;
 
     private TextView doctorNameTv;
 
@@ -110,6 +110,16 @@ public class PerceptionsActivity extends AppCompatActivity {
             }
         });
 
+        pastAdapter = new PerceptionAdapter();
+        pastPerceptionsRv.setAdapter(pastAdapter);
+        pastPerceptionsRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        pastPerceptionsRv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+
+        futureAdapter = new PerceptionAdapter();
+        futurePerceptionsRv.setAdapter(futureAdapter);
+        futurePerceptionsRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        futurePerceptionsRv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+
     }
 
     @Override
@@ -123,8 +133,8 @@ public class PerceptionsActivity extends AppCompatActivity {
         perceptionManager.getPerceptions(doctor, new PerceptionManager.PerceptionsListener() {
             @Override
             public void callback(List<Perception> perceptions) {
-                futurePerceptions = new ArrayList<>();
-                pastPerceptions = new ArrayList<>();
+                ArrayList<Perception> futurePerceptions = new ArrayList<>();
+                ArrayList<Perception> pastPerceptions = new ArrayList<>();
 
                 Date now = new Date(System.currentTimeMillis());
                 for (Perception perception : perceptions) {
@@ -136,14 +146,8 @@ public class PerceptionsActivity extends AppCompatActivity {
                 }
 
                 pastPerceptionsTv.setVisibility(pastPerceptions.size() == 0 ? View.GONE : View.VISIBLE);
-
-                pastPerceptionsRv.setAdapter(new PerceptionAdapter(pastPerceptions));
-                pastPerceptionsRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                pastPerceptionsRv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-
-                futurePerceptionsRv.setAdapter(new PerceptionAdapter(futurePerceptions));
-                futurePerceptionsRv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                futurePerceptionsRv.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+                pastAdapter.update(pastPerceptions);
+                futureAdapter.update(futurePerceptions);
             }
         });
 
@@ -154,8 +158,14 @@ public class PerceptionsActivity extends AppCompatActivity {
 
         private ArrayList<Perception> perceptions;
 
-        PerceptionAdapter(ArrayList<Perception> perceptions) {
-            this.perceptions = perceptions;
+        PerceptionAdapter() {
+            this.perceptions = new ArrayList<>();
+        }
+
+        public void update(ArrayList<Perception> perceptions) {
+            this.perceptions.clear();
+            this.perceptions.addAll(perceptions);
+            notifyDataSetChanged();
         }
 
         @NonNull
