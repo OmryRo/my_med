@@ -32,6 +32,9 @@ public class Perception {
     @ColumnInfo(name = "p_date_expire")
     public Date expire;
 
+    @ColumnInfo(name = "p_notified")
+    public boolean hasNotified = false;
+
     public Perception(long id, long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
         this.id = id;
         this.doctorId = doctorId;

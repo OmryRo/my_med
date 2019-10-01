@@ -233,8 +233,8 @@ public class AppointmentActivity extends AppCompatActivity {
                                 selectedDate.setHours(hourOfDay);
                                 selectedDate.setMinutes(minute);
                                 selectedDate.setYear(year - 1900);
-                                selectedDate.setMonth(month - 1);
-                                selectedDate.setDate(dayOfMonth - 1);
+                                selectedDate.setMonth(month);
+                                selectedDate.setDate(dayOfMonth);
                                 dateTv.setText(selectedDate.toString());
 
                             }
@@ -242,7 +242,7 @@ public class AppointmentActivity extends AppCompatActivity {
                         timePicker.show();
 
                     }
-                }, selectedDate.getYear() + 1900, selectedDate.getMonth() + 1, selectedDate.getDate() + 1);
+                }, selectedDate.getYear() + 1900, selectedDate.getMonth(), selectedDate.getDate());
                 datePicker.show();
 
             }

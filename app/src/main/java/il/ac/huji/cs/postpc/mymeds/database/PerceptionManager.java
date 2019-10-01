@@ -32,6 +32,10 @@ public class PerceptionManager {
         }).start();
     }
 
+    public List<Perception> getPerceptions() {
+        return db.perceptionsDao().getAll();
+    }
+
     public List<Perception> getPerceptions(Doctor doctor) {
         return db.perceptionsDao().getPerceptionsByDoctorId(doctor.id);
     }

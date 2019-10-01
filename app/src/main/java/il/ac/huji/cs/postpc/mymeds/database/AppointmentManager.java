@@ -17,6 +17,10 @@ public class AppointmentManager {
         db = AppDatabase.getInstance(context);
     }
 
+    public List<Appointment> getAppointments() {
+        return db.appointmentsDao().getAll();
+    }
+
     public Appointment getAppointment(long id) {
         return db.appointmentsDao().getAppointmentById(id);
     }

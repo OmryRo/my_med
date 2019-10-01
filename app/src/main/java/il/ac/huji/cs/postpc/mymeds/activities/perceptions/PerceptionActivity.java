@@ -293,7 +293,7 @@ public class PerceptionActivity extends AppCompatActivity {
     }
 
     private void setDate(TextView textView, Date date, String pretext) {
-        String dateText = String.format("%s/%s/%s", date.getDate(), date.getMonth(), date.getYear() + 1900);
+        String dateText = String.format("%s/%s/%s", date.getDate(), date.getMonth() + 1, date.getYear() + 1900);
         textView.setText(String.format("%s: %s", pretext, dateText));
     }
 
