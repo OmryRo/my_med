@@ -13,11 +13,6 @@
         android:orientation="vertical"
         >
 
-        <FrameLayout
-            android:id="@+id/appointments_reminder_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

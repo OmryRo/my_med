@@ -31,7 +31,6 @@ public class MedicinesFragment extends Fragment {
     private MedicinesFragmentListener listener;
     private FloatingActionButton newMedicineFab;
     private RecyclerView recyclerView;
-    private ReminderFragment reminderFragment;
     private MedicineManager medicineManager;
     private boolean startedAnotherActivity;
 
@@ -45,39 +44,6 @@ public class MedicinesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_medicines, container, false);
         newMedicineFab = view.findViewById(R.id.medicines_add_fab);
         recyclerView = view.findViewById(R.id.medicines_container);
-
-        reminderFragment = new ReminderFragment();
-        reminderFragment.init(
-                "You run out of something in few days.\nDon't forget to go to the phamacy.",
-                new ReminderFragment.ReminderFragmentListener() {
-                    @Override
-                    public void onRemindMeLaterClicked() {
-                        hide();
-                    }
-
-                    @Override
-                    public void onDismissClicked() {
-                        hide();
-                    }
-
-                    private void hide() {
-                        reminderFragment.animateHide(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                getFragmentManager()
-                                        .beginTransaction()
-                                        .remove(reminderFragment)
-                                        .commit();
-                            }
-                        });
-                    }
-                }
-        );
-
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.medicines_reminder_container, reminderFragment)
-                .commit();
 
         newMedicineFab.setOnClickListener(new View.OnClickListener() {
             @Override

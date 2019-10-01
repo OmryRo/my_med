@@ -30,7 +30,6 @@ public class AppointmentsFragment extends Fragment {
     private AppointmentsFragmentListener listener;
     private FloatingActionButton newDoctorFab;
     private RecyclerView recyclerView;
-    private ReminderFragment reminderFragment;
     private DoctorManager doctorManager;
 
     private boolean startedAnotherActivity = false;
@@ -43,27 +42,6 @@ public class AppointmentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_appointments, container, false);
         newDoctorFab = view.findViewById(R.id.doctors_add_fab);
         recyclerView = view.findViewById(R.id.doctors_container);
-
-        reminderFragment = new ReminderFragment();
-        reminderFragment.init(
-                "You didn't visit Dr. Palony in the last 3 months.",
-                new ReminderFragment.ReminderFragmentListener() {
-                    @Override
-                    public void onRemindMeLaterClicked() {
-
-                    }
-
-                    @Override
-                    public void onDismissClicked() {
-
-                    }
-                }
-        );
-
-        getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.appointments_reminder_container, reminderFragment)
-                .commit();
 
         newDoctorFab.setOnClickListener(new View.OnClickListener() {
             @Override
