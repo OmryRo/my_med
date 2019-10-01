@@ -36,6 +36,16 @@ public class PerceptionManager {
         return db.perceptionsDao().getAll();
     }
 
+    public void getPerceptions(final PerceptionsListener callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Perception> perceptions = getPerceptions();
+                callback.callback(perceptions);
+            }
+        }).start();
+    }
+
     public List<Perception> getPerceptions(Doctor doctor) {
         return db.perceptionsDao().getPerceptionsByDoctorId(doctor.id);
     }

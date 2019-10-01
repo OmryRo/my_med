@@ -17,10 +17,6 @@ public class AppointmentManager {
         db = AppDatabase.getInstance(context);
     }
 
-    public List<Appointment> getAppointments() {
-        return db.appointmentsDao().getAll();
-    }
-
     public Appointment getAppointment(long id) {
         return db.appointmentsDao().getAppointmentById(id);
     }
@@ -31,6 +27,20 @@ public class AppointmentManager {
             public void run() {
                 Appointment appointment = getAppointment(id);
                 callback.callback(appointment);
+            }
+        }).start();
+    }
+
+    public List<Appointment> getAppointments() {
+        return db.appointmentsDao().getAll();
+    }
+
+    public void getAppointments(final AppointmentsListener callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Appointment> appointments = getAppointments();
+                callback.callback(appointments);
             }
         }).start();
     }
