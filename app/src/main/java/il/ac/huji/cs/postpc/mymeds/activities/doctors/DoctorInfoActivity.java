@@ -18,12 +18,19 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Date;
+import java.util.List;
+
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentsActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionsActivity;
+import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
+import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 
 public class DoctorInfoActivity extends AppCompatActivity {
 
@@ -35,6 +42,9 @@ public class DoctorInfoActivity extends AppCompatActivity {
     private static final Object LOCK = new Object();
 
     private DoctorManager manager;
+    private AppointmentManager appointmentManager;
+    private PerceptionManager perceptionManager;
+
     private Doctor doctor;
     private boolean isEditing;
     private boolean hasStartedAnotherActivity;
@@ -67,6 +77,8 @@ public class DoctorInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager = ((MyMedApplication) getApplicationContext()).getDoctorManager();
+        appointmentManager = ((MyMedApplication) getApplicationContext()).getAppointmentManager();
+        perceptionManager = ((MyMedApplication) getApplicationContext()).getPerceptionManager();
 
         setContentView(R.layout.activity_doctor);
         toolbar = findViewById(R.id.toolbar);
@@ -215,6 +227,47 @@ public class DoctorInfoActivity extends AppCompatActivity {
                 }
             });
 
+            appointmentManager.getAppointments(doctor, new AppointmentManager.AppointmentsListener() {
+                @Override
+                public void callback(List<Appointment> appointments) {
+                    long lastVisit = Long.MIN_VALUE;
+                    long nextVisit = Long.MAX_VALUE;
+                    long now = System.currentTimeMillis();
+
+                    for (Appointment appointment : appointments) {
+                        long appointmentTime = appointment.date.getTime();
+                        if (appointmentTime < now) {
+                            if (lastVisit < appointmentTime) {
+                                lastVisit = appointmentTime;
+                            }
+                        } else {
+                            if (nextVisit > appointmentTime) {
+                                nextVisit = appointmentTime;
+                            }
+                        }
+                    }
+
+                    String text = "No Appointments";
+                    if (nextVisit != Long.MAX_VALUE) {
+                        Date nextVisitDate = new Date(nextVisit);
+                        text = "Next visit at: " + nextVisitDate.toString();
+
+                    } else if (lastVisit != Long.MIN_VALUE) {
+                        Date lastVisitDate = new Date(lastVisit);
+                        text = "Last visit was at: " + lastVisitDate.toString();
+                    }
+
+                    final String finalText = text;
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            doctorAppointmentsTv.setText(finalText);
+                        }
+                    });
+                }
+            });
+
             doctorAppointmentsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -256,6 +309,33 @@ public class DoctorInfoActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), PerceptionsActivity.class);
                     intent.putExtra(PerceptionsActivity.INTENT_DOCTOR_ID, doctor.id);
                     startActivityForResult(intent, PerceptionsActivity.PERCEPTIONS_REQ);
+                }
+            });
+
+            perceptionManager.getPerceptions(doctor, new PerceptionManager.PerceptionsListener() {
+                @Override
+                public void callback(List<Perception> perceptions) {
+
+                    int validCounter = 0;
+                    Date now = new Date(System.currentTimeMillis());
+
+                    for (Perception perception : perceptions) {
+                        if (perception.expire.after(now)) {
+                            validCounter++;
+                        }
+                    }
+
+                    final int validCounterFinal = validCounter;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (validCounterFinal == 0) {
+                                doctorPerceptionTv.setText("There are no perception in effect.");
+                            } else {
+                                doctorPerceptionTv.setText(String.format("There are %s perception in effect.", validCounterFinal));
+                            }
+                        }
+                    });
                 }
             });
 
