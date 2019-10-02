@@ -32,6 +32,7 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
 
     implementation 'com.google.firebase:firebase-ml-vision:23.0.0'
+    implementation 'com.google.firebase:firebase-firestore:21.1.1'
 
     // Use the most recent version of CameraX, currently that is alpha04
     implementation "androidx.camera:camera-core:1.0.0-alpha04"

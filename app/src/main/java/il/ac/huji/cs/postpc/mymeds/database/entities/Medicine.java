@@ -10,8 +10,17 @@ import java.util.Date;
 @Entity(tableName = "medicines")
 public class Medicine {
 
+    @Ignore
     public static final int TYPE_PILLS = 0;
+
+    @Ignore
     public static final int TYPE_IV = 1;
+
+    @Ignore
+    public static final int TYPE_INHALE = 2;
+
+    @Ignore
+    public static final int TYPE_INJECTION = 3;
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "m_id")
@@ -50,7 +59,16 @@ public class Medicine {
     @Ignore
     public String getDosageString() {
 
-        String amountUnits = type == TYPE_PILLS ? "pill" : "bottle";
+        String amountUnits = null;
+        switch (type) {
+            case TYPE_PILLS:
+                amountUnits = "pills";
+                break;
+            default:
+                amountUnits = "units";
+                break;
+        }
+
         if (amount > 1) {
             amountUnits += "s";
         }

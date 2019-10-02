@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +27,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 import il.ac.huji.cs.postpc.mymeds.utils.PermissionChecker;
 
@@ -36,6 +45,8 @@ import il.ac.huji.cs.postpc.mymeds.utils.PermissionChecker;
  * api to use: https://open.fda.gov/apis/
  */
 public class SearchMedicineActivity extends AppCompatActivity implements ScanBarcodeFragment.Listener {
+
+    private static final String TAG = "SEARCH_MEDICINE_ACTIVITY";
 
     public static final int SEACH_MEDICINE_REQUEST = 0x2010;
     public static final int SEARCH_MEDICINE_CHANGES = 0x2011;
@@ -50,8 +61,14 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
     private ImageButton micButton;
     private ImageButton clearButton;
     private RecyclerView recyclerView;
+    private MedicineSearchAdapter adapter;
     private ScanBarcodeFragment searchBarcodeFragment;
     private boolean isInCameraMode;
+    private ArrayList<MedicineSearchResult> medicines;
+    private boolean startedAnotherActivity;
+    private boolean recievedBarcode;
+
+    private final Object LOCK = new Object();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,36 +116,48 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
             }
         });
 
+        downloadMedicineCollection();
         setTextSearchMode();
         setSearchBar();
         setRecycleView();
     }
 
     private void setRecycleView() {
+        adapter = new MedicineSearchAdapter();
         recyclerView = findViewById(R.id.results_container);
-        recyclerView.setAdapter(new RecyclerView.Adapter<ListItemHolder>() {
-            @NonNull
-            @Override
-            public ListItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return ListItemHolder.createHolder(parent);
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
-                holder.setData(
-                        R.drawable.ic_tablets_solid,
-                        "Some Medicine",
-                        "3 times a day.\nNext time: 8 hours."
-                );
-            }
-
-            @Override
-            public int getItemCount() {
-                return 10;
-            }
-        });
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+    }
+
+    private void downloadMedicineCollection() {
+        medicines = new ArrayList<>();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("meds")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                try {
+                                    MedicineSearchResult item = new MedicineSearchResult();
+                                    item.nameEn = documentSnapshot.getString("en");
+                                    item.nameHe = documentSnapshot.getString("he");
+                                    item.barcode = documentSnapshot.getLong("barcode");
+                                    medicines.add(item);
+                                } catch (NullPointerException e) {
+                                    Log.e(TAG, "failed on object: " + documentSnapshot.getId() + " " + documentSnapshot.toString(), e);
+                                }
+                            }
+                            adapter.filter(searchText.getText().toString());
+
+                        } else {
+                            Log.d(TAG, "onComplete: ");
+                        }
+                    }
+                });
     }
 
     private void setSearchBar() {
@@ -155,6 +184,7 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
                 boolean isEmpty = s.length() == 0;
                 micButton.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
                 clearButton.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                adapter.filter(s.toString());
             }
         });
 
@@ -181,6 +211,11 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
     }
 
     private void setCameraMode() {
+
+        synchronized (LOCK) {
+            recievedBarcode = false;
+        }
+
         setTitle(R.string.search_by_camera);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -229,6 +264,12 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        startedAnotherActivity = false;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if (isInCameraMode) {
@@ -270,6 +311,147 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
 
     @Override
     public void onBarcodeFound(String barcode) {
-        searchText.setText(barcode);
+
+        synchronized (LOCK) {
+            if (recievedBarcode) {
+                return;
+            }
+
+            recievedBarcode = true;
+        }
+
+        long barcodeAsLong;
+        try {
+            barcodeAsLong = Long.parseLong(barcode);
+        } catch (NumberFormatException e) {
+            barcodeAsLong = -1;
+        }
+
+        if (barcodeAsLong == -1) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Invalid barcode")
+                    .setMessage("Something went wrong. Please try again.")
+                    .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setCameraMode();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create().show();
+        }
+
+        for (MedicineSearchResult result : medicines) {
+            if (result.barcode == barcodeAsLong) {
+                startNewMedicineActivity(result);
+                return;
+            }
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle("Not found")
+                .setMessage(String.format("Couldn't find medicine with barcode %s.", barcode))
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setCameraMode();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
+    }
+
+
+
+    private void startNewMedicineActivity(MedicineSearchResult result) {
+        Intent intent = new Intent(getApplicationContext(), MedicineInfoActivity.class);
+        intent.putExtra(MedicineInfoActivity.INTENT_MED_NAME, result.nameEn);
+        intent.putExtra(MedicineInfoActivity.INTENT_MED_TYPE, result.type);
+        startActivityForResult(intent, MedicineInfoActivity.MEDICINE_INFO_REQ);
+    }
+
+    class MedicineSearchResult {
+        long barcode;
+        int amount;
+        String nameEn;
+        String nameHe;
+        int type;
+    }
+
+    class MedicineSearchAdapter extends RecyclerView.Adapter<ListItemHolder> {
+
+        ArrayList<MedicineSearchResult> filtered;
+
+        MedicineSearchAdapter() {
+            filtered = new ArrayList<>();
+        }
+
+        public void filter(String needle) {
+            filtered.clear();
+
+            if (medicines == null) {
+                return;
+            }
+
+            if (needle == null || needle.length() == 0) {
+                filtered.addAll(medicines);
+            } else {
+
+                needle = needle.toLowerCase();
+
+                for (MedicineSearchResult result : medicines) {
+                    if (result.nameHe.toLowerCase().contains(needle) || result.nameEn.toLowerCase().contains(needle)) {
+                        filtered.add(result);
+                    }
+                }
+
+            }
+
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public ListItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return ListItemHolder.createHolder(parent);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
+            final MedicineSearchResult result = filtered.get(position);
+            holder.setData(
+                    result.type == Medicine.TYPE_PILLS ? R.drawable.ic_tablets_solid : R.drawable.ic_syringe_solid,
+                    result.nameEn,
+                    ""
+            );
+
+            holder.setOnClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    synchronized (LOCK) {
+                        if (startedAnotherActivity) {
+                            return;
+                        }
+
+                        startedAnotherActivity = true;
+                    }
+
+                    startNewMedicineActivity(result);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return filtered.size();
+        }
     }
 }

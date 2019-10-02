@@ -79,7 +79,7 @@ public class MedicinesFragment extends Fragment {
 
                 final Medicine medicine = medicineManager.getByPos(position);
                 holder.setData(
-                        medicine.type == Medicine.TYPE_PILLS ? R.drawable.ic_pills_solid : R.drawable.ic_syringe_solid,
+                        medicine.type == Medicine.TYPE_PILLS ? R.drawable.ic_tablets_solid : R.drawable.ic_syringe_solid,
                         medicine.name,
                         medicine.getDosageString()
                 );

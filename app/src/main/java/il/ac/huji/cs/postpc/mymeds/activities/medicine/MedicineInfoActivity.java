@@ -30,11 +30,12 @@ public class MedicineInfoActivity extends AppCompatActivity {
     public static final int MEDICINE_INFO_MEDICINE_CHANGED = 1;
 
     public static final String INTENT_INDEX = "INDEX";
+    public static final String INTENT_MED_NAME = "MED_NAME";
+    public static final String INTENT_MED_TYPE = "MED_TYPE";
 
     private MedicineManager manager;
     private Medicine medicine;
 
-    private ImageView medicineIv;
     private ImageView medicineTypeIv;
     private TextView medicineNameTv;
     private TextView medicineTypeTv;
@@ -53,7 +54,6 @@ public class MedicineInfoActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        medicineIv = findViewById(R.id.medicine_image);
         medicineNameTv = findViewById(R.id.medicine_name);
         medicineTypeIv = findViewById(R.id.medicine_type_icon);
         medicineTypeTv = findViewById(R.id.medicine_type_text);

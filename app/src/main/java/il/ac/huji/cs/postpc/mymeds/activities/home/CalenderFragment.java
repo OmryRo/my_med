@@ -1,6 +1,7 @@
 package il.ac.huji.cs.postpc.mymeds.activities.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,8 @@ import java.util.StringJoiner;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
@@ -37,6 +40,8 @@ public class CalenderFragment extends Fragment {
     private PerceptionManager perceptionManager;
     private AppointmentManager appointmentManager;
     private CalenderMap calenderMap = new CalenderMap();
+    private boolean startedAnotherActivity;
+    private final Object LOCK = new Object();
 
     public CalenderFragment() {}
 
@@ -63,6 +68,12 @@ public class CalenderFragment extends Fragment {
 
         calendarView.setDate(System.currentTimeMillis());
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startedAnotherActivity = false;
     }
 
     @Override
@@ -135,16 +146,40 @@ public class CalenderFragment extends Fragment {
             Object event = events.get(position);
             if (event instanceof Appointment) {
 
-                Appointment appointment = (Appointment) event;
+                final Appointment appointment = (Appointment) event;
 
                 holder.setData(
                         R.drawable.ic_user_md_solid,
                         ((Appointment) event).title,
                         String.format("%s:%s", appointment.date.getHours(), appointment.date.getMinutes())
                 );
+
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), AppointmentActivity.class);
+                        intent.putExtra(AppointmentActivity.APPOINTMENT_ID, appointment.id);
+                        intent.putExtra(AppointmentActivity.ARRIVED_FROM_DOCTOR, true);
+                        startActivityForResult(intent, AppointmentActivity.APPOINTMENT_INFO_REQ);
+
+                    }
+                });
+
             } else if (event instanceof Perception) {
+
+                final Perception perception = (Perception) event;
+
                 StringJoiner joiner = new StringJoiner(", ");
-                for (String medName : ((Perception) event).medicineNames) {
+                for (String medName : perception.medicineNames) {
                     joiner.add(medName);
                 }
 
@@ -153,6 +188,27 @@ public class CalenderFragment extends Fragment {
                         "Prescription",
                         joiner.toString()
                 );
+
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), PerceptionActivity.class);
+                        intent.putExtra(PerceptionActivity.PERCEPTION_ID, perception.id);
+                        intent.putExtra(PerceptionActivity.ARRIVED_FROM_DOCTOR, true);
+                        startActivityForResult(intent, PerceptionActivity.PERCEPTION_INFO_REQ);
+
+                    }
+                });
+
             } else {
                 holder.setData(
                         R.drawable.ic_event_black_24dp,
