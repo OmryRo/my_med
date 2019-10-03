@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+import il.ac.huji.cs.postpc.mymeds.R;
+
 @Entity(tableName = "medicines")
 public class Medicine {
 
@@ -32,6 +34,15 @@ public class Medicine {
     @ColumnInfo(name = "m_note")
     public String note;
 
+    @ColumnInfo(name = "m_next")
+    public Date nextTime;
+
+    @ColumnInfo(name = "m_ends_at")
+    public Date endsAt;
+
+    @ColumnInfo(name = "m_times")
+    public int times;
+
     @ColumnInfo(name = "m_amount")
     public int amount;
 
@@ -41,17 +52,8 @@ public class Medicine {
     @ColumnInfo(name = "m_stock")
     public int stock;
 
-    @ColumnInfo(name = "m_last")
-    public Date lastTaken;
-
     @ColumnInfo(name = "m_type")
     public int type;
-
-    @ColumnInfo(name  = "m_has_image")
-    public boolean hasImage;
-
-    @ColumnInfo(name = "m_notification_next_date")
-    public Date notificationNextDate;
 
     @ColumnInfo(name = "m_notified_low_stock")
     public boolean notifiedLowStock;
@@ -62,10 +64,10 @@ public class Medicine {
         String amountUnits = null;
         switch (type) {
             case TYPE_PILLS:
-                amountUnits = "pills";
+                amountUnits = "pill";
                 break;
             default:
-                amountUnits = "units";
+                amountUnits = "unit";
                 break;
         }
 
@@ -78,24 +80,57 @@ public class Medicine {
 
     @Ignore
     public String getNextTimeString() {
-        return each.nextOccurianceHumanReadabily(lastTaken, new Date());
+        return nextTime.toString();//each.nextOccurianceHumanReadabily(lastTaken, new Date());
     }
 
     @Ignore
-    public Medicine(String name, String note, int amount, RepeatingDate each, int stock, Date lastTaken, int type, boolean hasImage) {
-        this(0, name, note, amount, each, stock, lastTaken, type, hasImage);
+    public Medicine(String name, String note, Date nextTime, Date endsAt, int times, int amount, RepeatingDate each, int stock, int type) {
+        this(0, name, note, nextTime, endsAt, times, amount, each, stock, type);
     }
 
-    public Medicine(long id, String name, String note, int amount, RepeatingDate each, int stock, Date lastTaken, int type, boolean hasImage) {
+    public Medicine(long id, String name, String note, Date nextTime, Date endsAt, int times, int amount, RepeatingDate each, int stock, int type) {
         this.id = id;
         this.name = name;
         this.note = note;
+        this.nextTime = nextTime;
+        this.endsAt = endsAt;
+        this.times = times;
         this.amount = amount;
         this.each = each;
         this.stock = stock;
-        this.lastTaken = lastTaken;
         this.type = type;
-        this.hasImage = hasImage;
+    }
+
+    @Ignore
+    public static String medicineTypeToString(int type) {
+        switch (type) {
+            case TYPE_PILLS:
+                return "Pills";
+            case TYPE_IV:
+                return "IV";
+            case TYPE_INJECTION:
+                return "Injection";
+            case TYPE_INHALE:
+                return "Inhalation";
+            default:
+                return "Pills";
+        }
+    }
+
+    @Ignore
+    public static int medicineTypeToRes(int type) {
+        switch (type) {
+            case TYPE_PILLS:
+                return R.drawable.ic_tablets_solid;
+            case TYPE_IV:
+                return R.drawable.ic_syringe_solid;
+            case TYPE_INJECTION:
+                return R.drawable.ic_syringe_solid;
+            case TYPE_INHALE:
+                return R.drawable.ic_prescription_bottle_solid;
+            default:
+                return R.drawable.ic_pills_solid;
+        }
     }
 
 }

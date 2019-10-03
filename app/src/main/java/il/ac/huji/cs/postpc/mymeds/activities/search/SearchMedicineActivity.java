@@ -41,9 +41,6 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 import il.ac.huji.cs.postpc.mymeds.utils.PermissionChecker;
 
-/*
- * api to use: https://open.fda.gov/apis/
- */
 public class SearchMedicineActivity extends AppCompatActivity implements ScanBarcodeFragment.Listener {
 
     private static final String TAG = "SEARCH_MEDICINE_ACTIVITY";

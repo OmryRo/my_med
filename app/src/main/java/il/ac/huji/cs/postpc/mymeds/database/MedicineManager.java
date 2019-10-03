@@ -35,32 +35,35 @@ public class MedicineManager {
                     add(
                             "Ritalin LA 30mg",
                             "Coffie isn't allowed when taking this medicine.",
+                            new Date(System.currentTimeMillis()),
+                            null,
+                            10,
                             1,
                             new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
                             30,
-                            new Date(),
-                            Medicine.TYPE_PILLS,
-                            false
+                            Medicine.TYPE_PILLS
                     );
                     add(
                             "Something random",
                             "do we really need it?.",
+                            new Date(System.currentTimeMillis()),
+                            new Date(System.currentTimeMillis() + 10000),
+                            -1,
                             2,
-                            new RepeatingDate(RepeatingDate.UNIT_MONTHS, 1),
-                            30,
-                            new Date(),
-                            Medicine.TYPE_IV,
-                            false
+                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
+                            200,
+                            Medicine.TYPE_IV
                     );
                     add(
                             "Something random 2",
                             "do we really need it?.",
+                            new Date(System.currentTimeMillis()),
+                            null,
+                            10,
                             1,
-                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 3),
-                            25,
-                            new Date(),
-                            Medicine.TYPE_PILLS,
-                            false
+                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
+                            30,
+                            Medicine.TYPE_PILLS
                     );
                 }
             }
@@ -70,14 +73,15 @@ public class MedicineManager {
     public Medicine add(
             String name,
             String note,
+            Date nextTime,
+            Date endsAt,
+            int times,
             int amount,
             RepeatingDate each,
             int stock,
-            Date lastTaken,
-            int type,
-            boolean hasImage
+            int type
     ) {
-        Medicine medicine = new Medicine(name, note, amount, each, stock, lastTaken, type, hasImage);
+        Medicine medicine = new Medicine(name, note, nextTime, endsAt, times, amount, each, stock, type);
 
         long id = db.medicinesDao().insert(medicine);
         medicine.id = id;
@@ -90,18 +94,19 @@ public class MedicineManager {
     public void add(
             final String name,
             final String note,
+            final Date nextTime,
+            final Date endsAt,
+            final int times,
             final int amount,
             final RepeatingDate each,
             final int stock,
-            final Date lastTaken,
             final int type,
-            final boolean hasImage,
             final Listener callback
     ) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Medicine medicine = add(name, note, amount, each, stock, lastTaken, type, hasImage);
+                Medicine medicine = add(name, note, nextTime, endsAt, times, amount, each, stock, type);
 
                 if (callback != null) {
                     callback.callback(medicine);

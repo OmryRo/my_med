@@ -21,7 +21,7 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
-@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class}, exportSchema = false, version = 10)
+@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class}, exportSchema = false, version = 11)
 @TypeConverters({AppDatabase.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 

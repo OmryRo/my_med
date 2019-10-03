@@ -89,28 +89,36 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/medicine_notes"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorTextTextDark"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Should take after eating, before going to bad."
-                    />
+                    android:orientation="vertical"
+                    >
 
-                <EditText
-                    android:id="@+id/medicine_notes_et"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorTextTextDark"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Notes, like should take it with food or not..."
-                    android:text="Should take after eating, before going to bad."
-                    android:visibility="gone"
-                    />
+                    <TextView
+                        android:id="@+id/medicine_notes"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorTextTextDark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="Should take after eating, before going to bad."
+                        />
+
+                    <EditText
+                        android:id="@+id/medicine_notes_et"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorTextTextDark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:hint="Notes, like should take it with food or not..."
+                        android:text="Should take after eating, before going to bad."
+                        />
+
+                </LinearLayout>
 
                 <View
                     android:id="@+id/medicine_divider_after_notes"
@@ -122,45 +130,311 @@
                     />
 
                 <LinearLayout
+                    android:id="@+id/medicine_next_time_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginBottom="2dp"
-                    >
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_prescription_bottle_solid"
-                        android:tint="@color/colorPrimary"
-                        android:layout_gravity="center"
-                        />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/ic_event_black_24dp"
+                        android:tint="@color/colorTextTextDark"
+                        android:tintMode="src_in" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
                         android:orientation="vertical"
                         >
 
                         <TextView
-                            android:id="@+id/medicine_dose_amount"
-                            android:textSize="16sp"
-                            android:textColor="@color/colorTextTitleDark"
+                            android:id="@+id/medicine_next_time"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Dose: 3 pills a day"
-                            />
+                            android:layout_marginTop="7dp"
+                            android:text="Next time at 4th in September 2019, 20:00"
+                            android:textColor="@color/colorTextTextDark"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:id="@+id/medicine_next_time_edit_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+
+                            <Spinner
+                                android:id="@+id/medicine_next_time_edit_selector"
+                                android:layout_marginTop="7dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                >
+
+                            </Spinner>
+
+                            <EditText
+                                android:id="@+id/medicine_next_time_edit_select_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Select date."
+                                android:editable="false"
+                                android:textSize="18sp"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/medicine_dosage_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/ic_prescription_bottle_solid"
+                        android:tint="@color/colorTextTextDark"
+                        android:tintMode="src_in" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
 
                         <TextView
-                            android:id="@+id/medicine_dose_next"
-                            android:textSize="14sp"
-                            android:textColor="@color/colorTextTextDark"
+                            android:id="@+id/medicine_dosage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Next dose in 2 hours."
-                            />
+                            android:layout_marginTop="7dp"
+                            android:text="2 pills each 12 hours."
+                            android:textColor="@color/colorTextTextDark"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:id="@+id/medicine_dosage_edit_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            >
+
+                            <EditText
+                                android:id="@+id/medicine_dosage_edit_amount"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:text="10"
+                                android:textSize="18sp"
+                                android:inputType="numberSigned|numberDecimal"
+                                android:gravity="center"
+                                />
+
+                            <TextView
+                                android:id="@+id/medicine_dosage_edit_middle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+                                android:text="pills each"
+                                android:textSize="18sp" />
+
+                            <EditText
+                                android:id="@+id/medicine_dosage_edit_time_amount"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:text="10"
+                                android:layout_marginEnd="5dp"
+                                android:textSize="18sp"
+                                android:inputType="numberSigned|numberDecimal"
+                                android:gravity="center"
+                                />
+
+                            <Spinner
+                                android:id="@+id/medicine_dosage_edit_time_units"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:layout_gravity="center"
+                                >
+
+                            </Spinner>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/medicine_ends_at_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/ic_access_alarm_black_24dp"
+                        android:tint="@color/colorTextTextDark"
+                        android:tintMode="src_in" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:id="@+id/medicine_ends_at_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:text="Ends at 4th in September 2019, 20:00"
+                            android:textColor="@color/colorTextTextDark"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:id="@+id/medicine_ends_at_edit_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+
+                            <Spinner
+                                android:id="@+id/medicine_ends_at_edit_selector"
+                                android:layout_marginTop="7dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                >
+
+                            </Spinner>
+
+                            <EditText
+                                android:id="@+id/medicine_ends_at_edit_select_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Select date."
+                                android:editable="false"
+                                android:textSize="18sp"
+                                />
+                            >
+
+                            <LinearLayout
+                                android:id="@+id/medicine_ends_at_edit_times_conatiner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+                                <EditText
+                                    android:id="@+id/medicine_ends_at_edit_times"
+                                    android:layout_width="40dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="10"
+                                    android:layout_marginEnd="5dp"
+                                    android:textSize="18sp"
+                                    android:inputType="numberSigned|numberDecimal"
+                                    android:gravity="center"
+                                    />
+                                <TextView
+                                    android:id="@+id/medicine_ends_at_edit_times_suffix"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="times."
+                                    android:textColor="@color/colorTextTextDark"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/medicine_inventory_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/ic_business_center_black_24dp"
+                        android:tint="@color/colorTextTextDark"
+                        android:tintMode="src_in" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:id="@+id/medicine_inventory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:text="20 pills left."
+                            android:textColor="@color/colorTextTextDark"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:id="@+id/medicine_inventory_edit_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            >
+
+                            <EditText
+                                android:id="@+id/medicine_inventory_edit_amount"
+                                android:layout_width="60dp"
+                                android:layout_height="wrap_content"
+                                android:text="10"
+                                android:layout_marginEnd="5dp"
+                                android:textSize="18sp"
+                                android:gravity="center"
+                                />
+
+                            <TextView
+                                android:id="@+id/medicine_inventory_edit_suffix"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="pills left."
+                                android:textColor="@color/colorTextTextDark"
+                                android:textSize="18sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

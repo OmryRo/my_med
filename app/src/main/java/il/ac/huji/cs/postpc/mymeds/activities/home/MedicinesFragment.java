@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.search.SearchMedicineActivity;
 import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
@@ -117,6 +118,7 @@ public class MedicinesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        recyclerView.getAdapter().notifyDataSetChanged();
         startedAnotherActivity = false;
     }
 
@@ -138,6 +140,15 @@ public class MedicinesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         medicineManager = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == MedicineInfoActivity.MEDICINE_INFO_REQ && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED) {
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 
     public interface MedicinesFragmentListener {}

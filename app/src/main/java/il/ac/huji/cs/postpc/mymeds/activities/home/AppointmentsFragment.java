@@ -110,6 +110,7 @@ public class AppointmentsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        recyclerView.getAdapter().notifyDataSetChanged();
         startedAnotherActivity = false;
     }
 
