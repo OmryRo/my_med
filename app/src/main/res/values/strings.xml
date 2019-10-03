@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyMeds</string>
+    <string name="app_name">My Medications</string>
     <string name="title_activity_home">MyMeds</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

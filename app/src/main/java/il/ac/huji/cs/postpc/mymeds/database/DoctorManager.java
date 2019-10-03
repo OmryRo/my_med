@@ -29,11 +29,11 @@ public class DoctorManager {
                 }
 
                 // remove later for debugging propose...
-                if (doctors.size() == 0) {
-                    add("Palony Almony the first", "Do something", "+9722222222", "first@docdocdoc.com", "");
-                    add("Palony Almony the second", "Do something", "+9722222222", "second@docdocdoc.com", "");
-                    add("Palony Almony the third", "Do something", "+9722222222", "third@docdocdoc.com", "");
-                }
+//                if (doctors.size() == 0) {
+//                    add("Palony Almony the first", "Do something", "+9722222222", "first@docdocdoc.com", "");
+//                    add("Palony Almony the second", "Do something", "+9722222222", "second@docdocdoc.com", "");
+//                    add("Palony Almony the third", "Do something", "+9722222222", "third@docdocdoc.com", "");
+//                }
             }
         }).start();
     }
