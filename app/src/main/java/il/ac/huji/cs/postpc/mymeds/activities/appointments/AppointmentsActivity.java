@@ -28,6 +28,7 @@ import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
@@ -39,6 +40,7 @@ public class AppointmentsActivity extends AppCompatActivity {
 
     public static final int APPOINTMENT_INFO_REQ = 0x5001;
     public static final int APPOINTMENT_INFO_RES = 0x5001;
+    public static final int APPOINTMENT_INFO_DOCTOR_DELETED = 0x5002;
     public static final String INTENT_DOCTOR_ID = "ID";
 
     private final Object LOCK = new Object();
@@ -91,7 +93,7 @@ public class AppointmentsActivity extends AppCompatActivity {
         doctorId = intent.getLongExtra(INTENT_DOCTOR_ID, -1);
 
         if (doctorId == -1) {
-            throw new RuntimeException("bad doctor id");
+            finish();
         }
 
         newAppointmentFab = findViewById(R.id.appointment_add_fab);
@@ -135,6 +137,12 @@ public class AppointmentsActivity extends AppCompatActivity {
         startedAnotherActivity = false;
 
         doctor = doctorManager.getById(doctorId);
+
+        if (doctor == null) {
+            finish();
+            return;
+        }
+
         doctorNameTv.setText(doctor.name);
 
         appointmentManager.getAppointments(doctor, new AppointmentManager.AppointmentsListener() {
@@ -169,7 +177,7 @@ public class AppointmentsActivity extends AppCompatActivity {
             this.appointments = new ArrayList<>();
         }
 
-        void update(List<Appointment> appointments) {
+        synchronized void update(List<Appointment> appointments) {
             this.appointments.clear();
             this.appointments.addAll(appointments);
             notifyDataSetChanged();
@@ -219,6 +227,12 @@ public class AppointmentsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setData();
+
+        if (resultCode == AppointmentActivity.APPOINTMENT_INFO_DOCTOR_DELETED) {
+            setResult(APPOINTMENT_INFO_DOCTOR_DELETED);
+            finish();
+        } else {
+            setData();
+        }
     }
 }

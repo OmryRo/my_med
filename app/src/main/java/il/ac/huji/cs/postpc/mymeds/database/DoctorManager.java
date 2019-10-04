@@ -79,6 +79,8 @@ public class DoctorManager {
 
     public void remove(Doctor doctor) {
         db.doctorsDao().delete(doctor);
+        db.perceptionsDao().deleteAllByDoctor(doctor.id);
+        db.appointmentsDao().deleteAllByDoctor(doctor.id);
         doctors.remove(doctor);
         dbMap.remove(doctor.id);
     }

@@ -170,7 +170,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
             medicine = manager.getById(index);
 
             if (medicine == null) {
-                throw new RuntimeException("Unknown medicine");
+                finish();
+                return;
             }
 
         } else {
@@ -178,7 +179,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
             medicineType = intent.getIntExtra(INTENT_MED_TYPE, -1);
 
             if (medicineName == null || medicineType == -1) {
-                throw new RuntimeException("Unknown medicine");
+                finish();
+                return;
             }
 
             isEditing = true;

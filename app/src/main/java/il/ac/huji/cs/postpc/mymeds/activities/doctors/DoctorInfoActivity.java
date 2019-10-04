@@ -37,6 +37,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
     public static final int DOCTOR_INFO_REQ = 0x5000;
     public static final int DOCTOR_INFO_NOTHING_CHANGED = 0;
     public static final int DOCTOR_INFO_DOCTORS_CHANGED = 1;
+    public static final int DOCTOR_INFO_DOCTORS_DELETED = 2;
     public static final String INTENT_INDEX = "INDEX";
 
     private static final Object LOCK = new Object();
@@ -121,6 +122,11 @@ public class DoctorInfoActivity extends AppCompatActivity {
 
         if (index != -1) {
             doctor = manager.getById(index);
+
+            if (doctor == null) {
+                finish();
+                return;
+            }
         }
 
         setContent(doctor == null);
@@ -503,7 +509,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setResult(DOCTOR_INFO_DOCTORS_CHANGED);
+                        setResult(DOCTOR_INFO_DOCTORS_DELETED);
                         finish();
                     }
                 });

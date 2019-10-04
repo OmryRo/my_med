@@ -24,6 +24,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -58,6 +59,7 @@ public class PerceptionActivity extends AppCompatActivity {
     public static final int PERCEPTION_INFO_REQ = 0x5000;
     public static final int PERCEPTION_INFO_NOTHING_CHANGED = 0;
     public static final int PERCEPTION_INFO_PERCEPTION_CHANGED = 1;
+    public static final int PERCEPTION_INFO_DOCTOR_DELETED = 2;
 
     public static final String PERCEPTION_ID = "PERCEPTION_ID";
     public static final String DOCTOR_ID = "DOCTOR_ID";
@@ -125,6 +127,12 @@ public class PerceptionActivity extends AppCompatActivity {
 
         if (perceptionId == -1 && doctorId != -1) {
             doctor = doctorManager.getById(doctorId);
+
+            if (doctor == null) {
+                finish();
+                return;
+            }
+
             perception = null;
             hasChanged = true;
             setTitle("New Perception");
@@ -133,19 +141,31 @@ public class PerceptionActivity extends AppCompatActivity {
         } else if (doctorId == -1 && perceptionId != -1) {
             perceptionManager.getPerception(perceptionId, new PerceptionManager.PerceptionListener() {
                 @Override
-                public void callback(Perception perception) {
-                    PerceptionActivity.this.perception = perception;
-                    PerceptionActivity.this.doctor = doctorManager.getById(perception.doctorId);
+                public void callback(final Perception perception) {
 
-                    setContent();
-                    hasChanged = false;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (perception == null) {
+                                finish();
+                                return;
+                            }
+
+                            PerceptionActivity.this.perception = perception;
+                            PerceptionActivity.this.doctor = doctorManager.getById(perception.doctorId);
+
+                            setContent();
+                            hasChanged = false;
+                        }
+                    });
+
                 }
             });
             setTitle("Perception");
 
 
         } else {
-            throw new RuntimeException("bad parameters");
+            finish();
         }
 
     }
@@ -502,4 +522,13 @@ public class PerceptionActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == DoctorInfoActivity.DOCTOR_INFO_DOCTORS_DELETED) {
+            setResult(PERCEPTION_INFO_DOCTOR_DELETED);
+            finish();
+        }
+    }
 }

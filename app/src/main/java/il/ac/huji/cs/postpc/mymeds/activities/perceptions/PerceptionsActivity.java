@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -25,6 +26,7 @@ import java.util.StringJoiner;
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
@@ -37,6 +39,7 @@ public class PerceptionsActivity extends AppCompatActivity {
 
     public static final int PERCEPTIONS_REQ = 0x5001;
     public static final int PERCEPTIONS_RES = 0x5001;
+    public static final int PERCEPTIONS_DOCTOR_DELECTED = 0x5002;
     public static final String INTENT_DOCTOR_ID = "ID";
 
     private final Object LOCK = new Object();
@@ -87,7 +90,8 @@ public class PerceptionsActivity extends AppCompatActivity {
         doctorId = intent.getLongExtra(INTENT_DOCTOR_ID, -1);
 
         if (doctorId == -1) {
-            throw new RuntimeException("bad doctor id");
+            finish();
+            return;
         }
 
         newPerceptionFab = findViewById(R.id.perception_add_fab);
@@ -128,6 +132,12 @@ public class PerceptionsActivity extends AppCompatActivity {
         startedAnotherActivity = false;
 
         doctor = doctorManager.getById(doctorId);
+
+        if (doctor == null) {
+            finish();
+            return;
+        }
+
         doctorNameTv.setText(doctor.name);
 
         perceptionManager.getPerceptions(doctor, new PerceptionManager.PerceptionsListener() {
@@ -162,7 +172,7 @@ public class PerceptionsActivity extends AppCompatActivity {
             this.perceptions = new ArrayList<>();
         }
 
-        public void update(ArrayList<Perception> perceptions) {
+        public synchronized void update(ArrayList<Perception> perceptions) {
             this.perceptions.clear();
             this.perceptions.addAll(perceptions);
             notifyDataSetChanged();
@@ -212,6 +222,16 @@ public class PerceptionsActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return perceptions.size();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == PerceptionActivity.PERCEPTION_INFO_DOCTOR_DELETED) {
+            setResult(PERCEPTIONS_DOCTOR_DELECTED);
+            finish();
         }
     }
 }
