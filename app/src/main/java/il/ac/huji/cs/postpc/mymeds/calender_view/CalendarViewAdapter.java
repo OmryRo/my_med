@@ -1,7 +1,7 @@
 /**
  * https://github.com/SpongeBobSun/mCalendarView/blob/master/mcalendarview/src/main/java/sun/bob/mcalendarview/adapters/CalendarViewAdapter.java
  */
-package il.ac.huji.cs.postpc.mymeds.views;
+package il.ac.huji.cs.postpc.mymeds.calender_view;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import sun.bob.mcalendarview.listeners.OnDateClickListener;
 import sun.bob.mcalendarview.utils.CalendarUtil;
 import sun.bob.mcalendarview.vo.DateData;
 import sun.bob.mcalendarview.vo.MonthData;

@@ -1,7 +1,7 @@
 /**
  * https://github.com/SpongeBobSun/mCalendarView/blob/master/mcalendarview/src/main/java/sun/bob/mcalendarview/fragments/MonthFragment.java
  */
-package il.ac.huji.cs.postpc.mymeds.views;
+package il.ac.huji.cs.postpc.mymeds.calender_view;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Date;
-import java.util.Locale;
 
 import il.ac.huji.cs.postpc.mymeds.R;
 import sun.bob.mcalendarview.views.MonthView;

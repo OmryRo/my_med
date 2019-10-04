@@ -1,7 +1,7 @@
 /**
  * https://github.com/SpongeBobSun/mCalendarView/blob/master/mcalendarview/src/main/java/sun/bob/mcalendarview/adapters/CalendarAdapter.java
  */
-package il.ac.huji.cs.postpc.mymeds.views;
+package il.ac.huji.cs.postpc.mymeds.calender_view;
 
 import android.content.Context;
 import android.view.View;
@@ -10,15 +10,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Observable;
 
-import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import sun.bob.mcalendarview.MarkStyle;
 import sun.bob.mcalendarview.listeners.OnDateClickListener;
 import sun.bob.mcalendarview.utils.CurrentCalendar;
-import sun.bob.mcalendarview.views.BaseCellView;
-import sun.bob.mcalendarview.views.BaseMarkView;
-import sun.bob.mcalendarview.views.DefaultCellView;
-import sun.bob.mcalendarview.views.DefaultMarkView;
 import sun.bob.mcalendarview.vo.DayData;
 import sun.bob.mcalendarview.vo.MarkedDates;
 import sun.bob.mcalendarview.vo.MonthData;

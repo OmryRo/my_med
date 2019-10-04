@@ -1,4 +1,4 @@
-package il.ac.huji.cs.postpc.mymeds.views;
+package il.ac.huji.cs.postpc.mymeds.calender_view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,10 +14,7 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import il.ac.huji.cs.postpc.mymeds.R;
-import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import sun.bob.mcalendarview.CellConfig;
-import sun.bob.mcalendarview.MarkStyleExp;
-import sun.bob.mcalendarview.views.BaseCellView;
 import sun.bob.mcalendarview.vo.DayData;
 
 public class CellView extends sun.bob.mcalendarview.views.DefaultCellView {

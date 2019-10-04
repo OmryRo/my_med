@@ -14,13 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.google.common.collect.Table;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -40,8 +36,7 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
-import il.ac.huji.cs.postpc.mymeds.views.CalendarView;
-import sun.bob.mcalendarview.CellConfig;
+import il.ac.huji.cs.postpc.mymeds.calender_view.CalendarView;
 import sun.bob.mcalendarview.listeners.OnDateClickListener;
 import sun.bob.mcalendarview.vo.DateData;
 import sun.bob.mcalendarview.vo.MarkedDates;

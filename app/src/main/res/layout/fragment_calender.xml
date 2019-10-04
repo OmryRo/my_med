@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         >
 
-        <il.ac.huji.cs.postpc.mymeds.views.CalendarView
+        <il.ac.huji.cs.postpc.mymeds.calender_view.CalendarView
             android:id="@+id/calender_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

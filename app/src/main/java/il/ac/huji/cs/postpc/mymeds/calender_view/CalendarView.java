@@ -1,14 +1,13 @@
 /**
  * https://github.com/SpongeBobSun/mCalendarView/blob/master/mcalendarview/src/main/java/sun/bob/mcalendarview/MCalendarView.java
  */
-package il.ac.huji.cs.postpc.mymeds.views;
+package il.ac.huji.cs.postpc.mymeds.calender_view;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
-import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
