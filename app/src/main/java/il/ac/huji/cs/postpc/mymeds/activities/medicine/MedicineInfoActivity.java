@@ -361,6 +361,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
 
         if (isEditing) {
 
+            endsAtContainer.setVisibility(View.VISIBLE);
+
             endsAtEditSelectorSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

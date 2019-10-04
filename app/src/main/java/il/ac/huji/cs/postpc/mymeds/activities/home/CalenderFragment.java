@@ -20,7 +20,9 @@ import com.google.common.collect.Table;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
@@ -186,6 +188,39 @@ public class CalenderFragment extends Fragment {
             }
         });
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Map<Long, Medicine> medicineMap = medicineManager.getMedicines();
+                for (Medicine medicine : medicineMap.values()) {
+
+                    if (medicine.nextTime == null) {
+                        continue;
+                    }
+
+                    Date nextTime = medicine.nextTime;
+                    int maxRepeats = medicine.times == -1 ? 50 : medicine.times;
+
+                    while ((medicine.endsAt == null || medicine.endsAt.after(nextTime)) && maxRepeats >= 0) {
+                        calenderMap.add(nextTime, medicine);
+                        maxRepeats--;
+                        nextTime = medicine.each.addTo(nextTime);
+                    }
+
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
+
+            }
+        }).start();
+
     }
 
     @Override
@@ -304,6 +339,41 @@ public class CalenderFragment extends Fragment {
                                 "%02d:%02d %s %s were taken.",
                                 treatment.when.getHours(), treatment.when.getMinutes(),
                                 treatment.amount, (medicine.type == Medicine.TYPE_PILLS ? "pills" : "units")
+                        )
+                );
+
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), MedicineInfoActivity.class);
+                        intent.putExtra(MedicineInfoActivity.INTENT_INDEX, medicine.id);
+                        startActivityForResult(intent, MedicineInfoActivity.MEDICINE_INFO_REQ);
+
+                    }
+                });
+
+            } else if (event.event instanceof Medicine) {
+
+                final Medicine medicine = (Medicine) event.event;
+                final int hours = event.hours;
+                final int minutes = event.minutes;
+
+                holder.setData(
+                        Medicine.medicineTypeToRes(medicine.type),
+                        String.format(medicine.name),
+                        String.format(
+                                "%02d:%02d take %s %s.",
+                                hours, minutes, medicine.amount,
+                                (medicine.type == Medicine.TYPE_PILLS ? "pills" : "units")
                         )
                 );
 
