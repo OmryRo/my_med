@@ -10,12 +10,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
+import android.widget.Toast;
+
+import com.google.common.collect.Table;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -29,7 +33,11 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
-
+import il.ac.huji.cs.postpc.mymeds.views.CalendarView;
+import sun.bob.mcalendarview.CellConfig;
+import sun.bob.mcalendarview.listeners.OnDateClickListener;
+import sun.bob.mcalendarview.vo.DateData;
+import sun.bob.mcalendarview.vo.MarkedDates;
 
 public class CalenderFragment extends Fragment {
 
@@ -39,9 +47,10 @@ public class CalenderFragment extends Fragment {
     private EventAdapter eventAdapter;
     private PerceptionManager perceptionManager;
     private AppointmentManager appointmentManager;
-    private CalenderMap calenderMap = new CalenderMap();
+    private CalenderMap calenderMap = CalenderMap.getInstance();
     private boolean startedAnotherActivity;
     private final Object LOCK = new Object();
+    private int[] lastMarked;
 
     public CalenderFragment() {}
 
@@ -58,16 +67,31 @@ public class CalenderFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         calendarView = view.findViewById(R.id.calender_view);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView.setOnDateClickListener(new OnDateClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                List<Object> events = calenderMap.get(year, month, dayOfMonth);
-                eventAdapter.update(events);
+            public void onDateClick(View view, DateData date) {
+                setEvents(date.getYear(), date.getMonth(), date.getDay());
             }
         });
+        Date now = new Date();
+        setEvents(now.getYear() + 1900, now.getMonth() + 1, now.getDate());
 
-        calendarView.setDate(System.currentTimeMillis());
         return view;
+    }
+
+    synchronized void setEvents(int year, int month, int day) {
+        MarkedDates.getInstance().removeAdd();
+        lastMarked = new int[] {year, month, day};
+        calendarView.markDate(year, month, day);
+
+        try {
+            calendarView.travelTo(null);
+        } catch (Exception e) {
+            Log.e("CALENDER_FRAGMENT", "initData: ", e);
+        }
+
+        List<Object> events = calenderMap.get(year, month, day);
+        eventAdapter.update(events);
     }
 
     @Override
@@ -80,10 +104,21 @@ public class CalenderFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        calenderMap = new CalenderMap();
-
         perceptionManager = ((MyMedApplication) context.getApplicationContext()).getPerceptionManager();
         appointmentManager = ((MyMedApplication) context.getApplicationContext()).getAppointmentManager();
+
+        initData();
+
+        if (context instanceof CalenderFragmentListener) {
+            listener = (CalenderFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    public void initData() {
+        calenderMap.clear();
 
         perceptionManager.getPerceptions(new PerceptionManager.PerceptionsListener() {
             @Override
@@ -91,6 +126,15 @@ public class CalenderFragment extends Fragment {
                 for (Perception perception : perceptions) {
                     calenderMap.add(perception.start, perception.expire, perception);
                 }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
             }
         });
 
@@ -100,15 +144,17 @@ public class CalenderFragment extends Fragment {
                 for (Appointment appointment : appointments) {
                     calenderMap.add(appointment.date, appointment);
                 }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
             }
         });
-
-        if (context instanceof CalenderFragmentListener) {
-            listener = (CalenderFragmentListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -224,5 +270,10 @@ public class CalenderFragment extends Fragment {
         public int getItemCount() {
             return events.size();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        initData();
     }
 }

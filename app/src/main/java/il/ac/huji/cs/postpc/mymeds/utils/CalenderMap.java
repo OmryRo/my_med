@@ -18,13 +18,28 @@ public class CalenderMap {
     private final Object LOCK = new Object();
     private YearHolder holder;
 
-    public CalenderMap() {
+    private static CalenderMap instance;
+
+    public synchronized static CalenderMap getInstance() {
+        if (instance == null) {
+            instance = new CalenderMap();
+        }
+        return instance;
+    }
+
+    private CalenderMap() {
         this.holder = new YearHolder();
+    }
+
+    public void clear() {
+        synchronized (LOCK) {
+            holder.clear();
+        }
     }
 
     public void add(Date date, Object item) {
         int yearIndex = date.getYear() + 1900;
-        int monthIndex = date.getMonth();
+        int monthIndex = date.getMonth() + 1;
         int dayIndex = date.getDate();
 
         Log.e("BLABLA", "add: " + yearIndex + " " + monthIndex + " " + dayIndex);
@@ -78,6 +93,10 @@ public class CalenderMap {
         int day = date.getDate();
 
         return get(year, month, day);
+    }
+
+    public boolean hasEvents(int year, int month, int day) {
+        return get(year, month, day).size() > 0;
     }
 
 }

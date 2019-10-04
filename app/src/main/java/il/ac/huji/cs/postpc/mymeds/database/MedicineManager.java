@@ -31,41 +31,41 @@ public class MedicineManager {
                 }
 
                 // remove later for debugging propose...
-//                if (medicines.size() == 0) {
-//                    add(
-//                            "Ritalin LA 30mg",
-//                            "Coffie isn't allowed when taking this medicine.",
-//                            new Date(System.currentTimeMillis()),
-//                            null,
-//                            10,
-//                            1,
-//                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
-//                            30,
-//                            Medicine.TYPE_PILLS
-//                    );
-//                    add(
-//                            "Something random",
-//                            "do we really need it?.",
-//                            new Date(System.currentTimeMillis()),
-//                            new Date(System.currentTimeMillis() + 10000),
-//                            -1,
-//                            2,
-//                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
-//                            200,
-//                            Medicine.TYPE_IV
-//                    );
-//                    add(
-//                            "Something random 2",
-//                            "do we really need it?.",
-//                            new Date(System.currentTimeMillis()),
-//                            null,
-//                            10,
-//                            1,
-//                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
-//                            30,
-//                            Medicine.TYPE_PILLS
-//                    );
-//                }
+                if (medicines.size() == 0) {
+                    add(
+                            "Ritalin LA 30mg",
+                            "Coffie isn't allowed when taking this medicine.",
+                            new Date(System.currentTimeMillis()),
+                            null,
+                            10,
+                            1,
+                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
+                            30,
+                            Medicine.TYPE_PILLS
+                    );
+                    add(
+                            "Something random",
+                            "do we really need it?.",
+                            new Date(System.currentTimeMillis()),
+                            new Date(System.currentTimeMillis() + 10000),
+                            -1,
+                            2,
+                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
+                            200,
+                            Medicine.TYPE_IV
+                    );
+                    add(
+                            "Something random 2",
+                            "do we really need it?.",
+                            new Date(System.currentTimeMillis()),
+                            null,
+                            10,
+                            1,
+                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
+                            30,
+                            Medicine.TYPE_PILLS
+                    );
+                }
             }
         }).start();
     }
