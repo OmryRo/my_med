@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,20 +19,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
-import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
-import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
-import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
 public class AppointmentsActivity extends AppCompatActivity {
@@ -49,6 +42,7 @@ public class AppointmentsActivity extends AppCompatActivity {
     private DoctorManager doctorManager;
     private AppointmentManager appointmentManager;
     private Toolbar toolbar;
+    private View noAppointments;
     private FloatingActionButton newAppointmentFab;
     private RecyclerView pastAppointmentsRv;
     private RecyclerView futureAppointmentsRv;
@@ -88,6 +82,8 @@ public class AppointmentsActivity extends AppCompatActivity {
         futureAppointmentsRv = findViewById(R.id.future_appointments);
         pastAppointmentsTv = findViewById(R.id.past_appointments_tv);
         futureAppointmentsTv = findViewById(R.id.future_appointments_tv);
+
+        noAppointments = findViewById(R.id.no_appointments_message);
 
         Intent intent = getIntent();
         doctorId = intent.getLongExtra(INTENT_DOCTOR_ID, -1);
@@ -164,6 +160,7 @@ public class AppointmentsActivity extends AppCompatActivity {
                 pastAppointmentsTv.setVisibility(pastAppointments.size() == 0 ? View.GONE : View.VISIBLE);
                 futureAppointmentsAdapter.update(futureAppointments);
                 pastAppointmentsAdapter.update(pastAppointments);
+                noAppointments.setVisibility(appointments.size() == 0 ? View.VISIBLE : View.GONE);
 
             }
         });

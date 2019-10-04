@@ -6,62 +6,61 @@ import java.util.Date;
 import java.util.List;
 
 import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 
-public class PerceptionManager {
+public class PrescriptionManager {
 
     private final AppDatabase db;
 
-    public PerceptionManager(Context context) {
+    public PrescriptionManager(Context context) {
         db = AppDatabase.getInstance(context);
     }
 
-    public Perception getPerception(long id) {
+    public Prescription getPrescription(long id) {
         return db.perceptionsDao().getPerceptionById(id);
     }
 
-    public void getPerception(final long id, final PerceptionListener callback) {
+    public void getPrescription(final long id, final PerceptionListener callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Perception perception = getPerception(id);
+                Prescription perception = getPrescription(id);
                 callback.callback(perception);
             }
         }).start();
     }
 
-    public List<Perception> getPerceptions() {
+    public List<Prescription> getPrescriptions() {
         return db.perceptionsDao().getAll();
     }
 
-    public void getPerceptions(final PerceptionsListener callback) {
+    public void getPrescriptions(final PerceptionsListener callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Perception> perceptions = getPerceptions();
+                List<Prescription> perceptions = getPrescriptions();
                 callback.callback(perceptions);
             }
         }).start();
     }
 
-    public List<Perception> getPerceptions(Doctor doctor) {
+    public List<Prescription> getPrescriptions(Doctor doctor) {
         return db.perceptionsDao().getPerceptionsByDoctorId(doctor.id);
     }
 
-    public void getPerceptions(final Doctor doctor, final PerceptionsListener callback) {
+    public void getPrescriptions(final Doctor doctor, final PerceptionsListener callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Perception> perceptions = getPerceptions(doctor);
+                List<Prescription> perceptions = getPrescriptions(doctor);
                 callback.callback(perceptions);
             }
         }).start();
     }
 
-    public Perception addPerception(long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
-        Perception perception = new Perception(doctorId, medicineIds, medicineNames, start, expire);
+    public Prescription addPerception(long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
+        Prescription perception = new Prescription(doctorId, medicineIds, medicineNames, start, expire);
         long id = db.perceptionsDao().insert(perception);
         perception.id = id;
         return perception;
@@ -78,17 +77,17 @@ public class PerceptionManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Perception perception = addPerception(doctorId, medicineIds, medicineNames, start, expire);
+                Prescription perception = addPerception(doctorId, medicineIds, medicineNames, start, expire);
                 callback.callback(perception);
             }
         }).start();
     }
 
-    public void updatePerception(Perception perception) {
+    public void updatePerception(Prescription perception) {
         db.perceptionsDao().update(perception);
     }
 
-    public void updatePerception(final Perception perception, final PerceptionListener callback) {
+    public void updatePerception(final Prescription perception, final PerceptionListener callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -98,11 +97,11 @@ public class PerceptionManager {
         }).start();
     }
 
-    public void deletePerception(Perception perception) {
+    public void deletePerception(Prescription perception) {
         db.perceptionsDao().delete(perception);
     }
 
-    public void deletePerception(final Perception perception, final PerceptionListener callback) {
+    public void deletePerception(final Prescription perception, final PerceptionListener callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -127,10 +126,10 @@ public class PerceptionManager {
     }
 
     public interface PerceptionListener {
-        void callback(Perception perception);
+        void callback(Prescription perception);
     }
 
     public interface PerceptionsListener {
-        void callback(List<Perception> perceptions);
+        void callback(List<Prescription> perceptions);
     }
 }

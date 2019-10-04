@@ -8,7 +8,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 
 @Dao

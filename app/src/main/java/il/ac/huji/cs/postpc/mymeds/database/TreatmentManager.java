@@ -2,13 +2,10 @@ package il.ac.huji.cs.postpc.mymeds.database;
 
 import android.content.Context;
 
-import java.util.Date;
 import java.util.List;
 
 import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 
 public class TreatmentManager {

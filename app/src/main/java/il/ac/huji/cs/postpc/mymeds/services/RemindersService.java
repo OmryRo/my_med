@@ -8,11 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +21,11 @@ import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.loading.LoadingActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.TreatmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 
 public class RemindersService extends Service {
 
@@ -83,7 +80,7 @@ public class RemindersService extends Service {
 
         MedicineManager medicineManager;
         AppointmentManager appointmentManager;
-        PerceptionManager perceptionManager;
+        PrescriptionManager perceptionManager;
         TreatmentManager treatmentManager;
 
         @Override
@@ -120,8 +117,8 @@ public class RemindersService extends Service {
         }
 
         void checkForPerceptionsReminders() {
-            List<Perception> perceptions = perceptionManager.getPerceptions();
-            for (Perception perception : perceptions) {
+            List<Prescription> perceptions = perceptionManager.getPrescriptions();
+            for (Prescription perception : perceptions) {
 
                 if (perception.hasNotified) {
                     continue;

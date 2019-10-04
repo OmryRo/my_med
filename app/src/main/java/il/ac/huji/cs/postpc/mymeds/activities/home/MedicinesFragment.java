@@ -32,6 +32,7 @@ public class MedicinesFragment extends Fragment {
     private MedicinesFragmentListener listener;
     private FloatingActionButton newMedicineFab;
     private RecyclerView recyclerView;
+    private View noMedicinesMessage;
     private MedicineManager medicineManager;
     private boolean startedAnotherActivity;
 
@@ -45,6 +46,7 @@ public class MedicinesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_medicines, container, false);
         newMedicineFab = view.findViewById(R.id.medicines_add_fab);
         recyclerView = view.findViewById(R.id.medicines_container);
+        noMedicinesMessage = view.findViewById(R.id.no_medicines_message);
 
         newMedicineFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +122,7 @@ public class MedicinesFragment extends Fragment {
         super.onResume();
         recyclerView.getAdapter().notifyDataSetChanged();
         startedAnotherActivity = false;
+        toggleNoMedicineMessage();
     }
 
     @Override
@@ -148,7 +151,12 @@ public class MedicinesFragment extends Fragment {
 
         if (requestCode == MedicineInfoActivity.MEDICINE_INFO_REQ && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED) {
             recyclerView.getAdapter().notifyDataSetChanged();
+            toggleNoMedicineMessage();
         }
+    }
+
+    private void toggleNoMedicineMessage() {
+        noMedicinesMessage.setVisibility(medicineManager.size() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public interface MedicinesFragmentListener {}

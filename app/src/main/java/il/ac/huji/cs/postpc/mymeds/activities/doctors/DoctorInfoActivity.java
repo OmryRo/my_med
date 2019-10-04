@@ -11,12 +11,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Date;
 import java.util.List;
@@ -24,13 +21,13 @@ import java.util.List;
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentsActivity;
-import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionsActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.prescriptions.PrescriptionsActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 
 public class DoctorInfoActivity extends AppCompatActivity {
 
@@ -44,7 +41,7 @@ public class DoctorInfoActivity extends AppCompatActivity {
 
     private DoctorManager manager;
     private AppointmentManager appointmentManager;
-    private PerceptionManager perceptionManager;
+    private PrescriptionManager perceptionManager;
 
     private Doctor doctor;
     private boolean isEditing;
@@ -103,10 +100,10 @@ public class DoctorInfoActivity extends AppCompatActivity {
         doctorContactInfoTv = findViewById(R.id.doctor_contact_info_text);
         doctorEmailIv = findViewById(R.id.doctor_email_image);
         doctorPhoneIv = findViewById(R.id.doctor_phone_image);
-        doctorPerceptionTv = findViewById(R.id.doctor_perceptions_more_info);
+        doctorPerceptionTv = findViewById(R.id.doctor_prescriptions_more_info);
         doctorAppointmentsTv = findViewById(R.id.doctor_appointment_more_info);
         doctorAppointmentsView = findViewById(R.id.doctor_appointments);
-        doctorPerceptionsView = findViewById(R.id.doctor_perceptions);
+        doctorPerceptionsView = findViewById(R.id.doctor_prescriptions);
     }
 
     @Override
@@ -312,20 +309,20 @@ public class DoctorInfoActivity extends AppCompatActivity {
                         hasStartedAnotherActivity = true;
                     }
 
-                    Intent intent = new Intent(getApplicationContext(), PerceptionsActivity.class);
-                    intent.putExtra(PerceptionsActivity.INTENT_DOCTOR_ID, doctor.id);
-                    startActivityForResult(intent, PerceptionsActivity.PERCEPTIONS_REQ);
+                    Intent intent = new Intent(getApplicationContext(), PrescriptionsActivity.class);
+                    intent.putExtra(PrescriptionsActivity.INTENT_DOCTOR_ID, doctor.id);
+                    startActivityForResult(intent, PrescriptionsActivity.PERCEPTIONS_REQ);
                 }
             });
 
-            perceptionManager.getPerceptions(doctor, new PerceptionManager.PerceptionsListener() {
+            perceptionManager.getPrescriptions(doctor, new PrescriptionManager.PerceptionsListener() {
                 @Override
-                public void callback(List<Perception> perceptions) {
+                public void callback(List<Prescription> perceptions) {
 
                     int validCounter = 0;
                     Date now = new Date(System.currentTimeMillis());
 
-                    for (Perception perception : perceptions) {
+                    for (Prescription perception : perceptions) {
                         if (perception.expire.after(now)) {
                             validCounter++;
                         }

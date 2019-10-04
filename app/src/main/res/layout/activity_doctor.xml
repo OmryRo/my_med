@@ -326,7 +326,7 @@
                     >
 
                     <LinearLayout
-                        android:id="@+id/doctor_perceptions"
+                        android:id="@+id/doctor_prescriptions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -339,12 +339,12 @@
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/colorTextTextDark"
-                            android:text="Perceptions:"
+                            android:text="Prescriptions:"
                             android:layout_marginBottom="5dp"
                             />
 
                         <TextView
-                            android:id="@+id/doctor_perceptions_more_info"
+                            android:id="@+id/doctor_prescriptions_more_info"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"

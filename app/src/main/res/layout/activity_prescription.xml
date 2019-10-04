@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.perceptions.PerceptionActivity">
+    tools:context=".activities.prescriptions.PrescriptionActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -57,19 +57,19 @@
 
                 <TextView
                     android:layout_marginTop="10dp"
-                    android:id="@+id/perception_title"
+                    android:id="@+id/prescription_title"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Perception"
+                    android:text="Prescription"
                     />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/perception_doctor_container"
+                android:id="@+id/prescription_doctor_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -88,7 +88,7 @@
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/perception_doctor_name"
+                    android:id="@+id/prescription_doctor_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -116,7 +116,7 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/perception_start_date_container"
+                android:id="@+id/prescription_start_date_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -135,7 +135,7 @@
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/perception_start_date"
+                    android:id="@+id/prescription_start_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -146,7 +146,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/perception_end_date_container"
+                android:id="@+id/prescription_end_date_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
@@ -165,7 +165,7 @@
                     android:tintMode="src_in" />
 
                 <TextView
-                    android:id="@+id/perception_end_date"
+                    android:id="@+id/prescription_end_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
@@ -201,7 +201,7 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/perception_medicines_add"
+                    android:id="@+id/prescription_medicines_add"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginEnd="5dp"
@@ -214,7 +214,7 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/perception_medicines"
+                android:id="@+id/prescription_medicines"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity(tableName = "perceptions")
-public class Perception {
+@Entity(tableName = "prescription")
+public class Prescription {
 
     public final static int STATE_NOT_USED = 0;
     public final static int STATE_USED = 1;
@@ -35,7 +35,7 @@ public class Perception {
     @ColumnInfo(name = "p_notified")
     public boolean hasNotified = false;
 
-    public Perception(long id, long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
+    public Prescription(long id, long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
         this.id = id;
         this.doctorId = doctorId;
         this.medicineIds = medicineIds;
@@ -45,7 +45,7 @@ public class Perception {
     }
 
     @Ignore
-    public Perception(long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
+    public Prescription(long doctorId, long[] medicineIds, String[] medicineNames, Date start, Date expire) {
         this(0, doctorId, medicineIds, medicineNames, start, expire);
     }
 

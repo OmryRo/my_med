@@ -25,14 +25,14 @@ import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
-import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.prescriptions.PrescriptionActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.TreatmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
@@ -46,8 +46,9 @@ public class CalenderFragment extends Fragment {
     private CalenderFragmentListener listener;
     private RecyclerView recyclerView;
     private CalendarView calendarView;
+    private View noEventsMessage;
     private EventAdapter eventAdapter;
-    private PerceptionManager perceptionManager;
+    private PrescriptionManager perceptionManager;
     private AppointmentManager appointmentManager;
     private TreatmentManager treatmentManager;
     private MedicineManager medicineManager;
@@ -69,6 +70,8 @@ public class CalenderFragment extends Fragment {
         recyclerView.setAdapter(eventAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        noEventsMessage = view.findViewById(R.id.no_events_message);
 
         calendarView = view.findViewById(R.id.calender_view);
         calendarView.setOnDateClickListener(new OnDateClickListener() {
@@ -95,8 +98,9 @@ public class CalenderFragment extends Fragment {
         }
 
         CalenderMap.Day events = calenderMap.get(year, month, day);
-        Log.e("CALENDER_FRAGMENT", "setEvents: " + events.size() + " " + year + " " + month + " " + day);
         eventAdapter.update(events);
+        noEventsMessage.setVisibility(events.size() == 0 ? View.VISIBLE : View.GONE);
+
     }
 
     @Override
@@ -127,10 +131,10 @@ public class CalenderFragment extends Fragment {
     public void initData() {
         calenderMap.clear();
 
-        perceptionManager.getPerceptions(new PerceptionManager.PerceptionsListener() {
+        perceptionManager.getPrescriptions(new PrescriptionManager.PerceptionsListener() {
             @Override
-            public void callback(List<Perception> perceptions) {
-                for (Perception perception : perceptions) {
+            public void callback(List<Prescription> perceptions) {
+                for (Prescription perception : perceptions) {
                     calenderMap.add(perception.start, perception.expire, perception);
                 }
 
@@ -287,9 +291,9 @@ public class CalenderFragment extends Fragment {
                     }
                 });
 
-            } else if (event.event instanceof Perception) {
+            } else if (event.event instanceof Prescription) {
 
-                final Perception perception = (Perception) event.event;
+                final Prescription perception = (Prescription) event.event;
 
                 StringJoiner joiner = new StringJoiner(", ");
                 for (String medName : perception.medicineNames) {
@@ -314,10 +318,10 @@ public class CalenderFragment extends Fragment {
                             startedAnotherActivity = true;
                         }
 
-                        Intent intent = new Intent(getContext(), PerceptionActivity.class);
-                        intent.putExtra(PerceptionActivity.PERCEPTION_ID, perception.id);
-                        intent.putExtra(PerceptionActivity.ARRIVED_FROM_DOCTOR, false);
-                        startActivityForResult(intent, PerceptionActivity.PERCEPTION_INFO_REQ);
+                        Intent intent = new Intent(getContext(), PrescriptionActivity.class);
+                        intent.putExtra(PrescriptionActivity.PRESCRIPTION_ID, perception.id);
+                        intent.putExtra(PrescriptionActivity.ARRIVED_FROM_DOCTOR, false);
+                        startActivityForResult(intent, PrescriptionActivity.PRESCRIPTION_INFO_REQ);
 
                     }
                 });

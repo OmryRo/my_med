@@ -42,6 +42,40 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <LinearLayout
+            android:id="@+id/no_events_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calender_view"
+            >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:foreground="@drawable/ic_event_black_24dp"
+                android:foregroundTint="@color/common_google_signin_btn_text_dark_disabled"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Nothing on this day"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textColor="@color/common_google_signin_btn_text_dark_disabled"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -8,7 +8,7 @@ import android.graphics.Color;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.TreatmentManager;
 import il.ac.huji.cs.postpc.mymeds.services.RemindersService;
 
@@ -21,7 +21,7 @@ public class MyMedApplication extends Application {
     private DoctorManager doctorManager;
     private MedicineManager medicineManager;
     private AppointmentManager appointmentManager;
-    private PerceptionManager perceptionManager;
+    private PrescriptionManager perceptionManager;
     private TreatmentManager treatmentManager;
 
     @Override
@@ -31,7 +31,7 @@ public class MyMedApplication extends Application {
         doctorManager = new DoctorManager(this);
         medicineManager = new MedicineManager(this);
         appointmentManager = new AppointmentManager(this);
-        perceptionManager = new PerceptionManager(this);
+        perceptionManager = new PrescriptionManager(this);
         treatmentManager = new TreatmentManager(this);
 
         setNotificationChannel();
@@ -67,7 +67,7 @@ public class MyMedApplication extends Application {
         return appointmentManager;
     }
 
-    public PerceptionManager getPerceptionManager() {
+    public PrescriptionManager getPerceptionManager() {
         return perceptionManager;
     }
 
