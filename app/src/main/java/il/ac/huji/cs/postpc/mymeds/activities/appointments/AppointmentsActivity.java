@@ -7,6 +7,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -127,6 +128,10 @@ public class AppointmentsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setData();
+    }
+
+    private void setData() {
         startedAnotherActivity = false;
 
         doctor = doctorManager.getById(doctorId);
@@ -154,8 +159,6 @@ public class AppointmentsActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     class AppointmentAdapter extends RecyclerView.Adapter<ListItemHolder> {
@@ -211,5 +214,11 @@ public class AppointmentsActivity extends AppCompatActivity {
         public int getItemCount() {
             return appointments.size();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        setData();
     }
 }

@@ -48,9 +48,14 @@ public class HomeActivity extends AppCompatActivity implements
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_about:
-                        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                        CustomTabsIntent intent = builder.build();
-                        intent.launchUrl(getApplicationContext(), Uri.parse("https://omryro.github.io/my_med/"));
+                        try {
+                            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                            CustomTabsIntent intent = builder.build();
+                            intent.launchUrl(getApplicationContext(), Uri.parse("https://omryro.github.io/my_med/"));
+                        } catch (Exception exception) {
+
+                        }
+
                         break;
                 }
                 return false;

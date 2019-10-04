@@ -26,11 +26,16 @@ import java.util.StringJoiner;
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
+import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
 import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.TreatmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 import il.ac.huji.cs.postpc.mymeds.views.CalendarView;
@@ -47,6 +52,8 @@ public class CalenderFragment extends Fragment {
     private EventAdapter eventAdapter;
     private PerceptionManager perceptionManager;
     private AppointmentManager appointmentManager;
+    private TreatmentManager treatmentManager;
+    private MedicineManager medicineManager;
     private CalenderMap calenderMap = CalenderMap.getInstance();
     private boolean startedAnotherActivity;
     private final Object LOCK = new Object();
@@ -85,12 +92,13 @@ public class CalenderFragment extends Fragment {
         calendarView.markDate(year, month, day);
 
         try {
-            calendarView.travelTo(null);
+            calendarView.travelTo(new DateData(year, month, day));
         } catch (Exception e) {
             Log.e("CALENDER_FRAGMENT", "initData: ", e);
         }
 
-        List<Object> events = calenderMap.get(year, month, day);
+        CalenderMap.Day events = calenderMap.get(year, month, day);
+        Log.e("CALENDER_FRAGMENT", "setEvents: " + events.size() + " " + year + " " + month + " " + day);
         eventAdapter.update(events);
     }
 
@@ -106,6 +114,8 @@ public class CalenderFragment extends Fragment {
 
         perceptionManager = ((MyMedApplication) context.getApplicationContext()).getPerceptionManager();
         appointmentManager = ((MyMedApplication) context.getApplicationContext()).getAppointmentManager();
+        treatmentManager = ((MyMedApplication) context.getApplicationContext()).getTreatmentManager();
+        medicineManager =  ((MyMedApplication) context.getApplicationContext()).getMedicineManager();
 
         initData();
 
@@ -155,6 +165,27 @@ public class CalenderFragment extends Fragment {
                 });
             }
         });
+
+        treatmentManager.getTreatments(new TreatmentManager.TreatmentsListener() {
+            @Override
+            public void callback(List<Treatment> treatments) {
+
+                for (Treatment treatment : treatments) {
+                    calenderMap.add(treatment.when, treatment);
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
+
+            }
+        });
+
     }
 
     @Override
@@ -163,20 +194,26 @@ public class CalenderFragment extends Fragment {
         listener = null;
         perceptionManager = null;
         appointmentManager = null;
+        treatmentManager = null;
+        medicineManager = null;
     }
 
     public interface CalenderFragmentListener {}
 
     class EventAdapter extends RecyclerView.Adapter<ListItemHolder> {
 
-        ArrayList<Object> events;
+        ArrayList<CalenderMap.Event> events;
         EventAdapter() {
             this.events = new ArrayList<>();
         }
 
-        void update(List<Object> events) {
+        void update(CalenderMap.Day events) {
             this.events.clear();
-            this.events.addAll(events);
+
+            for (int i = 0; i < events.size(); i++) {
+                this.events.add(events.get(i));
+            }
+
             notifyDataSetChanged();
         }
 
@@ -189,14 +226,14 @@ public class CalenderFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
 
-            Object event = events.get(position);
-            if (event instanceof Appointment) {
+            CalenderMap.Event event = events.get(position);
+            if (event.event instanceof Appointment) {
 
-                final Appointment appointment = (Appointment) event;
+                final Appointment appointment = (Appointment) event.event;
 
                 holder.setData(
                         R.drawable.ic_user_md_solid,
-                        ((Appointment) event).title,
+                        appointment.title,
                         String.format("%s:%s", appointment.date.getHours(), appointment.date.getMinutes())
                 );
 
@@ -214,15 +251,15 @@ public class CalenderFragment extends Fragment {
 
                         Intent intent = new Intent(getContext(), AppointmentActivity.class);
                         intent.putExtra(AppointmentActivity.APPOINTMENT_ID, appointment.id);
-                        intent.putExtra(AppointmentActivity.ARRIVED_FROM_DOCTOR, true);
+                        intent.putExtra(AppointmentActivity.ARRIVED_FROM_DOCTOR, false);
                         startActivityForResult(intent, AppointmentActivity.APPOINTMENT_INFO_REQ);
 
                     }
                 });
 
-            } else if (event instanceof Perception) {
+            } else if (event.event instanceof Perception) {
 
-                final Perception perception = (Perception) event;
+                final Perception perception = (Perception) event.event;
 
                 StringJoiner joiner = new StringJoiner(", ");
                 for (String medName : perception.medicineNames) {
@@ -249,8 +286,42 @@ public class CalenderFragment extends Fragment {
 
                         Intent intent = new Intent(getContext(), PerceptionActivity.class);
                         intent.putExtra(PerceptionActivity.PERCEPTION_ID, perception.id);
-                        intent.putExtra(PerceptionActivity.ARRIVED_FROM_DOCTOR, true);
+                        intent.putExtra(PerceptionActivity.ARRIVED_FROM_DOCTOR, false);
                         startActivityForResult(intent, PerceptionActivity.PERCEPTION_INFO_REQ);
+
+                    }
+                });
+
+            } else if (event.event instanceof Treatment) {
+
+                final Treatment treatment = (Treatment) event.event;
+                final Medicine medicine = medicineManager.getById(treatment.medicine_id);
+
+                holder.setData(
+                        Medicine.medicineTypeToRes(medicine.type),
+                        String.format(medicine.name),
+                        String.format(
+                                "%02d:%02d %s %s were taken.",
+                                treatment.when.getHours(), treatment.when.getMinutes(),
+                                treatment.amount, (medicine.type == Medicine.TYPE_PILLS ? "pills" : "units")
+                        )
+                );
+
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), MedicineInfoActivity.class);
+                        intent.putExtra(MedicineInfoActivity.INTENT_INDEX, medicine.id);
+                        startActivityForResult(intent, MedicineInfoActivity.MEDICINE_INFO_REQ);
 
                     }
                 });
