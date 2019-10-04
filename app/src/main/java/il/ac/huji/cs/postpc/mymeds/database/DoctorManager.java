@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.huji.cs.postpc.mymeds.BuildConfig;
 import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 
@@ -29,7 +30,7 @@ public class DoctorManager {
                 }
 
                 // remove later for debugging propose...
-                if (doctors.size() == 0) {
+                if (BuildConfig.DEBUG && doctors.size() == 0) {
                     add("Palony Almony the first", "Do something", "+9722222222", "first@docdocdoc.com", "");
                     add("Palony Almony the second", "Do something", "+9722222222", "second@docdocdoc.com", "");
                     add("Palony Almony the third", "Do something", "+9722222222", "third@docdocdoc.com", "");
