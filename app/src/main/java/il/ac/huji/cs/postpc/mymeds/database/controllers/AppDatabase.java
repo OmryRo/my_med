@@ -20,8 +20,9 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 
-@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class}, exportSchema = false, version = 11)
+@Database(entities = {Doctor.class, Medicine.class, Appointment.class, Perception.class, Treatment.class}, exportSchema = false, version = 12)
 @TypeConverters({AppDatabase.Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -29,6 +30,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract MedicinesDao medicinesDao();
     public abstract AppointmentsDao appointmentsDao();
     public abstract PerceptionsDao perceptionsDao();
+    public abstract TreatmentDao treatmentDao();
 
     private static volatile AppDatabase instance;
 
