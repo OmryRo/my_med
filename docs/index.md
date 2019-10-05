@@ -2,6 +2,8 @@
 
 <img src="https://github.com/OmryRo/my_med/blob/master/graphics/market_logo.png" width="150" align="right" />
 
+![](../graphics/market_logo.png)
+
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
  
 My Medicine is an App for Android (7+) that help tracking medicine times and appointments to the doctor.
