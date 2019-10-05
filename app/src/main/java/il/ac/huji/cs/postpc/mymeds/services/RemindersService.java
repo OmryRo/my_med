@@ -107,7 +107,7 @@ public class RemindersService extends Service {
                     continue;
                 }
 
-                if (appointment.date.getTime() + minutesBefore * 60000 >= System.currentTimeMillis()) {
+                if (appointment.date.getTime() - minutesBefore * 60000 <= System.currentTimeMillis()) {
                     appointment.notifyMinutesBefore = -1;
                     appointmentManager.updateAppointment(appointment);
 
@@ -126,7 +126,7 @@ public class RemindersService extends Service {
 
                 long dayBefore = 24 * 60 * 1000;
 
-                if (perception.expire.getTime() + dayBefore >= System.currentTimeMillis()) {
+                if (perception.expire.getTime() - dayBefore <= System.currentTimeMillis()) {
                     perception.hasNotified = true;
                     perceptionManager.updatePerception(perception);
 

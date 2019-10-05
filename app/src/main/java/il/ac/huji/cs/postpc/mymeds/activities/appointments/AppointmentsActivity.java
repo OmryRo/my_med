@@ -28,6 +28,7 @@ import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
+import il.ac.huji.cs.postpc.mymeds.utils.Utils;
 
 public class AppointmentsActivity extends AppCompatActivity {
 
@@ -143,9 +144,9 @@ public class AppointmentsActivity extends AppCompatActivity {
 
         appointmentManager.getAppointments(doctor, new AppointmentManager.AppointmentsListener() {
             @Override
-            public void callback(List<Appointment> appointments) {
-                ArrayList<Appointment> futureAppointments = new ArrayList<>();
-                ArrayList<Appointment> pastAppointments = new ArrayList<>();
+            public void callback(final List<Appointment> appointments) {
+                final ArrayList<Appointment> futureAppointments = new ArrayList<>();
+                final ArrayList<Appointment> pastAppointments = new ArrayList<>();
 
                 Date now = new Date(System.currentTimeMillis());
                 for (Appointment appointment : appointments) {
@@ -156,11 +157,16 @@ public class AppointmentsActivity extends AppCompatActivity {
                     }
                 }
 
-                futureAppointmentsTv.setVisibility(futureAppointments.size() == 0 ? View.GONE : View.VISIBLE);
-                pastAppointmentsTv.setVisibility(pastAppointments.size() == 0 ? View.GONE : View.VISIBLE);
-                futureAppointmentsAdapter.update(futureAppointments);
-                pastAppointmentsAdapter.update(pastAppointments);
-                noAppointments.setVisibility(appointments.size() == 0 ? View.VISIBLE : View.GONE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        futureAppointmentsTv.setVisibility(futureAppointments.size() == 0 ? View.GONE : View.VISIBLE);
+                        pastAppointmentsTv.setVisibility(pastAppointments.size() == 0 ? View.GONE : View.VISIBLE);
+                        futureAppointmentsAdapter.update(futureAppointments);
+                        pastAppointmentsAdapter.update(pastAppointments);
+                        noAppointments.setVisibility(appointments.size() == 0 ? View.VISIBLE : View.GONE);
+                    }
+                });
 
             }
         });
@@ -193,7 +199,7 @@ public class AppointmentsActivity extends AppCompatActivity {
             holder.setData(
                     R.drawable.ic_event_black_24dp,
                     appointment.title,
-                    appointment.date.toString()
+                    Utils.dateToHumanReadabily(appointment.date, true)
             );
             holder.setOnClick(new View.OnClickListener() {
                 @Override

@@ -94,7 +94,7 @@ public class MonthFragment extends sun.bob.mcalendarview.fragments.MonthFragment
                     @Override
                     public void onClick(View v) {
                         if (listener != null) {
-                            listener.onForwardPressed();
+                            listener.onBackPressed();
                         }
                     }
                 });

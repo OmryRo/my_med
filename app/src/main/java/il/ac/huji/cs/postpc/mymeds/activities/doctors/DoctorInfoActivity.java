@@ -28,6 +28,7 @@ import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
+import il.ac.huji.cs.postpc.mymeds.utils.Utils;
 
 public class DoctorInfoActivity extends AppCompatActivity {
 
@@ -253,11 +254,11 @@ public class DoctorInfoActivity extends AppCompatActivity {
                     String text = "No Appointments";
                     if (nextVisit != Long.MAX_VALUE) {
                         Date nextVisitDate = new Date(nextVisit);
-                        text = "Next visit at: " + nextVisitDate.toString();
+                        text = "Next visit at: " + Utils.dateToHumanReadabily(nextVisitDate, true);
 
                     } else if (lastVisit != Long.MIN_VALUE) {
                         Date lastVisitDate = new Date(lastVisit);
-                        text = "Last visit was at: " + lastVisitDate.toString();
+                        text = "Last visit was at: " + Utils.dateToHumanReadabily(lastVisitDate, true);
                     }
 
                     final String finalText = text;

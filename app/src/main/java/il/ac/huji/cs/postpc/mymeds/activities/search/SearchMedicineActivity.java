@@ -294,6 +294,10 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
                 searchText.setText(query);
                 searchText.setSelection(query.length());
             }
+
+        } else if (requestCode == MedicineInfoActivity.MEDICINE_INFO_REQ && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED) {
+            setResult(MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED);
+            finish();
         }
     }
 
@@ -451,4 +455,6 @@ public class SearchMedicineActivity extends AppCompatActivity implements ScanBar
             return filtered.size();
         }
     }
+
+
 }

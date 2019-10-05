@@ -28,6 +28,7 @@ import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
+import il.ac.huji.cs.postpc.mymeds.utils.Utils;
 
 public class PrescriptionsActivity extends AppCompatActivity {
 
@@ -139,9 +140,9 @@ public class PrescriptionsActivity extends AppCompatActivity {
 
         perceptionManager.getPrescriptions(doctor, new PrescriptionManager.PerceptionsListener() {
             @Override
-            public void callback(List<Prescription> perceptions) {
-                ArrayList<Prescription> futurePerceptions = new ArrayList<>();
-                ArrayList<Prescription> pastPerceptions = new ArrayList<>();
+            public void callback(final List<Prescription> perceptions) {
+                final ArrayList<Prescription> futurePerceptions = new ArrayList<>();
+                final ArrayList<Prescription> pastPerceptions = new ArrayList<>();
 
                 Date now = new Date(System.currentTimeMillis());
                 for (Prescription perception : perceptions) {
@@ -152,10 +153,16 @@ public class PrescriptionsActivity extends AppCompatActivity {
                     }
                 }
 
-                pastPerceptionsTv.setVisibility(pastPerceptions.size() == 0 ? View.GONE : View.VISIBLE);
-                pastAdapter.update(pastPerceptions);
-                futureAdapter.update(futurePerceptions);
-                noPrescriptionsMessage.setVisibility(perceptions.size() == 0 ? View.VISIBLE : View.GONE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pastPerceptionsTv.setVisibility(pastPerceptions.size() == 0 ? View.GONE : View.VISIBLE);
+                        pastAdapter.update(pastPerceptions);
+                        futureAdapter.update(futurePerceptions);
+                        noPrescriptionsMessage.setVisibility(perceptions.size() == 0 ? View.VISIBLE : View.GONE);
+                    }
+                });
+
             }
         });
 
@@ -192,7 +199,10 @@ public class PrescriptionsActivity extends AppCompatActivity {
                 medicines.add(name);
             }
 
-            String validaty = String.format("%s - %s", perception.start.toString(), perception.expire.toString());
+            String validaty = String.format(
+                    "%s - %s",
+                    Utils.dateToHumanReadabily(perception.start, false),
+                    Utils.dateToHumanReadabily(perception.expire, false));
 
             holder.setData(R.drawable.ic_prescription_bottle_solid, medicines.toString(), validaty);
             holder.setOnClick(new View.OnClickListener() {

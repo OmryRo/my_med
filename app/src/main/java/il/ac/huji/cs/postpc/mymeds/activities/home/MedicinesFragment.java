@@ -149,7 +149,9 @@ public class MedicinesFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == MedicineInfoActivity.MEDICINE_INFO_REQ && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED) {
+        if ((requestCode == MedicineInfoActivity.MEDICINE_INFO_REQ && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED) ||
+                (requestCode == SearchMedicineActivity.SEACH_MEDICINE_REQUEST && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED)
+        ) {
             recyclerView.getAdapter().notifyDataSetChanged();
             toggleNoMedicineMessage();
             ((HomeActivity) getActivity()).reinitializeCalendar();

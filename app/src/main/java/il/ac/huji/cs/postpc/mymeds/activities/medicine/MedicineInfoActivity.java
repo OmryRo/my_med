@@ -35,6 +35,7 @@ import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
+import il.ac.huji.cs.postpc.mymeds.utils.Utils;
 
 public class MedicineInfoActivity extends AppCompatActivity {
 
@@ -238,7 +239,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
                 nextTimeSp.setSelection(1);
             }
 
-            nextTimeEv.setText(selectedNextTimeDate == null ? "Select date." : dateToHumanReadabily(selectedNextTimeDate, true));
+            nextTimeEv.setText(selectedNextTimeDate == null ? "Select date." : Utils.dateToHumanReadabily(selectedNextTimeDate, true));
 
             nextTimeEv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -263,7 +264,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
                                     selectedDate.setYear(year - 1900);
                                     selectedDate.setMonth(month);
                                     selectedDate.setDate(dayOfMonth);
-                                    nextTimeEv.setText(dateToHumanReadabily(selectedDate, true));
+                                    nextTimeEv.setText(Utils.dateToHumanReadabily(selectedDate, true));
                                     selectedNextTimeDate = selectedDate;
 
                                 }
@@ -293,7 +294,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
             String infoText = (
                     medicine.nextTime == null ?
                     "No more treatments." :
-                    String.format("Next time at %s", dateToHumanReadabily(medicine.nextTime, true)));
+                    String.format("Next time at %s", Utils.dateToHumanReadabily(medicine.nextTime, true)));
 
             nextTimeTv.setText(infoText);
         }
@@ -395,7 +396,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
                 } else {
                     endsAtEditSelectorSp.setSelection(1);
                     selectedEndsAtDate = medicine.endsAt;
-                    endsAtEditDateEt.setText(dateToHumanReadabily(selectedEndsAtDate, false));
+                    endsAtEditDateEt.setText(Utils.dateToHumanReadabily(selectedEndsAtDate, false));
                 }
 
             } else {
@@ -424,7 +425,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
                             selectedDate.setDate(dayOfMonth);
                             selectedDate.setHours(23);
                             selectedDate.setMinutes(59);
-                            endsAtEditDateEt.setText(dateToHumanReadabily(selectedDate, false));
+                            endsAtEditDateEt.setText(Utils.dateToHumanReadabily(selectedDate, false));
                             selectedEndsAtDate = selectedDate;
 
                         }
@@ -452,7 +453,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
                 endsAtContainer.setVisibility(View.VISIBLE);
 
                 if (medicine.endsAt != null) {
-                    endsAtTv.setText(String.format("Ends at %s", dateToHumanReadabily(medicine.endsAt, false)));
+                    endsAtTv.setText(String.format("Ends at %s", Utils.dateToHumanReadabily(medicine.endsAt, false)));
                 } else {
                     endsAtTv.setText(String.format("Ends in %s times", medicine.times));
                 }
@@ -656,16 +657,6 @@ public class MedicineInfoActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(isEditing ? R.menu.info_edit_menu : R.menu.info_view_menu, menu);
         return true;
-    }
-
-    public static String dateToHumanReadabily(Date date, boolean showTime) {
-        String dateString = String.format("%02d/%02d/%04d", date.getDate(), date.getMonth() + 1, date.getYear() + 1900);
-
-        if (!showTime) {
-            return dateString;
-        }
-
-        return String.format("%s, %02d:%02d", dateString, date.getHours(), date.getMinutes());
     }
 
     public class StaticAdapter extends BaseAdapter {

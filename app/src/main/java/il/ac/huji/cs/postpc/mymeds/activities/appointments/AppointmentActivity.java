@@ -37,6 +37,7 @@ import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
+import il.ac.huji.cs.postpc.mymeds.utils.Utils;
 
 public class AppointmentActivity extends AppCompatActivity {
 
@@ -256,7 +257,7 @@ public class AppointmentActivity extends AppCompatActivity {
                                 selectedDate.setYear(year - 1900);
                                 selectedDate.setMonth(month);
                                 selectedDate.setDate(dayOfMonth);
-                                dateTv.setText(selectedDate.toString());
+                                dateTv.setText(Utils.dateToHumanReadabily(selectedDate, true));
 
                             }
                         }, selectedDate.getHours(), selectedDate.getMinutes(), true);
@@ -269,7 +270,7 @@ public class AppointmentActivity extends AppCompatActivity {
             }
         });
 
-        dateTv.setText(selectedDate.toString());
+        dateTv.setText(Utils.dateToHumanReadabily(selectedDate, true));
 
         notificationContainer.setVisibility(isEditing || appointment.notifyMinutesBefore >= 0 ? View.VISIBLE : View.GONE);
 

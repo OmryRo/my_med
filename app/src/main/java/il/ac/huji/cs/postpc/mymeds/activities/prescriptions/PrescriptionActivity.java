@@ -38,6 +38,7 @@ import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 import il.ac.huji.cs.postpc.mymeds.utils.PerceptionMedicineHolder;
+import il.ac.huji.cs.postpc.mymeds.utils.Utils;
 
 public class PrescriptionActivity extends AppCompatActivity {
 
@@ -300,7 +301,7 @@ public class PrescriptionActivity extends AppCompatActivity {
     }
 
     private void setDate(TextView textView, Date date, String pretext) {
-        String dateText = String.format("%s/%s/%s", date.getDate(), date.getMonth() + 1, date.getYear() + 1900);
+        String dateText = Utils.dateToHumanReadabily(date, false);
         textView.setText(String.format("%s: %s", pretext, dateText));
     }
 
