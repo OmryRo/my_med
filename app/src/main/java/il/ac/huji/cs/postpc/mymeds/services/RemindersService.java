@@ -56,7 +56,7 @@ public class RemindersService extends Service {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), MyMedApplication.NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_pills_solid)
                         .setContentTitle(title)
                         .setContentText(message);
 

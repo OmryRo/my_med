@@ -394,7 +394,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
 
                 } else {
                     endsAtEditSelectorSp.setSelection(1);
-                    selectedEndsAtDate = medicine.nextTime;
+                    selectedEndsAtDate = medicine.endsAt;
                     endsAtEditDateEt.setText(dateToHumanReadabily(selectedEndsAtDate, false));
                 }
 
@@ -422,6 +422,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
                             selectedDate.setYear(year - 1900);
                             selectedDate.setMonth(month);
                             selectedDate.setDate(dayOfMonth);
+                            selectedDate.setHours(23);
+                            selectedDate.setMinutes(59);
                             endsAtEditDateEt.setText(dateToHumanReadabily(selectedDate, false));
                             selectedEndsAtDate = selectedDate;
 

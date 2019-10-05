@@ -152,6 +152,7 @@ public class MedicinesFragment extends Fragment {
         if (requestCode == MedicineInfoActivity.MEDICINE_INFO_REQ && resultCode == MedicineInfoActivity.MEDICINE_INFO_MEDICINE_CHANGED) {
             recyclerView.getAdapter().notifyDataSetChanged();
             toggleNoMedicineMessage();
+            ((HomeActivity) getActivity()).reinitializeCalendar();
         }
     }
 

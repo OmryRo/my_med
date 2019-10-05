@@ -143,6 +143,7 @@ public class AppointmentsFragment extends Fragment {
         if (requestCode == DoctorInfoActivity.DOCTOR_INFO_REQ && resultCode == DoctorInfoActivity.DOCTOR_INFO_DOCTORS_CHANGED) {
             toggleNoDoctorMessage();
             recyclerView.getAdapter().notifyDataSetChanged();
+            ((HomeActivity) getActivity()).reinitializeCalendar();
         }
     }
 

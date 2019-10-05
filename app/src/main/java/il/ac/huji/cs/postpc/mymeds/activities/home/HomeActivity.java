@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -22,7 +23,10 @@ import android.view.MenuItem;
 import java.util.Locale;
 
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.search.SearchMedicineActivity;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 
 public class HomeActivity extends AppCompatActivity implements
         CalenderFragment.CalenderFragmentListener,
@@ -147,5 +151,9 @@ public class HomeActivity extends AppCompatActivity implements
             navView.setSelectedItemId(R.id.navigation_medicines);
         }
 
+    }
+
+    public void reinitializeCalendar() {
+        calenderFragment.initData();
     }
 }
