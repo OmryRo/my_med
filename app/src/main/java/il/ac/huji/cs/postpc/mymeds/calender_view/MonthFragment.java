@@ -35,7 +35,7 @@ public class MonthFragment extends sun.bob.mcalendarview.fragments.MonthFragment
     private boolean hasTitle = true;
     private NavigateButtonClickListener listener;
 
-    MonthFragment() {}
+    public MonthFragment() {}
 
     public void setListener(NavigateButtonClickListener listener) {
         this.listener = listener;
