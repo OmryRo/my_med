@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.huji.cs.postpc.mymeds.BuildConfig;
 import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
@@ -39,8 +40,7 @@ public class MedicineManager {
                     dbMap.put(medicine.id, medicine);
                 }
 
-                // remove later for debugging propose...
-                if (medicines.size() == 0) {
+                if (BuildConfig.DEBUG && medicines.size() == 0) {
                     String name, note;
                     Date nextTime, endsAt;
                     int times, amount, stock, type;

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import il.ac.huji.cs.postpc.mymeds.BuildConfig;
 import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 
@@ -35,7 +36,8 @@ public class DoctorManager {
                 for (Doctor doctor : doctors) {
                     dbMap.put(doctor.id, doctor);
                 }
-                if (doctors.size() == 0) {
+
+                if (BuildConfig.DEBUG && doctors.size() == 0) {
                     try {
                         JSONArray jsonArray = new JSONArray(readJSONFromAsset());
                         String name, note, phone, email, address;
