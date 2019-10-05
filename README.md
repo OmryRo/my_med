@@ -15,15 +15,14 @@ My Medicine is an App for Android (7+) that help tracking medicine times and app
 * Drip counter that sometimes works on some devices.
 
 **Screenshots**
-![](graphics/screenshot_1.png)
-![](graphics/screenshot_2.png)
+![](graphics/screenshot_1.png) | ![](graphics/screenshot_2.png)
 
 **Technical Notes**
 * Uses Firebase to scan barcodes and keep a list of medicines with their barcode for the search feature.
 * Uses OpenCV for the drip counter. Which also the reason for the fat APK size.
 
 **License**
-* The icon of the application and in some places in the app using Icons of [https://fontawesome.com/license/free](Font Awesome). Icons from font awsome are marked in the vector file.
-* The icons that aren't marked with anything, such as Meterial Design Fonts are under [https://www.apache.org/licenses/LICENSE-2.0.html](Apache License 2.0).
-* The code under the package 'il.ac.huji.cs.postpc.mymeds.calender_view' are extension for the library [https://github.com/SpongeBobSun/mCalendarView](mCalendarView) which under [https://github.com/SpongeBobSun/mCalendarView/blob/master/LICENSE](Apache 2.0)
-* Anything else in the repository is under [https://www.apache.org/licenses/LICENSE-2.0.html](Apache License 2.0).
+* The icon of the application and in some places in the app using Icons of [Font Awesome](https://fontawesome.com/license/free]. Icons from font awsome are marked in the vector file.
+* The icons that aren't marked with anything, such as Meterial Design Fonts are under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html).
+* The code under the package ***il.ac.huji.cs.postpc.mymeds.calender_view*** are ***'extension'*** for the library [mCalendarView](https://github.com/SpongeBobSun/mCalendarView) which under [Apache 2.0](https://github.com/SpongeBobSun/mCalendarView/blob/master/LICENSE)
+* Anything else in the repository is under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.html).
