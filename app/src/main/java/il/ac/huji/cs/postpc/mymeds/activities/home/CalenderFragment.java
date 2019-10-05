@@ -129,6 +129,11 @@ public class CalenderFragment extends Fragment {
     }
 
     public void initData() {
+
+        if (getActivity() == null) {
+            return;
+        }
+
         calenderMap.clear();
 
         perceptionManager.getPrescriptions(new PrescriptionManager.PerceptionsListener() {
