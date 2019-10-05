@@ -1,0 +1,52 @@
+[
+  {
+    "Key": "126 87 30591 23",
+    "Value": {
+      "en": "CONCERTA 54 MG",
+      "he": "קונסרטה 54 מ''ג",
+      "barcode": 7290008124980,
+      "units": "pills",
+      "amount_in_package": 30
+    }
+  },
+  {
+    "Key": "128 74 25337 09",
+    "Value": {
+      "en": "ACAMOL",
+      "he": "אקמול",
+      "barcode": 7290008097758,
+      "units": "pills",
+      "amount_in_package": 42
+    }
+  },
+  {
+    "Key": "016 87 20611 11",
+    "Value": {
+      "en": "OPTALGIN TABLETS",
+      "he": "אופטלגין טבליות",
+      "barcode": 7290000801834,
+      "units": "pills",
+      "amount_in_package": 20
+    }
+  },
+  {
+    "Key": "115 33 29761 21",
+    "Value": {
+      "en": "ADVIL LIQUI-GELS 200",
+      "he": "אדויל ליקווי-ג'לס 200",
+      "barcode": 7290100412152,
+      "units": "pills",
+      "amount_in_package": 40
+    }
+  },
+  {
+    "Key": "152 45 33547 00",
+    "Value": {
+      "en": "VITAMIN D3 1000",
+      "he": "ויטמין די 3 1000",
+      "barcode": 7290013834027,
+      "units": "pills",
+      "amount_in_package": 30
+    }
+  }
+]
