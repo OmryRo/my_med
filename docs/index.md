@@ -1,6 +1,6 @@
 # My Medicine
 
-<div style="display: block; width: 200px;">
+<div style="display: block; width: 200px; float: right;">
 
 ![](../graphics/market_logo.png)
 
