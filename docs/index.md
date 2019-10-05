@@ -1,7 +1,9 @@
 # My Medicine
 
 <div style="display: block; width: 200px;">
+
 ![](../graphics/market_logo.png)
+
 </div>
 
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
