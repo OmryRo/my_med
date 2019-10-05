@@ -1,6 +1,6 @@
 # My Medicine
 
-<img src="docs/graphics/market_logo.png" width="150" align="right" />
+<img src="graphics/market_logo.png" width="150" align="right" />
 
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
  
