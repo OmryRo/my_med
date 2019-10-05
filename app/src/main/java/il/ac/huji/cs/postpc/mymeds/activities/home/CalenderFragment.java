@@ -226,10 +226,6 @@ public class CalenderFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
-        perceptionManager = null;
-        appointmentManager = null;
-        treatmentManager = null;
-        medicineManager = null;
     }
 
     public interface CalenderFragmentListener {}
