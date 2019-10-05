@@ -10,38 +10,52 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.appointments.AppointmentActivity;
-import il.ac.huji.cs.postpc.mymeds.activities.perceptions.PerceptionActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.prescriptions.PrescriptionActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.TreatmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Treatment;
 import il.ac.huji.cs.postpc.mymeds.utils.CalenderMap;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
-
+import il.ac.huji.cs.postpc.mymeds.calender_view.CalendarView;
+import sun.bob.mcalendarview.listeners.OnDateClickListener;
+import sun.bob.mcalendarview.vo.DateData;
+import sun.bob.mcalendarview.vo.MarkedDates;
 
 public class CalenderFragment extends Fragment {
 
     private CalenderFragmentListener listener;
     private RecyclerView recyclerView;
     private CalendarView calendarView;
+    private View noEventsMessage;
     private EventAdapter eventAdapter;
-    private PerceptionManager perceptionManager;
+    private PrescriptionManager perceptionManager;
     private AppointmentManager appointmentManager;
-    private CalenderMap calenderMap = new CalenderMap();
+    private TreatmentManager treatmentManager;
+    private MedicineManager medicineManager;
+    private CalenderMap calenderMap = CalenderMap.getInstance();
     private boolean startedAnotherActivity;
     private final Object LOCK = new Object();
+    private int[] lastMarked;
 
     public CalenderFragment() {}
 
@@ -57,17 +71,36 @@ public class CalenderFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
+        noEventsMessage = view.findViewById(R.id.no_events_message);
+
         calendarView = view.findViewById(R.id.calender_view);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView.setOnDateClickListener(new OnDateClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                List<Object> events = calenderMap.get(year, month, dayOfMonth);
-                eventAdapter.update(events);
+            public void onDateClick(View view, DateData date) {
+                setEvents(date.getYear(), date.getMonth(), date.getDay());
             }
         });
+        Date now = new Date();
+        setEvents(now.getYear() + 1900, now.getMonth() + 1, now.getDate());
 
-        calendarView.setDate(System.currentTimeMillis());
         return view;
+    }
+
+    synchronized void setEvents(int year, int month, int day) {
+        MarkedDates.getInstance().removeAdd();
+        lastMarked = new int[] {year, month, day};
+        calendarView.markDate(year, month, day);
+
+        try {
+            calendarView.travelTo(new DateData(year, month, day));
+        } catch (Exception e) {
+            Log.e("CALENDER_FRAGMENT", "initData: ", e);
+        }
+
+        CalenderMap.Day events = calenderMap.get(year, month, day);
+        eventAdapter.update(events);
+        noEventsMessage.setVisibility(events.size() == 0 ? View.VISIBLE : View.GONE);
+
     }
 
     @Override
@@ -80,28 +113,12 @@ public class CalenderFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        calenderMap = new CalenderMap();
-
         perceptionManager = ((MyMedApplication) context.getApplicationContext()).getPerceptionManager();
         appointmentManager = ((MyMedApplication) context.getApplicationContext()).getAppointmentManager();
+        treatmentManager = ((MyMedApplication) context.getApplicationContext()).getTreatmentManager();
+        medicineManager =  ((MyMedApplication) context.getApplicationContext()).getMedicineManager();
 
-        perceptionManager.getPerceptions(new PerceptionManager.PerceptionsListener() {
-            @Override
-            public void callback(List<Perception> perceptions) {
-                for (Perception perception : perceptions) {
-                    calenderMap.add(perception.start, perception.expire, perception);
-                }
-            }
-        });
-
-        appointmentManager.getAppointments(new AppointmentManager.AppointmentsListener() {
-            @Override
-            public void callback(List<Appointment> appointments) {
-                for (Appointment appointment : appointments) {
-                    calenderMap.add(appointment.date, appointment);
-                }
-            }
-        });
+        initData();
 
         if (context instanceof CalenderFragmentListener) {
             listener = (CalenderFragmentListener) context;
@@ -111,26 +128,126 @@ public class CalenderFragment extends Fragment {
         }
     }
 
+    public void initData() {
+        calenderMap.clear();
+
+        perceptionManager.getPrescriptions(new PrescriptionManager.PerceptionsListener() {
+            @Override
+            public void callback(List<Prescription> perceptions) {
+                for (Prescription perception : perceptions) {
+                    calenderMap.add(perception.start, perception.expire, perception);
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
+            }
+        });
+
+        appointmentManager.getAppointments(new AppointmentManager.AppointmentsListener() {
+            @Override
+            public void callback(List<Appointment> appointments) {
+                for (Appointment appointment : appointments) {
+                    calenderMap.add(appointment.date, appointment);
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
+            }
+        });
+
+        treatmentManager.getTreatments(new TreatmentManager.TreatmentsListener() {
+            @Override
+            public void callback(List<Treatment> treatments) {
+
+                for (Treatment treatment : treatments) {
+                    calenderMap.add(treatment.when, treatment);
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
+
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Map<Long, Medicine> medicineMap = medicineManager.getMedicines();
+                for (Medicine medicine : medicineMap.values()) {
+
+                    if (medicine.nextTime == null) {
+                        continue;
+                    }
+
+                    Date nextTime = medicine.nextTime;
+                    int maxRepeats = medicine.times == -1 ? 50 : medicine.times;
+
+                    while ((medicine.endsAt == null || medicine.endsAt.after(nextTime)) && maxRepeats >= 0) {
+                        calenderMap.add(nextTime, medicine);
+                        maxRepeats--;
+                        nextTime = medicine.each.addTo(nextTime);
+                    }
+
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (lastMarked != null) {
+                            setEvents(lastMarked[0], lastMarked[1], lastMarked[2]);
+                        }
+                    }
+                });
+
+            }
+        }).start();
+
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         listener = null;
         perceptionManager = null;
         appointmentManager = null;
+        treatmentManager = null;
+        medicineManager = null;
     }
 
     public interface CalenderFragmentListener {}
 
     class EventAdapter extends RecyclerView.Adapter<ListItemHolder> {
 
-        ArrayList<Object> events;
+        ArrayList<CalenderMap.Event> events;
         EventAdapter() {
             this.events = new ArrayList<>();
         }
 
-        void update(List<Object> events) {
+        void update(CalenderMap.Day events) {
             this.events.clear();
-            this.events.addAll(events);
+
+            for (int i = 0; i < events.size(); i++) {
+                this.events.add(events.get(i));
+            }
+
             notifyDataSetChanged();
         }
 
@@ -143,14 +260,14 @@ public class CalenderFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
 
-            Object event = events.get(position);
-            if (event instanceof Appointment) {
+            CalenderMap.Event event = events.get(position);
+            if (event.event instanceof Appointment) {
 
-                final Appointment appointment = (Appointment) event;
+                final Appointment appointment = (Appointment) event.event;
 
                 holder.setData(
                         R.drawable.ic_user_md_solid,
-                        ((Appointment) event).title,
+                        appointment.title,
                         String.format("%s:%s", appointment.date.getHours(), appointment.date.getMinutes())
                 );
 
@@ -168,15 +285,15 @@ public class CalenderFragment extends Fragment {
 
                         Intent intent = new Intent(getContext(), AppointmentActivity.class);
                         intent.putExtra(AppointmentActivity.APPOINTMENT_ID, appointment.id);
-                        intent.putExtra(AppointmentActivity.ARRIVED_FROM_DOCTOR, true);
+                        intent.putExtra(AppointmentActivity.ARRIVED_FROM_DOCTOR, false);
                         startActivityForResult(intent, AppointmentActivity.APPOINTMENT_INFO_REQ);
 
                     }
                 });
 
-            } else if (event instanceof Perception) {
+            } else if (event.event instanceof Prescription) {
 
-                final Perception perception = (Perception) event;
+                final Prescription perception = (Prescription) event.event;
 
                 StringJoiner joiner = new StringJoiner(", ");
                 for (String medName : perception.medicineNames) {
@@ -201,10 +318,79 @@ public class CalenderFragment extends Fragment {
                             startedAnotherActivity = true;
                         }
 
-                        Intent intent = new Intent(getContext(), PerceptionActivity.class);
-                        intent.putExtra(PerceptionActivity.PERCEPTION_ID, perception.id);
-                        intent.putExtra(PerceptionActivity.ARRIVED_FROM_DOCTOR, true);
-                        startActivityForResult(intent, PerceptionActivity.PERCEPTION_INFO_REQ);
+                        Intent intent = new Intent(getContext(), PrescriptionActivity.class);
+                        intent.putExtra(PrescriptionActivity.PRESCRIPTION_ID, perception.id);
+                        intent.putExtra(PrescriptionActivity.ARRIVED_FROM_DOCTOR, false);
+                        startActivityForResult(intent, PrescriptionActivity.PRESCRIPTION_INFO_REQ);
+
+                    }
+                });
+
+            } else if (event.event instanceof Treatment) {
+
+                final Treatment treatment = (Treatment) event.event;
+                final Medicine medicine = medicineManager.getById(treatment.medicine_id);
+
+                holder.setData(
+                        Medicine.medicineTypeToRes(medicine.type),
+                        String.format(medicine.name),
+                        String.format(
+                                "%02d:%02d %s %s were taken.",
+                                treatment.when.getHours(), treatment.when.getMinutes(),
+                                treatment.amount, (medicine.type == Medicine.TYPE_PILLS ? "pills" : "units")
+                        )
+                );
+
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), MedicineInfoActivity.class);
+                        intent.putExtra(MedicineInfoActivity.INTENT_INDEX, medicine.id);
+                        startActivityForResult(intent, MedicineInfoActivity.MEDICINE_INFO_REQ);
+
+                    }
+                });
+
+            } else if (event.event instanceof Medicine) {
+
+                final Medicine medicine = (Medicine) event.event;
+                final int hours = event.hours;
+                final int minutes = event.minutes;
+
+                holder.setData(
+                        Medicine.medicineTypeToRes(medicine.type),
+                        String.format(medicine.name),
+                        String.format(
+                                "%02d:%02d take %s %s.",
+                                hours, minutes, medicine.amount,
+                                (medicine.type == Medicine.TYPE_PILLS ? "pills" : "units")
+                        )
+                );
+
+                holder.setOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        synchronized (LOCK) {
+                            if (startedAnotherActivity) {
+                                return;
+                            }
+
+                            startedAnotherActivity = true;
+                        }
+
+                        Intent intent = new Intent(getContext(), MedicineInfoActivity.class);
+                        intent.putExtra(MedicineInfoActivity.INTENT_INDEX, medicine.id);
+                        startActivityForResult(intent, MedicineInfoActivity.MEDICINE_INFO_REQ);
 
                     }
                 });
@@ -224,5 +410,10 @@ public class CalenderFragment extends Fragment {
         public int getItemCount() {
             return events.size();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        initData();
     }
 }

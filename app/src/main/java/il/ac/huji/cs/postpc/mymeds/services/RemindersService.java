@@ -8,12 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
@@ -21,9 +21,11 @@ import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.loading.LoadingActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
+import il.ac.huji.cs.postpc.mymeds.database.TreatmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 
 public class RemindersService extends Service {
 
@@ -54,7 +56,7 @@ public class RemindersService extends Service {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), MyMedApplication.NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_pills_solid)
                         .setContentTitle(title)
                         .setContentText(message);
 
@@ -78,17 +80,20 @@ public class RemindersService extends Service {
 
         MedicineManager medicineManager;
         AppointmentManager appointmentManager;
-        PerceptionManager perceptionManager;
+        PrescriptionManager perceptionManager;
+        TreatmentManager treatmentManager;
 
         @Override
         public void run() {
             medicineManager = ((MyMedApplication) getApplicationContext()).getMedicineManager();
             appointmentManager = ((MyMedApplication) getApplicationContext()).getAppointmentManager();
             perceptionManager = ((MyMedApplication) getApplicationContext()).getPerceptionManager();
+            treatmentManager = ((MyMedApplication) getApplicationContext()).getTreatmentManager();
 
             while (true) {
                 checkForAppointmentReminders();
                 checkForPerceptionsReminders();
+                checkForMedicineReminders();
                 SystemClock.sleep(10000);
             }
         }
@@ -112,8 +117,8 @@ public class RemindersService extends Service {
         }
 
         void checkForPerceptionsReminders() {
-            List<Perception> perceptions = perceptionManager.getPerceptions();
-            for (Perception perception : perceptions) {
+            List<Prescription> perceptions = perceptionManager.getPrescriptions();
+            for (Prescription perception : perceptions) {
 
                 if (perception.hasNotified) {
                     continue;
@@ -133,6 +138,47 @@ public class RemindersService extends Service {
                     showNotification((int) perception.id + 100000, "Perception is going to expire today.", medicineNames.toString());
                 }
             }
+        }
+
+        void checkForMedicineReminders() {
+            Map<Long, Medicine> medicines = medicineManager.getMedicines();
+            Date now = new Date();
+
+            for (Medicine medicine : medicines.values()) {
+
+                if (medicine.nextTime != null && medicine.nextTime.before(now)) {
+
+                    String title = String.format("It's time to take %s", medicine.name);
+                    String message = medicine.getAmountString();
+                    showNotification((int) medicine.id, title, message);
+
+                    treatmentManager.addTreatment(medicine);
+
+                    Date nextTime = medicine.each.addTo(medicine.nextTime);
+                    if (medicine.endsAt != null) {
+
+                        if (medicine.endsAt.after(nextTime)) {
+                            medicine.nextTime = nextTime;
+                        } else {
+                            medicine.nextTime = null;
+                        }
+
+                    } else if (medicine.times > 0) {
+                        medicine.times--;
+                        medicine.nextTime = nextTime;
+
+                    } else {
+                        medicine.nextTime = null;
+                    }
+
+                    if (medicine.stock > 0) {
+                        medicine.stock--;
+                    }
+
+                    medicineManager.update(medicine);
+                }
+            }
+
         }
     }
 }

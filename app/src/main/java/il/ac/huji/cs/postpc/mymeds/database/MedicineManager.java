@@ -161,6 +161,7 @@ public class MedicineManager {
 
     public void remove(Medicine medicine) {
         db.medicinesDao().delete(medicine);
+        db.treatmentDao().deleteAllByMedicine(medicine.id);
         medicines.remove(medicine);
         dbMap.remove(medicine.id);
     }

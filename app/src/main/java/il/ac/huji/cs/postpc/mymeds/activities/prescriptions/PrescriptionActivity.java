@@ -1,29 +1,22 @@
-package il.ac.huji.cs.postpc.mymeds.activities.perceptions;
+package il.ac.huji.cs.postpc.mymeds.activities.prescriptions;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,44 +24,38 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
 import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
-import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.MedicineManager;
-import il.ac.huji.cs.postpc.mymeds.database.PerceptionManager;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
+import il.ac.huji.cs.postpc.mymeds.database.PrescriptionManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Perception;
-import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Prescription;
 import il.ac.huji.cs.postpc.mymeds.utils.PerceptionMedicineHolder;
 
-public class PerceptionActivity extends AppCompatActivity {
+public class PrescriptionActivity extends AppCompatActivity {
 
-    public static final int PERCEPTION_INFO_REQ = 0x5000;
-    public static final int PERCEPTION_INFO_NOTHING_CHANGED = 0;
-    public static final int PERCEPTION_INFO_PERCEPTION_CHANGED = 1;
+    public static final int PRESCRIPTION_INFO_REQ = 0x5000;
+    public static final int PRESCRIPTION_INFO_NOTHING_CHANGED = 0;
+    public static final int PRESCRIPTION_INFO_PERCEPTION_CHANGED = 1;
+    public static final int PRESCRIPTION_INFO_DOCTOR_DELETED = 2;
 
-    public static final String PERCEPTION_ID = "PERCEPTION_ID";
+    public static final String PRESCRIPTION_ID = "PRESCRIPTION_ID";
     public static final String DOCTOR_ID = "DOCTOR_ID";
     public static final String ARRIVED_FROM_DOCTOR = "ARRIVED_FROM_DOCTOR";
     private static final Object LOCK = new Object();
 
-    private PerceptionManager perceptionManager;
+    private PrescriptionManager perceptionManager;
     private DoctorManager doctorManager;
     private MedicineManager medicineManager;
 
-    private Perception perception;
+    private Prescription perception;
     private Doctor doctor;
     private boolean isEditing;
     private boolean hasArivedFromDoctor;
@@ -96,18 +83,18 @@ public class PerceptionActivity extends AppCompatActivity {
         doctorManager = ((MyMedApplication) getApplicationContext()).getDoctorManager();
         medicineManager = ((MyMedApplication) getApplicationContext()).getMedicineManager();
 
-        setContentView(R.layout.activity_perception);
+        setContentView(R.layout.activity_prescription);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        doctorName = findViewById(R.id.perception_doctor_name);
-        doctorContainer = findViewById(R.id.perception_doctor_container);
-        startDate = findViewById(R.id.perception_start_date);
-        startDateContainer = findViewById(R.id.perception_start_date_container);
-        endDate = findViewById(R.id.perception_end_date);
-        endDateContainer = findViewById(R.id.perception_end_date_container);
-        addMedicine = findViewById(R.id.perception_medicines_add);
-        medicinesRv = findViewById(R.id.perception_medicines);
+        doctorName = findViewById(R.id.prescription_doctor_name);
+        doctorContainer = findViewById(R.id.prescription_doctor_container);
+        startDate = findViewById(R.id.prescription_start_date);
+        startDateContainer = findViewById(R.id.prescription_start_date_container);
+        endDate = findViewById(R.id.prescription_end_date);
+        endDateContainer = findViewById(R.id.prescription_end_date_container);
+        addMedicine = findViewById(R.id.prescription_medicines_add);
+        medicinesRv = findViewById(R.id.prescription_medicines);
     }
 
     @Override
@@ -119,33 +106,51 @@ public class PerceptionActivity extends AppCompatActivity {
 
     private void setData() {
         Intent intent = getIntent();
-        long perceptionId = intent.getLongExtra(PERCEPTION_ID, -1);
+        long perceptionId = intent.getLongExtra(PRESCRIPTION_ID, -1);
         long doctorId = intent.getLongExtra(DOCTOR_ID, -1);
         hasArivedFromDoctor = intent.getBooleanExtra(ARRIVED_FROM_DOCTOR, false);
 
         if (perceptionId == -1 && doctorId != -1) {
             doctor = doctorManager.getById(doctorId);
+
+            if (doctor == null) {
+                finish();
+                return;
+            }
+
             perception = null;
             hasChanged = true;
             setTitle("New Perception");
             setContent();
 
         } else if (doctorId == -1 && perceptionId != -1) {
-            perceptionManager.getPerception(perceptionId, new PerceptionManager.PerceptionListener() {
+            perceptionManager.getPrescription(perceptionId, new PrescriptionManager.PerceptionListener() {
                 @Override
-                public void callback(Perception perception) {
-                    PerceptionActivity.this.perception = perception;
-                    PerceptionActivity.this.doctor = doctorManager.getById(perception.doctorId);
+                public void callback(final Prescription perception) {
 
-                    setContent();
-                    hasChanged = false;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (perception == null) {
+                                finish();
+                                return;
+                            }
+
+                            PrescriptionActivity.this.perception = perception;
+                            PrescriptionActivity.this.doctor = doctorManager.getById(perception.doctorId);
+
+                            setContent();
+                            hasChanged = false;
+                        }
+                    });
+
                 }
             });
             setTitle("Perception");
 
 
         } else {
-            throw new RuntimeException("bad parameters");
+            finish();
         }
 
     }
@@ -181,7 +186,7 @@ public class PerceptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DatePickerDialog datePicker = new DatePickerDialog(PerceptionActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(PrescriptionActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
 
@@ -204,7 +209,7 @@ public class PerceptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DatePickerDialog datePicker = new DatePickerDialog(PerceptionActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePicker = new DatePickerDialog(PrescriptionActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
 
@@ -276,7 +281,7 @@ public class PerceptionActivity extends AppCompatActivity {
                 synchronized (LOCK) {
 
                     if (addMedicineDialog == null) {
-                        addMedicineDialog = new AlertDialog.Builder(PerceptionActivity.this)
+                        addMedicineDialog = new AlertDialog.Builder(PrescriptionActivity.this)
                                 .setView(medicineDialogView)
                                 .create();
                     }
@@ -373,13 +378,13 @@ public class PerceptionActivity extends AppCompatActivity {
             perception.medicineIds = medicineIds;
             perception.medicineNames = medicineNames;
 
-            perceptionManager.updatePerception(perception, new PerceptionManager.PerceptionListener() {
+            perceptionManager.updatePerception(perception, new PrescriptionManager.PerceptionListener() {
                 @Override
-                public void callback(Perception perception) {
+                public void callback(Prescription perception) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setResult(PERCEPTION_INFO_PERCEPTION_CHANGED);
+                            setResult(PRESCRIPTION_INFO_PERCEPTION_CHANGED);
                             finish();
                         }
                     });
@@ -388,14 +393,14 @@ public class PerceptionActivity extends AppCompatActivity {
 
         } else {
             perceptionManager.addPerception(doctor.id, medicineIds, medicineNames, selectedStartDate, selectedEndDate,
-                    new PerceptionManager.PerceptionListener() {
+                    new PrescriptionManager.PerceptionListener() {
                 @Override
-                public void callback(final Perception perception) {
+                public void callback(final Prescription perception) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            PerceptionActivity.this.perception = perception;
-                            setResult(PERCEPTION_INFO_PERCEPTION_CHANGED);
+                            PrescriptionActivity.this.perception = perception;
+                            setResult(PRESCRIPTION_INFO_PERCEPTION_CHANGED);
                             finish();
                         }
                     });
@@ -406,14 +411,14 @@ public class PerceptionActivity extends AppCompatActivity {
 
     private void _delete() {
 
-        perceptionManager.deletePerception(perception, new PerceptionManager.PerceptionListener() {
+        perceptionManager.deletePerception(perception, new PrescriptionManager.PerceptionListener() {
 
             @Override
-            public void callback(Perception perception) {
+            public void callback(Prescription perception) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setResult(PERCEPTION_INFO_PERCEPTION_CHANGED);
+                        setResult(PRESCRIPTION_INFO_PERCEPTION_CHANGED);
                         finish();
                     }
                 });
@@ -502,4 +507,13 @@ public class PerceptionActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == DoctorInfoActivity.DOCTOR_INFO_DOCTORS_DELETED) {
+            setResult(PRESCRIPTION_INFO_DOCTOR_DELETED);
+            finish();
+        }
+    }
 }

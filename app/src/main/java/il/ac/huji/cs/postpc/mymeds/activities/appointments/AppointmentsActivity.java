@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -19,25 +19,21 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import il.ac.huji.cs.postpc.mymeds.MyMedApplication;
 import il.ac.huji.cs.postpc.mymeds.R;
-import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
-import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.database.AppointmentManager;
 import il.ac.huji.cs.postpc.mymeds.database.DoctorManager;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Appointment;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Doctor;
-import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.utils.ListItemHolder;
 
 public class AppointmentsActivity extends AppCompatActivity {
 
     public static final int APPOINTMENT_INFO_REQ = 0x5001;
     public static final int APPOINTMENT_INFO_RES = 0x5001;
+    public static final int APPOINTMENT_INFO_DOCTOR_DELETED = 0x5002;
     public static final String INTENT_DOCTOR_ID = "ID";
 
     private final Object LOCK = new Object();
@@ -46,6 +42,7 @@ public class AppointmentsActivity extends AppCompatActivity {
     private DoctorManager doctorManager;
     private AppointmentManager appointmentManager;
     private Toolbar toolbar;
+    private View noAppointments;
     private FloatingActionButton newAppointmentFab;
     private RecyclerView pastAppointmentsRv;
     private RecyclerView futureAppointmentsRv;
@@ -86,11 +83,13 @@ public class AppointmentsActivity extends AppCompatActivity {
         pastAppointmentsTv = findViewById(R.id.past_appointments_tv);
         futureAppointmentsTv = findViewById(R.id.future_appointments_tv);
 
+        noAppointments = findViewById(R.id.no_appointments_message);
+
         Intent intent = getIntent();
         doctorId = intent.getLongExtra(INTENT_DOCTOR_ID, -1);
 
         if (doctorId == -1) {
-            throw new RuntimeException("bad doctor id");
+            finish();
         }
 
         newAppointmentFab = findViewById(R.id.appointment_add_fab);
@@ -127,9 +126,19 @@ public class AppointmentsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setData();
+    }
+
+    private void setData() {
         startedAnotherActivity = false;
 
         doctor = doctorManager.getById(doctorId);
+
+        if (doctor == null) {
+            finish();
+            return;
+        }
+
         doctorNameTv.setText(doctor.name);
 
         appointmentManager.getAppointments(doctor, new AppointmentManager.AppointmentsListener() {
@@ -151,11 +160,10 @@ public class AppointmentsActivity extends AppCompatActivity {
                 pastAppointmentsTv.setVisibility(pastAppointments.size() == 0 ? View.GONE : View.VISIBLE);
                 futureAppointmentsAdapter.update(futureAppointments);
                 pastAppointmentsAdapter.update(pastAppointments);
+                noAppointments.setVisibility(appointments.size() == 0 ? View.VISIBLE : View.GONE);
 
             }
         });
-
-
     }
 
     class AppointmentAdapter extends RecyclerView.Adapter<ListItemHolder> {
@@ -166,7 +174,7 @@ public class AppointmentsActivity extends AppCompatActivity {
             this.appointments = new ArrayList<>();
         }
 
-        void update(List<Appointment> appointments) {
+        synchronized void update(List<Appointment> appointments) {
             this.appointments.clear();
             this.appointments.addAll(appointments);
             notifyDataSetChanged();
@@ -210,6 +218,18 @@ public class AppointmentsActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return appointments.size();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == AppointmentActivity.APPOINTMENT_INFO_DOCTOR_DELETED) {
+            setResult(APPOINTMENT_INFO_DOCTOR_DELETED);
+            finish();
+        } else {
+            setData();
         }
     }
 }

@@ -31,6 +31,7 @@ public class AppointmentsFragment extends Fragment {
     private FloatingActionButton newDoctorFab;
     private RecyclerView recyclerView;
     private DoctorManager doctorManager;
+    private View noDoctorMessage;
 
     private boolean startedAnotherActivity = false;
 
@@ -42,6 +43,7 @@ public class AppointmentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_appointments, container, false);
         newDoctorFab = view.findViewById(R.id.doctors_add_fab);
         recyclerView = view.findViewById(R.id.doctors_container);
+        noDoctorMessage = view.findViewById(R.id.no_doctors_message);
 
         newDoctorFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +114,7 @@ public class AppointmentsFragment extends Fragment {
         super.onResume();
         recyclerView.getAdapter().notifyDataSetChanged();
         startedAnotherActivity = false;
+        toggleNoDoctorMessage();
     }
 
     @Override
@@ -138,8 +141,14 @@ public class AppointmentsFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == DoctorInfoActivity.DOCTOR_INFO_REQ && resultCode == DoctorInfoActivity.DOCTOR_INFO_DOCTORS_CHANGED) {
+            toggleNoDoctorMessage();
             recyclerView.getAdapter().notifyDataSetChanged();
+            ((HomeActivity) getActivity()).reinitializeCalendar();
         }
+    }
+
+    private void toggleNoDoctorMessage() {
+        noDoctorMessage.setVisibility(doctorManager.size() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public interface AppointmentsFragmentListener {}

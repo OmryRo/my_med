@@ -60,7 +60,11 @@ public class Medicine {
 
     @Ignore
     public String getDosageString() {
+        return String.format("%s each %s.", getAmountString(), each.toHumanReadable());
+    }
 
+    @Ignore
+    public String getAmountString() {
         String amountUnits = null;
         switch (type) {
             case TYPE_PILLS:
@@ -75,7 +79,7 @@ public class Medicine {
             amountUnits += "s";
         }
 
-        return String.format("%d %s each %s.", amount, amountUnits, each.toHumanReadable());
+        return String.format("%d %s", amount, amountUnits);
     }
 
     @Ignore

@@ -170,7 +170,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
             medicine = manager.getById(index);
 
             if (medicine == null) {
-                throw new RuntimeException("Unknown medicine");
+                finish();
+                return;
             }
 
         } else {
@@ -178,7 +179,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
             medicineType = intent.getIntExtra(INTENT_MED_TYPE, -1);
 
             if (medicineName == null || medicineType == -1) {
-                throw new RuntimeException("Unknown medicine");
+                finish();
+                return;
             }
 
             isEditing = true;
@@ -361,6 +363,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
 
         if (isEditing) {
 
+            endsAtContainer.setVisibility(View.VISIBLE);
+
             endsAtEditSelectorSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -390,7 +394,7 @@ public class MedicineInfoActivity extends AppCompatActivity {
 
                 } else {
                     endsAtEditSelectorSp.setSelection(1);
-                    selectedEndsAtDate = medicine.nextTime;
+                    selectedEndsAtDate = medicine.endsAt;
                     endsAtEditDateEt.setText(dateToHumanReadabily(selectedEndsAtDate, false));
                 }
 
@@ -418,6 +422,8 @@ public class MedicineInfoActivity extends AppCompatActivity {
                             selectedDate.setYear(year - 1900);
                             selectedDate.setMonth(month);
                             selectedDate.setDate(dayOfMonth);
+                            selectedDate.setHours(23);
+                            selectedDate.setMinutes(59);
                             endsAtEditDateEt.setText(dateToHumanReadabily(selectedDate, false));
                             selectedEndsAtDate = selectedDate;
 

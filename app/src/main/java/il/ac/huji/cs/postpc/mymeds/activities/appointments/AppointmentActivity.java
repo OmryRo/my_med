@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -42,6 +43,7 @@ public class AppointmentActivity extends AppCompatActivity {
     public static final int APPOINTMENT_INFO_REQ = 0x5000;
     public static final int APPOINTMENT_INFO_NOTHING_CHANGED = 0;
     public static final int APPOINTMENT_INFO_APPOINTMENTS_CHANGED = 1;
+    public static final int APPOINTMENT_INFO_DOCTOR_DELETED = 2;
 
     public static final String APPOINTMENT_ID = "APPOINTMENT_ID";
     public static final String DOCTOR_ID = "DOCTOR_ID";
@@ -125,23 +127,42 @@ public class AppointmentActivity extends AppCompatActivity {
 
         if (appointmentId == -1 && doctorId != -1) {
             doctor = doctorManager.getById(doctorId);
+
+            if (doctor == null) {
+                finish();
+                return;
+            }
+
             appointment = null;
             setContent(true);
 
         } else if (doctorId == -1 && appointmentId != -1) {
             appointmentManager.getAppointment(appointmentId, new AppointmentManager.AppointmentListener() {
                 @Override
-                public void callback(Appointment appointment) {
-                    AppointmentActivity.this.appointment = appointment;
-                    AppointmentActivity.this.doctor = doctorManager.getById(appointment.doctorId);
+                public void callback(final Appointment appointment) {
 
-                    setContent(false);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (appointment == null) {
+                                finish();
+                                return;
+                            }
+
+                            AppointmentActivity.this.appointment = appointment;
+                            AppointmentActivity.this.doctor = doctorManager.getById(appointment.doctorId);
+
+                            setContent(false);
+
+                        }
+                    });
+
                 }
             });
 
 
         } else {
-            throw new RuntimeException("bad parameters");
+            finish();
         }
 
     }
@@ -446,5 +467,15 @@ public class AppointmentActivity extends AppCompatActivity {
             return NOTIFICATION_OPTIONS_IN_MINUTES.length;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == DoctorInfoActivity.DOCTOR_INFO_DOCTORS_DELETED) {
+            setResult(APPOINTMENT_INFO_DOCTOR_DELETED);
+            finish();
+        }
     }
 }

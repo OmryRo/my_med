@@ -44,8 +44,8 @@
         <activity android:name=".activities.medicine.MedicineInfoActivity" />
         <activity android:name=".activities.appointments.AppointmentsActivity" />
         <activity android:name=".activities.appointments.AppointmentActivity" />
-        <activity android:name=".activities.perceptions.PerceptionsActivity" />
-        <activity android:name=".activities.perceptions.PerceptionActivity" />
+        <activity android:name=".activities.prescriptions.PrescriptionsActivity" />
+        <activity android:name=".activities.prescriptions.PrescriptionActivity" />
     </application>
 
 </manifest>

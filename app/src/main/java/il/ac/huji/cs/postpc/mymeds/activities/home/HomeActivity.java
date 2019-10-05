@@ -1,13 +1,16 @@
 package il.ac.huji.cs.postpc.mymeds.activities.home;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.text.TextUtilsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -20,7 +23,10 @@ import android.view.MenuItem;
 import java.util.Locale;
 
 import il.ac.huji.cs.postpc.mymeds.R;
+import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
+import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.search.SearchMedicineActivity;
+import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 
 public class HomeActivity extends AppCompatActivity implements
         CalenderFragment.CalenderFragmentListener,
@@ -45,17 +51,15 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_drip_counter:
-                        break;
-                    case R.id.navigation_find_medicine:
-                        startActivityForResult(
-                                new Intent(getApplicationContext(), SearchMedicineActivity.class),
-                                SearchMedicineActivity.SEACH_MEDICINE_REQUEST
-                        );
-                        break;
-                    case R.id.navigation_options:
-                        break;
                     case R.id.navigation_about:
+                        try {
+                            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                            CustomTabsIntent intent = builder.build();
+                            intent.launchUrl(getApplicationContext(), Uri.parse("https://omryro.github.io/my_med/"));
+                        } catch (Exception exception) {
+
+                        }
+
                         break;
                 }
                 return false;
@@ -147,5 +151,9 @@ public class HomeActivity extends AppCompatActivity implements
             navView.setSelectedItemId(R.id.navigation_medicines);
         }
 
+    }
+
+    public void reinitializeCalendar() {
+        calenderFragment.initData();
     }
 }
