@@ -1,14 +1,10 @@
 package il.ac.huji.cs.postpc.mymeds.database;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +15,16 @@ import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
-public class MedicineManager {
+public class MedicineManager extends ManagerHelp {
     private static final String TAG = MedicineManager.class.getSimpleName();
+    private static final String FILE_NAME = "meds.json";
     private final AppDatabase db;
     private List<Medicine> medicines;
     private Map<Long, Medicine> dbMap;
-    private Context context;
 
     public MedicineManager(Context context) {
+        super(context);
         db = AppDatabase.getInstance(context);
-        this.context = context;
 
         new Thread(new Runnable() {
             @Override
@@ -47,7 +43,7 @@ public class MedicineManager {
                     RepeatingDate each;
 
                     try {
-                        JSONArray jsonArray = new JSONArray(readJSONFromAsset());
+                        JSONArray jsonArray = new JSONArray(readJSONFromAsset(FILE_NAME));
                         for (int i = 0; i < jsonArray.length(); ++i) {
                             name = jsonArray.getJSONObject(i)
                                     .getJSONObject("Value")
@@ -73,29 +69,6 @@ public class MedicineManager {
                 }
             }
         }).start();
-    }
-
-    private String convertToString(InputStream is) throws IOException {
-        int size = is.available();
-        byte[] buffer = new byte[size];
-        int totalNumberOfBytesReadIntoTheBuffer = is.read(buffer);
-        Log.d(TAG, "convertToString: read number" + totalNumberOfBytesReadIntoTheBuffer);
-        is.close();
-        return new String(buffer, StandardCharsets.UTF_8);
-    }
-
-    private String readJSONFromAsset() {
-        String result;
-        try {
-            InputStream is = context.getAssets().open("meds.json");
-            result = convertToString(is);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return result;
     }
 
     public Medicine add(
