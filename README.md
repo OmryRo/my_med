@@ -18,10 +18,7 @@ My Medicine is an App for Android (7+) that help tracking medicine times and app
 
 ## Screenshots
 
-<div style="display: block; clear: both;">
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_1.png" width="300" align="left" />
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_2.png" width="300" align="left" />
-</div>
+<table><tr><td><img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_1.png" width="200" align="left" /></td><td><img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_2.png" width="200" align="left" /></td></tr></table>
 
 ## Technical Notes
 
