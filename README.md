@@ -8,6 +8,9 @@ My Medicine is an App for Android (7+) that help tracking medicine times and app
 
 **Note:** keep in mind that this App is part of a school project and won't be developed farther then the current last version. 
 
+## Download
+
+You can find link to download the app on the release tab.
 
 ## Features
 
