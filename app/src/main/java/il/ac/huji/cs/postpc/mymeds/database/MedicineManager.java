@@ -5,6 +5,7 @@ import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class MedicineManager extends ManagerHelp {
 
                             add(name, note, nextTime, endsAt, times, amount, each, stock, type);
                         }
-                    } catch (JSONException e) {
+                    } catch (JSONException | IOException e) {
 //                        Log.d(TAG, "exit because JSONException");
                         e.printStackTrace();
                     }
