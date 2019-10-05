@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Dr Max Mustermann ",
+    "phone": "029937211",
+    "email": "max.mustermann@mymed.com",
+    "address": "Jupiter clinic",
+    "note": "Family doctor"
+  },
+  {
+    "name": "Dr John Doe",
+    "phone": "029931111",
+    "email": "john.doe@mymed.com",
+    "address": "Eartha clinic",
+    "note": "Nutritionist"
+  },
+  {
+    "name": "Dr Janie Roe",
+    "phone": "029931111",
+    "email": "janie.roe@mymed.com",
+    "address": "Moon clinic",
+    "note": "Orthopedist"
+  }
+]

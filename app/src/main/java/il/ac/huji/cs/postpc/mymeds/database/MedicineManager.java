@@ -1,25 +1,33 @@
 package il.ac.huji.cs.postpc.mymeds.database;
 
 import android.content.Context;
+import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import il.ac.huji.cs.postpc.mymeds.BuildConfig;
 import il.ac.huji.cs.postpc.mymeds.database.controllers.AppDatabase;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
 import il.ac.huji.cs.postpc.mymeds.database.entities.RepeatingDate;
 
 public class MedicineManager {
-
+    private static final String TAG = MedicineManager.class.getSimpleName();
     private final AppDatabase db;
     private List<Medicine> medicines;
     private Map<Long, Medicine> dbMap;
+    private Context context;
 
     public MedicineManager(Context context) {
         db = AppDatabase.getInstance(context);
+        this.context = context;
 
         new Thread(new Runnable() {
             @Override
@@ -32,43 +40,62 @@ public class MedicineManager {
                 }
 
                 // remove later for debugging propose...
-                if (BuildConfig.DEBUG && medicines.size() == 0) {
-                    add(
-                            "Ritalin LA 30mg",
-                            "Coffie isn't allowed when taking this medicine.",
-                            new Date(System.currentTimeMillis()),
-                            null,
-                            10,
-                            1,
-                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
-                            30,
-                            Medicine.TYPE_PILLS
-                    );
-                    add(
-                            "Something random",
-                            "do we really need it?.",
-                            new Date(System.currentTimeMillis()),
-                            new Date(System.currentTimeMillis() + 10000),
-                            -1,
-                            2,
-                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
-                            200,
-                            Medicine.TYPE_IV
-                    );
-                    add(
-                            "Something random 2",
-                            "do we really need it?.",
-                            new Date(System.currentTimeMillis()),
-                            null,
-                            10,
-                            1,
-                            new RepeatingDate(RepeatingDate.UNIT_DAYS, 1),
-                            30,
-                            Medicine.TYPE_PILLS
-                    );
+                if (medicines.size() == 0) {
+                    String name, note;
+                    Date nextTime, endsAt;
+                    int times, amount, stock, type;
+                    RepeatingDate each;
+
+                    try {
+                        JSONArray jsonArray = new JSONArray(readJSONFromAsset());
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+                            name = jsonArray.getJSONObject(i)
+                                    .getJSONObject("Value")
+                                    .getString("en");
+
+                            note = "";
+                            nextTime = new Date(System.currentTimeMillis());
+                            endsAt = null;
+                            times = 10;
+                            amount = jsonArray.getJSONObject(i)
+                                    .getJSONObject("Value")
+                                    .getInt("amount_in_package");
+                            each = new RepeatingDate(RepeatingDate.UNIT_DAYS, 1);
+                            stock = 1;
+                            type = Medicine.TYPE_PILLS;
+
+                            add(name, note, nextTime, endsAt, times, amount, each, stock, type);
+                        }
+                    } catch (JSONException e) {
+//                        Log.d(TAG, "exit because JSONException");
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
+    }
+
+    private String convertToString(InputStream is) throws IOException {
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        int totalNumberOfBytesReadIntoTheBuffer = is.read(buffer);
+        Log.d(TAG, "convertToString: read number" + totalNumberOfBytesReadIntoTheBuffer);
+        is.close();
+        return new String(buffer, StandardCharsets.UTF_8);
+    }
+
+    private String readJSONFromAsset() {
+        String result;
+        try {
+            InputStream is = context.getAssets().open("meds.json");
+            result = convertToString(is);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return result;
     }
 
     public Medicine add(
