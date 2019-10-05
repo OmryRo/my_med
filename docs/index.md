@@ -1,10 +1,6 @@
 # My Medicine
 
-<div style="display: block; width: 200px; float: right;">
-
-![](../graphics/market_logo.png)
-
-</div>
+<img src="docs/graphics/market_logo.png" width="150" align="right" />
 
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
  
@@ -25,7 +21,7 @@ You can download the latest version from the [release tab](https://github.com/Om
 
 ## Screenshots
 
-<table><tr><td><img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_1.png" width="200" align="left" /></td><td><img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_2.png" width="200" align="left" /></td></tr></table>
+<table><tr><td><img src="graphics/screenshot_1.png" width="200" align="left" /></td><td><img src="graphics/screenshot_2.png" width="200" align="left" /></td></tr></table>
 
 ## Technical Notes
 

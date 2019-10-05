@@ -1,6 +1,6 @@
 # My Medicine
 
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/market_logo.png" width="150" align="right" />
+<img src="https://github.com/OmryRo/my_med/blob/master/docs/graphics/market_logo.png" width="150" align="right" />
 
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
  
@@ -21,7 +21,7 @@ You can find link to download the app on the release tab.
 
 ## Screenshots
 
-<table><tr><td><img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_1.png" width="200" align="left" /></td><td><img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_2.png" width="200" align="left" /></td></tr></table>
+<table><tr><td><img src="https://github.com/OmryRo/my_med/blob/master/docs/graphics/screenshot_1.png" width="200" align="left" /></td><td><img src="https://github.com/OmryRo/my_med/blob/master/docs/graphics/screenshot_2.png" width="200" align="left" /></td></tr></table>
 
 ## Technical Notes
 
