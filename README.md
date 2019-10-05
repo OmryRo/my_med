@@ -1,6 +1,6 @@
 # My Medicine
 
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/market_logo.png" width="200" align="left" />
+<img src="https://github.com/OmryRo/my_med/blob/master/graphics/market_logo.png" width="150" align="right" />
 
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
  
@@ -18,8 +18,10 @@ My Medicine is an App for Android (7+) that help tracking medicine times and app
 
 ## Screenshots
 
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_1.png" width="300" />
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_2.png" width="300" />
+<div style="display: block; clear: both;">
+<img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_1.png" width="300" align="left" />
+<img src="https://github.com/OmryRo/my_med/blob/master/graphics/screenshot_2.png" width="300" align="left" />
+</div>
 
 ## Technical Notes
 
