@@ -1,8 +1,6 @@
 # My Medicine
 
-<img src="https://github.com/OmryRo/my_med/blob/master/graphics/market_logo.png" width="150" align="right" />
-
-![](../graphics/market_logo.png)
+<div style="display: block; width: 150px; height: 150px; float: right;">![](../graphics/market_logo.png)</div>
 
 My Medicine is an "school project" as part of course #67625 at The Hebrew University in Jerusalem.
  
