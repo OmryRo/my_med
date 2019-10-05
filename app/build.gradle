@@ -11,6 +11,8 @@ android {
         versionName "0.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField "boolean", "DEBUG_OPEN_CV", 'false'
+
     }
     buildTypes {
         release {
@@ -32,6 +34,11 @@ android {
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debugOpenCV {
+            minifyEnabled false
+            buildConfigField "boolean", "DEBUG_OPEN_CV", 'true'
         }
     }
 }
@@ -58,6 +65,7 @@ dependencies {
     implementation "androidx.camera:camera-camera2:1.0.0-alpha04"
 
     implementation 'sun.bob:mcalendarview:1.0.0'
+    implementation 'com.quickbirdstudios:opencv:4.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'  // Google Play services Gradle

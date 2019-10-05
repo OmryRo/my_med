@@ -15,6 +15,11 @@
         <menu>
 
             <item
+                android:id="@+id/navigation_drip_counter"
+                android:title="@string/drip_counter"
+                />
+
+            <item
                 android:id="@+id/navigation_about"
                 android:title="@string/about"
                 />

@@ -62,8 +62,9 @@ public class CalendarViewAdapter extends sun.bob.mcalendarview.adapters.Calendar
         int year = CalendarUtil.position2Year(position);
         int month = CalendarUtil.position2Month(position);
 
-        MonthFragment fragment = new MonthFragment(navigateButtonClickListener);
+        MonthFragment fragment = new MonthFragment();
         fragment.setTitle(hasTitle);
+        fragment.setListener(navigateButtonClickListener);
         MonthData monthData = new MonthData(new DateData(year, month, 1), hasTitle);
         fragment.setData(monthData, dateCellId, markCellId);
         return fragment;

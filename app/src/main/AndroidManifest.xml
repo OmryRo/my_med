@@ -46,6 +46,11 @@
         <activity android:name=".activities.appointments.AppointmentActivity" />
         <activity android:name=".activities.prescriptions.PrescriptionsActivity" />
         <activity android:name=".activities.prescriptions.PrescriptionActivity" />
+
+        <activity android:name=".drip_counter.DripCounterActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden"
+            />
     </application>
 
 </manifest>

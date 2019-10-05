@@ -35,7 +35,9 @@ public class MonthFragment extends sun.bob.mcalendarview.fragments.MonthFragment
     private boolean hasTitle = true;
     private NavigateButtonClickListener listener;
 
-    MonthFragment(NavigateButtonClickListener listener) {
+    MonthFragment() {}
+
+    public void setListener(NavigateButtonClickListener listener) {
         this.listener = listener;
     }
 
@@ -91,7 +93,9 @@ public class MonthFragment extends sun.bob.mcalendarview.fragments.MonthFragment
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onBackPressed();
+                        if (listener != null) {
+                            listener.onForwardPressed();
+                        }
                     }
                 });
 
@@ -104,7 +108,9 @@ public class MonthFragment extends sun.bob.mcalendarview.fragments.MonthFragment
                 forward.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onForwardPressed();
+                        if (listener != null) {
+                            listener.onForwardPressed();
+                        }
                     }
                 });
 

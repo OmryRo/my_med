@@ -27,6 +27,7 @@ import il.ac.huji.cs.postpc.mymeds.activities.doctors.DoctorInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.medicine.MedicineInfoActivity;
 import il.ac.huji.cs.postpc.mymeds.activities.search.SearchMedicineActivity;
 import il.ac.huji.cs.postpc.mymeds.database.entities.Medicine;
+import il.ac.huji.cs.postpc.mymeds.drip_counter.DripCounterActivity;
 
 public class HomeActivity extends AppCompatActivity implements
         CalenderFragment.CalenderFragmentListener,
@@ -61,6 +62,9 @@ public class HomeActivity extends AppCompatActivity implements
                         }
 
                         break;
+
+                    case R.id.navigation_drip_counter:
+                        startActivityForResult(new Intent(getApplicationContext(), DripCounterActivity.class), 0);
                 }
                 return false;
             }

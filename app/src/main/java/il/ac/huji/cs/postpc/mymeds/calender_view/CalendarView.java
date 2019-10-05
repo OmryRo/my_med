@@ -4,6 +4,7 @@
 package il.ac.huji.cs.postpc.mymeds.calender_view;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
@@ -72,9 +73,16 @@ public class CalendarView extends MCalendarView implements MonthFragment.Navigat
         this.setCurrentItem(500);
 //        addBackground();
         float density = getContext().getResources().getSystem().getDisplayMetrics().density;
-        //CellConfig.cellHeight = getContext().getResources().getSystem().getDisplayMetrics().widthPixels / 7 / density;
-        CellConfig.cellWidth = getContext().getResources().getSystem().getDisplayMetrics().widthPixels / 7 / density;
-        CellConfig.cellHeight = (int) (CellConfig.cellWidth * 0.65);
+        float cellWidth = getContext().getResources().getSystem().getDisplayMetrics().widthPixels / 7 / density;
+
+        if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            //CellConfig.cellHeight = (int) (getContext().getResources().getSystem().getDisplayMetrics().widthPixels / 7 / density * 0.5);
+            CellConfig.cellWidth = (int) (cellWidth * 0.5);
+            CellConfig.cellHeight = (int) (cellWidth * 0.25);
+        } else {
+            CellConfig.cellWidth = (int) (cellWidth);
+            CellConfig.cellHeight = (int) (cellWidth * 0.60);
+        }
     }
 
     private void addBackground(){

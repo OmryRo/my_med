@@ -50,9 +50,10 @@ public class CalendarAdapter extends sun.bob.mcalendarview.adapters.CalendarAdap
         ret.setDisplayText(dayData);
         ret.setDate(dayData.getDate());
 
-        if (OnDateClickListener.instance != null) {
+        if (position > 6 && OnDateClickListener.instance != null) {
             ret.setOnDateClickListener(OnDateClickListener.instance);
         }
+
         if (marked) {
             ret.setMarked();
         } else if (dayData.getDate().equals(CurrentCalendar.getCurrentDateData())) {
