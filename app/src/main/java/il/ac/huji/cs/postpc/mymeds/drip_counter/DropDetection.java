@@ -102,7 +102,9 @@ public class DropDetection {
                 Point center = Utils.average(points);
                 candidates.add(new Object[] {cnt, contourArea, center});
 
-                Imgproc.drawContours(dst, contours, i, Utils.COLOR_NATURAL, 3, 0, new Mat(), 0, searchArea[0]);
+                if (BuildConfig.DEBUG_OPEN_CV) {
+                    Imgproc.drawContours(dst, contours, i, Utils.COLOR_NATURAL, 3, 0, new Mat(), 0, searchArea[0]);
+                }
             }
 
             boolean isFound = false;
