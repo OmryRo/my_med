@@ -26,3 +26,4 @@ My Medicine is an App for Android (7+) that help tracking medicine times and app
 * The icon of the application and in some places in the app using Icons of [https://fontawesome.com/license/free](Font Awesome). Icons from font awsome are marked in the vector file.
 * The icons that aren't marked with anything, such as Meterial Design Fonts are under [https://www.apache.org/licenses/LICENSE-2.0.html](Apache License 2.0).
 * The code under the package 'il.ac.huji.cs.postpc.mymeds.calender_view' are extension for the library [https://github.com/SpongeBobSun/mCalendarView](mCalendarView) which under [https://github.com/SpongeBobSun/mCalendarView/blob/master/LICENSE](Apache 2.0)
+* Anything else in the repository is under [https://www.apache.org/licenses/LICENSE-2.0.html](Apache License 2.0).
